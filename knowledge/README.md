@@ -18,7 +18,8 @@ When searching for information or preparing code modifications:
 2. **Context & Why**: [`knowledge/decisions/`](file:///./decisions/README.md) - Accepted architectural decision records (ADRs).
 3. **Guardrails**: [`knowledge/failures/`](file:///./failures/README.md) - Anti-patterns and failed experiments (check before proposing changes).
 4. **Boundary Tests**: [`knowledge/cases/`](file:///./cases/README.md) - Real images that broke previous assumptions.
-5. **Empirical Data**: [`experiments/`](file:///../experiments/README.md) - Raw measurement data and benchmark results.
+5. **Trial-and-Error Chronicles**: [`history/`](file:///../history/README.md) - Chronological narrative of engineering breakthroughs, hurdles, and past project lessons.
+6. **Empirical Data**: [`experiments/`](file:///../experiments/README.md) - Raw measurement data and benchmark results.
 
 ---
 

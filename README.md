@@ -133,6 +133,7 @@ This repository follows a strict **Development Memory Protocol** to ensure that 
 - **Architectural Decisions**: [`knowledge/decisions/`](file:///./knowledge/decisions/README.md)
 - **Past Failures & Anti-Patterns**: [`knowledge/failures/`](file:///./knowledge/failures/README.md)
 - **Counterexamples & Edge Cases**: [`knowledge/cases/`](file:///./knowledge/cases/README.md)
+- **Validation History & Chronicles**: [`history/`](file:///./history/README.md)
 - **Empirical Experiments**: [`experiments/`](file:///./experiments/README.md)
 - **Benchmark Baseline**: [`docs/VALIDATED_BASELINE.md`](file:///./docs/VALIDATED_BASELINE.md)
 
