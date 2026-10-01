@@ -1,0 +1,134 @@
+# ==============================================================================
+# Real Human LoRA Dataset Pipeline - Configuration Example
+# ==============================================================================
+# Copy this file to 'config.yaml' and customize for your specific target person.
+# 'config.yaml' is ignored by git to keep your personal configurations private.
+
+project:
+  name: "real_human_lora"
+  target_person_name: "target_person"
+  trigger_word: "ohwx person" # FLUX / SD trigger token (e.g. "ohwx woman", "sks man")
+
+paths:
+  input_video_dir: "input/original-mp4"
+  reference_face_dir: "input/reference"
+  raw_frames_dir: "work/frames_raw"
+  facegate_review_dir: "work/facegate_review"
+  identity_review_dir: "work/identity_review"
+  selected_dir: "work/selected"
+  restored_dir: "work/restored"
+  output_dataset_dir: "output/dataset_flux"
+  reports_dir: "output/reports"
+  models_dir: "models"
+
+# ------------------------------------------------------------------------------
+# STEP 01: Frame Extraction
+# ------------------------------------------------------------------------------
+step1_extract:
+  segments_per_video: 50        # Number of equidistant frame extractions per MP4
+  supported_extensions:
+    - ".mp4"
+    - ".mov"
+    - ".mkv"
+    - ".webm"
+
+# ------------------------------------------------------------------------------
+# STEP 02: Technical Metrics (Global Blur)
+# ------------------------------------------------------------------------------
+step2_blur:
+  blur_method: "laplacian_variance"
+  min_blur_score: 80.0          # Below this score is flagged as globally blurry
+
+# ------------------------------------------------------------------------------
+# STEP 03: Face Quality Gate (Face Sharpness, Occlusion & Beauty Filter)
+# ------------------------------------------------------------------------------
+step3_face_gate:
+  min_face_size_px: 120         # Minimum face bounding box size (px)
+  min_face_sharpness: 18.0      # Minimum local Tenengrad/Laplacian sharpness on facial crop
+  max_occlusion_ratio: 0.35     # Maximum allowable facial landmark occlusion (0.0 - 1.0)
+  
+  # Plastic / Beauty Filter Rejection Gate (Anti-Artificial Smoothing)
+  max_plasticity_ratio: 70.0    # Ratio of edge sharpness to high-frequency micro-texture
+  min_skin_texture_score: 15.0  # High-frequency bandpass texture response on cheek/forehead
+
+# ------------------------------------------------------------------------------
+# STEP 04: Face Pose & Composition Classification
+# ------------------------------------------------------------------------------
+step4_pose:
+  yaw_bins:
+    frontal: [-15.0, 15.0]
+    half_profile: [15.0, 45.0]
+    profile: [45.0, 90.0]
+  pitch_bins:
+    looking_down: [-90.0, -15.0]
+    level: [-15.0, 15.0]
+    looking_up: [15.0, 90.0]
+  composition_quotas:
+    close_up: 0.40              # 40% Close-up shots (tight on face)
+    medium_shot: 0.40           # 40% Upper body / Medium shots
+    full_body: 0.20             # 20% Full body / Wide environmental shots
+
+# ------------------------------------------------------------------------------
+# STEP 05: Face Deduplication
+# ------------------------------------------------------------------------------
+step5_dedup:
+  hash_method: "dhash_and_phash"
+  similarity_threshold: 0.92   # Duplicate if perceptual similarity >= 92%
+  max_hamming_distance: 5       # Max hash hamming distance considered duplicate
+
+# ------------------------------------------------------------------------------
+# STEP 06: Identity Similarity Evaluation (GPU)
+# ------------------------------------------------------------------------------
+step6_identity:
+  device: "cuda"                # "cuda" or "cpu"
+  model_name: "buffalo_l"       # InsightFace model pack or ResNet50
+  similarity_metric: "cosine"
+  min_similarity_threshold: 0.55 # Reject frames below 0.55 similarity to reference images
+  exclude_multi_face_crowds: true
+
+# ------------------------------------------------------------------------------
+# STEP 07: Multi-Objective Candidate Selection
+# ------------------------------------------------------------------------------
+step7_selection:
+  target_total_images: 30       # Optimal FLUX LoRA training size (typically 25 - 40)
+  weights:
+    identity_similarity: 0.35   # Priority on target subject identity match
+    face_sharpness: 0.25        # Priority on crisp in-focus facial details
+    global_blur: 0.15           # Priority on overall image clarity
+    diversity_bonus: 0.25       # Priority on covering all pose/composition quotas
+
+# ------------------------------------------------------------------------------
+# STEP 08: Human Review Dashboard
+# ------------------------------------------------------------------------------
+step8_review:
+  thumbnail_size_px: 256
+  enable_side_by_side_reference: true
+
+# ------------------------------------------------------------------------------
+# STEP 09: Selective Face Restoration (GPU)
+# ------------------------------------------------------------------------------
+step9_restoration:
+  device: "cuda"
+  fidelity_weight: 0.8          # CodeFormer fidelity (0.0 = highest AI enhancement, 1.0 = closest to input)
+  selective_masking:
+    restore_eyes: true          # Restore iris, pupils, eyelashes
+    restore_eyebrows: true      # Restore eyebrow strands
+    restore_lips: true          # Restore lip texture
+    preserve_raw_skin: true     # CRITICAL: Keep 100% untouched camera sensor skin texture on cheeks & forehead
+
+# ------------------------------------------------------------------------------
+# STEP 10: FLUX.1 Dataset Packaging & Captioning (GPU)
+# ------------------------------------------------------------------------------
+step10_packaging:
+  target_resolutions:
+    - [1024, 1024]              # 1:1 Square
+    - [832, 1216]               # 9:16 Portrait
+    - [1216, 832]               # 16:9 Landscape
+    - [896, 1152]               # 3:4 Portrait
+    - [1152, 896]               # 4:3 Landscape
+  aspect_ratio_bucketing: true
+  
+  # Caption Strategy: Avoid overfitting facial traits while preserving flexibility
+  caption_strategy: "trigger_with_general_tagging"
+  caption_prefix: "[trigger], "
+  remove_camera_artifacts_tags: true

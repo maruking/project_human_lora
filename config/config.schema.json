@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RealHumanLoRAPipelineConfig",
+  "description": "Validation schema for Real Human LoRA Dataset Pipeline configuration",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "target_person_name": { "type": "string" },
+        "trigger_word": { "type": "string" }
+      },
+      "required": ["target_person_name", "trigger_word"]
+    },
+    "paths": {
+      "type": "object",
+      "properties": {
+        "input_video_dir": { "type": "string" },
+        "reference_face_dir": { "type": "string" },
+        "raw_frames_dir": { "type": "string" },
+        "selected_dir": { "type": "string" },
+        "restored_dir": { "type": "string" },
+        "output_dataset_dir": { "type": "string" },
+        "reports_dir": { "type": "string" }
+      }
+    },
+    "step1_extract": {
+      "type": "object",
+      "properties": {
+        "segments_per_video": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "step2_blur": {
+      "type": "object",
+      "properties": {
+        "min_blur_score": { "type": "number", "minimum": 0.0 }
+      }
+    },
+    "step3_face_gate": {
+      "type": "object",
+      "properties": {
+        "min_face_size_px": { "type": "integer", "minimum": 32 },
+        "min_face_sharpness": { "type": "number", "minimum": 0.0 },
+        "max_occlusion_ratio": { "type": "number", "minimum": 0.0, "maximum": 1.0 },
+        "max_plasticity_ratio": { "type": "number", "minimum": 0.0 },
+        "min_skin_texture_score": { "type": "number", "minimum": 0.0 }
+      }
+    },
+    "step6_identity": {
+      "type": "object",
+      "properties": {
+        "device": { "type": "string", "enum": ["cuda", "cpu"] },
+        "min_similarity_threshold": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+      }
+    },
+    "step7_selection": {
+      "type": "object",
+      "properties": {
+        "target_total_images": { "type": "integer", "minimum": 5, "maximum": 200 }
+      }
+    },
+    "step9_restoration": {
+      "type": "object",
+      "properties": {
+        "device": { "type": "string", "enum": ["cuda", "cpu"] },
+        "fidelity_weight": { "type": "number", "minimum": 0.0, "maximum": 1.0 }
+      }
+    },
+    "step10_packaging": {
+      "type": "object",
+      "properties": {
+        "aspect_ratio_bucketing": { "type": "boolean" },
+        "caption_strategy": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+# ==============================================================================
+# Real Human LoRA Dataset Pipeline - Base Requirements (CPU)
+# ==============================================================================
+# Install with:
+#   pip install -r requirements.txt
+#
+# Recommended Python version: 3.10.x (64-bit Windows)
+# Note: MediaPipe has the highest stability and pre-built wheel support on Python 3.10.
+
+# Core Computer Vision & Image Processing
+opencv-python>=4.8.0
+numpy>=1.24.0,<2.3.0
+pillow>=10.0.0
+scipy>=1.10.0
+
+# Facial Landmark & Head Pose Estimation (Step 3 & 4)
+mediapipe>=0.10.14,<=0.10.21
+
+# Image Hashing & Deduplication (Step 5)
+imagehash>=4.3.1
+
+# Configuration & Utilities
+pyyaml>=6.0
+tqdm>=4.65.0
+requests>=2.28.0

@@ -1,0 +1,150 @@
+# ==============================================================================
+# Git Ignore Rules for Real Human LoRA Dataset Pipeline Template
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Virtual Environments & Packages
+# ------------------------------------------------------------------------------
+venv/
+.venv/
+.venv*/
+env/
+ENV/
+.step4_packages/
+*.egg-info/
+dist/
+build/
+wheels/
+*.whl
+
+# ------------------------------------------------------------------------------
+# 2. Python Bytecode & Cache
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ------------------------------------------------------------------------------
+# 3. User Configurations & Secrets (Keep example files tracked)
+# ------------------------------------------------------------------------------
+config/config.yaml
+config/config.json
+config/local_config.*
+*.local.yaml
+*.local.json
+.env
+.env.*
+secrets/
+private/
+
+# Keep config templates tracked
+!config/config.example.yaml
+!config/config.schema.json
+
+# ------------------------------------------------------------------------------
+# 4. Input Media (Real Human Videos / Reference Faces)
+# ------------------------------------------------------------------------------
+input/original-mp4/*
+!input/original-mp4/.gitkeep
+!input/original-mp4/README.md
+
+input/reference/*
+!input/reference/.gitkeep
+!input/reference/README.md
+
+# ------------------------------------------------------------------------------
+# 5. Intermediate Working Directories & Extracted Frames
+# ------------------------------------------------------------------------------
+work/frames_raw/*
+!work/frames_raw/.gitkeep
+!work/frames_raw/README.md
+
+work/facegate_review/*
+!work/facegate_review/.gitkeep
+!work/facegate_review/README.md
+
+work/facegate_face_crops/*
+!work/facegate_face_crops/.gitkeep
+!work/facegate_face_crops/README.md
+
+work/identity_review/*
+!work/identity_review/.gitkeep
+!work/identity_review/README.md
+
+work/candidates/*
+!work/candidates/.gitkeep
+!work/candidates/README.md
+
+work/selected/*
+!work/selected/.gitkeep
+!work/selected/README.md
+
+work/restored/*
+!work/restored/.gitkeep
+!work/restored/README.md
+
+# ------------------------------------------------------------------------------
+# 6. Final Outputs & Reports (Generated Datasets)
+# ------------------------------------------------------------------------------
+output/dataset_flux/*
+!output/dataset_flux/.gitkeep
+!output/dataset_flux/README.md
+
+output/reports/*
+!output/reports/.gitkeep
+!output/reports/README.md
+
+# Common raw media types if placed accidentally in root
+*.mp4
+*.mov
+*.mkv
+*.avi
+*.webm
+*.m4v
+
+# ------------------------------------------------------------------------------
+# 7. Model Binaries & Weights (Keep README and place-holders tracked)
+# ------------------------------------------------------------------------------
+models/*.onnx
+models/*.pth
+models/*.pt
+models/*.bin
+models/*.safetensors
+models/*.ckpt
+!models/.gitkeep
+!models/README.md
+
+# HuggingFace & Torch Hub download caches
+.cache/
+torch_cache/
+huggingface/
+
+# ------------------------------------------------------------------------------
+# 8. Logs & Temporary Files
+# ------------------------------------------------------------------------------
+*.log
+tmp/
+.tmp/
+temp/
+*.tmp
+
+# ------------------------------------------------------------------------------
+# 9. OS & IDE Specific Files
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
