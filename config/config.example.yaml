@@ -1,0 +1,251 @@
+# Runtime configuration; explicit CLI > YAML > internal fallback.
+# Source videos are retained; STEP1 creates standalone normalized copies.
+project:
+  name: real_human_lora
+  target_person_name: target_person
+  trigger_word: character
+  subject_name: subject
+paths:
+  input_video_dir: input/original-mp4
+  reference_face_dir: input/reference
+  raw_frames_dir: work/frames_raw
+  facegate_review_dir: work/facegate_review
+  facegate_crops_dir: work/facegate_face_crops
+  pose_review_dir: work/pose_review
+  deduplicated_dir: work/frames_deduplicated
+  identity_review_dir: work/identity_review
+  candidates_dir: work/candidates
+  selected_dir: work/selected
+  restored_dir: work/restored
+  output_dataset_dir: output/dataset_flux
+  reports_dir: output/reports
+  models_dir: models
+  normalized_video_dir: work/videos
+  manifests_dir: work/manifests
+frame_extraction:
+  sample_fps: 2.0
+  max_frames_per_video: 120
+  policy_version: 2
+step1_extract:
+  trim_start: 0.0
+  trim_end: 0.0
+  subfolders: true
+  ffmpeg: null
+  ffprobe: null
+  overwrite: false
+  supported_extensions:
+  - .mp4
+  - .mov
+  - .mkv
+  - .avi
+  - .webm
+  - .m4v
+step2_blur:
+  report: '@reports/step2_dataset_report.csv'
+  # Optional project-relative still-image subtree inside raw_frames_dir.
+  supplemental_dir: null
+  blur_method: laplacian_and_tenengrad_percentiles
+  # Optional paths; omitted outputs follow the effective --report parent directory.
+  # summary: '@reports/step2_summary.json'
+  # outliers: '@reports/step2_diagnostic_outliers.csv'
+  retain_missing_records: false
+step3_face_gate:
+  face_crop_margin: 0.2
+  face_core_scale: 0.8
+  min_face_visibility_score: 70.0
+  min_face_sharpness_percentile: 20.0
+  min_global_laplacian: 25.0
+  min_face_laplacian: 50.0
+  shot_close_up_threshold: 0.12
+  shot_full_body_threshold: 0.04
+  min_source_short_edge_fullbody: 720
+  min_face_dim_close_up: 140
+  min_face_dim_upper_body: 110
+  min_face_dim_full_body: 80
+  min_eye_sharpness: 1.6
+  max_face_central_gradient: 65.0
+  min_single_eye_feature_ratio: 0.07
+  min_avg_eye_feature_ratio: 0.08
+  max_eye_asymmetry_ratio: 2.2
+  min_face_brightness: 95.0
+  min_face_to_global_ratio: 0.65
+  min_skin_texture_upper_body: 0.035
+  max_plasticity_ratio: 45.0
+  laplacian_weight: 0.5
+  tenengrad_weight: 0.5
+  detection_confidence: 0.5
+  max_faces: 10
+  limit: null
+  min_skin_texture_close_up: 0.05
+  skip_beauty_filter: false
+  overwrite: false
+  report: '@reports/step2_dataset_report.csv'
+  output: '@reports/step3_dataset_report.csv'
+step4_pose:
+  front_yaw_max: 15.0
+  three_quarter_yaw_max: 42.0
+  profile_yaw_min: 42.0
+  pitch_looking_max: 20.0
+  pitch_looking_min: -20.0
+  extreme_pitch_threshold: 35.0
+  extreme_roll_threshold: 35.0
+  all_images: false
+  limit: 0
+  overwrite_review: false
+  report: '@reports/step3_dataset_report.csv'
+  output: '@reports/step4_dataset_report.csv'
+step5_dedup:
+  phash_threshold: 10
+  angle_threshold: 12.0
+  time_window: 6
+  limit: 0
+  report: '@reports/step4_dataset_report.csv'
+  output_csv: '@reports/step5_dataset_report.csv'
+  review_dir: '@reports/step5_duplicates_review'
+step6_identity:
+  base_thresholds:
+    CLOSE_UP: 0.62
+    UPPER_BODY: 0.58
+    FULL_BODY: 0.52
+  pose_modifiers:
+    FRONT: 0.0
+    LOOKING_DOWN: -0.04
+    LOOKING_UP: -0.04
+    LEFT_3Q: -0.05
+    RIGHT_3Q: -0.05
+    LEFT_PROFILE: -0.1
+    RIGHT_PROFILE: -0.1
+    EXTREME_POSE: -0.12
+  device: auto
+  limit: 0
+  eval_all_eligible: false
+  report: '@reports/step5_dataset_report.csv'
+  output_csv: '@reports/step6_dataset_report.csv'
+  model_name: facebook/dino-vitb16
+  backend: dino
+step7_selection:
+  shot_min:
+    CLOSE_UP: 10
+    UPPER_BODY: 25
+    FULL_BODY: 18
+  shot_max:
+    CLOSE_UP: 14
+    UPPER_BODY: 35
+    FULL_BODY: 25
+  pose_min:
+    FRONT: 15
+    LEFT_3Q: 12
+    RIGHT_3Q: 12
+    LOOKING_DOWN: 6
+    RIGHT_PROFILE: 3
+    LEFT_PROFILE: 1
+    OTHER: 1
+  pose_max:
+    FRONT: 22
+    LEFT_3Q: 20
+    RIGHT_3Q: 20
+    LOOKING_DOWN: 12
+    RIGHT_PROFILE: 3
+    LEFT_PROFILE: 1
+    OTHER: 2
+  candidate_pool_size: 65
+  max_scene_burst: 8
+  max_reference_burst: 15
+  limit: 0
+  report: '@reports/step6_dataset_report.csv'
+  output_csv: '@reports/step7_dataset_report.csv'
+step7_revision_b:
+  # Report-only candidate proposal. Confirmed A/B state is required for selection.
+  universe: '@reports/step2_dataset_report.csv'
+  step2_summary: '@reports/step2_summary.json'
+  step3: '@reports/step3_dataset_report.csv'
+  selection_pointer: '@reports/step3_revision_a/latest.json'
+  selection_groups: null
+  pose: '@reports/step4_dataset_report.csv'
+  duplicates: '@reports/step5_dataset_report.csv'
+  identity: '@reports/step6_dataset_report.csv'
+  min_count: 35
+  target_count: 40
+  max_count: 45
+  max_per_source: 6
+  max_mild_expression: 6
+  angle_min: {FRONTAL: 12, THREE_QUARTER: 12, SIDE: 4}
+  angle_max: {FRONTAL: 20, THREE_QUARTER: 24, SIDE: 12}
+  pitch_min: {LOOKING_UP: 1, LOOKING_DOWN: 1}
+  composition_min: {CLOSE_UP: 12, UPPER_BODY: 16, FULL_BODY: 6}
+  composition_max: {CLOSE_UP: 16, UPPER_BODY: 24, FULL_BODY: 12}
+step8_review:
+  initial_review_count: 45
+  populate_defaults: false
+  candidates_dir: '@candidates/all_ranked'
+  shot_target_percent:
+    CLOSE_UP: 18.0
+    UPPER_BODY: 62.0
+    FULL_BODY: 20.0
+  final_count_min: 30
+  final_count_max: 45
+step9_restoration:
+  codeformer_path: null
+  fidelity_weight: 0.8
+  min_identity_threshold: 0.6
+  max_identity_loss: 0.08
+  min_fidelity: 0.82
+  limit: 0
+  report: '@reports/step7_dataset_report.csv'
+  comparison_dir: '@reports/step9_restoration_comparison'
+  report_csv: '@reports/step9_restoration_report.csv'
+  model_name: facebook/dino-vitb16
+  device: auto
+  restoration_face_dim_threshold: 190.0
+  restoration_eye_threshold: 2.0
+  reference_limit: 15
+step10_packaging:
+  clothing_prompts:
+  - wearing an elegant black evening dress
+  - wearing a stylish black top
+  - wearing a casual white t-shirt
+  - wearing a warm knitted sweater
+  - wearing a denim jacket and pants
+  - wearing an oversized comfortable hoodie
+  - wearing a floral summer dress
+  - wearing casual modern streetwear
+  - wearing athletic sportswear
+  - wearing stylish casual clothes
+  hair_prompts:
+  - long dark hair falling over shoulders
+  - hair tied up in a neat ponytail
+  - hair styled in a messy bun
+  - wavy brunette hair with natural texture
+  - sleek straight dark hair
+  - short bob hairstyle
+  - natural textured hair
+  expression_prompts:
+  - gentle warm smile looking at camera
+  - subtle cheerful smile
+  - calm neutral expression with soft gaze
+  - serious focused expression
+  - candid smiling laughter
+  - pensive contemplative look
+  background_prompts:
+  - clean modern indoor apartment with soft interior
+  - cozy living room with warm wooden furniture
+  - bright contemporary room with white minimalist background
+  - urban city street with subtle bokeh
+  - outdoor cafe patio with natural ambiance
+  - studio environment with neutral clean background
+  - sunlit room with window shadows in background
+  lighting_prompts:
+  - soft diffused natural daylight
+  - warm cinematic indoor ambient lighting
+  - soft golden hour sunlight with gentle shadows
+  - clean professional studio lighting
+  - cool atmospheric interior lighting
+  - bright airy window light
+  limit: 0
+  step7_report: '@reports/step7_dataset_report.csv'
+  step9_report: '@reports/step9_restoration_report.csv'
+  output_csv: '@reports/step10_dataset_report.csv'
+  model_name: openai/clip-vit-large-patch14
+  device: auto
+  dimension_alignment: 16
+  caption_strategy: clip_attributes_with_pose

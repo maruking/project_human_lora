@@ -1,0 +1,16 @@
+{
+  "supplemental_dir": null,
+  "policy": "PROVISIONAL_DIAGNOSTIC_ONLY_NOT_VALIDATED_NO_AUTOMATIC_ABC",
+  "eye_closed_max": 0.1,
+  "eye_borderline_max": 0.3,
+  "eye_asymmetry_max": 2.2,
+  "clip_pixel_min": 250,
+  "bright_pixel_min": 230,
+  "clip_borderline": 0.02,
+  "clip_overexposed": 0.1,
+  "bright_borderline": 0.4,
+  "contrast_lost_max": 5.0,
+  "contrast_borderline_max": 15.0,
+  "texture_lost_max": 0.01,
+  "texture_borderline_max": 0.035
+}

@@ -1,0 +1,952 @@
+{
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_person_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trigger_word": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^<>:\"/\\\\|?*\\u0000-\\u001f]+$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "paths": {
+      "type": "object",
+      "properties": {
+        "input_video_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference_face_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "raw_frames_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "facegate_review_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "facegate_crops_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pose_review_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "deduplicated_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identity_review_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "candidates_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selected_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "restored_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_dataset_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reports_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "models_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normalized_video_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "manifests_dir": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "step1_extract": {
+      "type": "object",
+      "properties": {
+        "trim_start": {
+          "type": "number",
+          "minimum": 0
+        },
+        "trim_end": {
+          "type": "number",
+          "minimum": 0
+        },
+        "subfolders": {
+          "type": "boolean",
+          "enum": [
+            true
+          ]
+        },
+        "ffmpeg": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ffprobe": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "overwrite": {
+          "type": "boolean"
+        },
+        "supported_extensions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "step2_blur": {
+      "type": "object",
+      "properties": {
+        "supplemental_dir": {
+          "type": ["string", "null"],
+          "minLength": 1
+        },
+        "report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blur_method": {
+          "type": "string",
+          "enum": [
+            "laplacian_and_tenengrad_percentiles"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outliers": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retain_missing_records": {
+          "type": "boolean",
+          "enum": [
+            false
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "step3_face_gate": {
+      "type": "object",
+      "properties": {
+        "face_crop_margin": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "face_core_scale": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_face_visibility_score": {
+          "type": "number",
+          "minimum": 0
+        },
+        "min_face_sharpness_percentile": {
+          "type": "number",
+          "minimum": 0
+        },
+        "min_global_laplacian": {
+          "type": "number",
+          "minimum": 0
+        },
+        "min_face_laplacian": {
+          "type": "number",
+          "minimum": 0
+        },
+        "shot_close_up_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "shot_full_body_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_source_short_edge_fullbody": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "min_face_dim_close_up": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "min_face_dim_upper_body": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "min_face_dim_full_body": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "min_eye_sharpness": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_face_central_gradient": {
+          "type": "number",
+          "minimum": 0
+        },
+        "min_single_eye_feature_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_avg_eye_feature_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_eye_asymmetry_ratio": {
+          "type": "number",
+          "minimum": 0
+        },
+        "min_face_brightness": {
+          "type": "number",
+          "minimum": 0
+        },
+        "min_face_to_global_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_skin_texture_upper_body": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_plasticity_ratio": {
+          "type": "number",
+          "minimum": 0
+        },
+        "laplacian_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "tenengrad_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "detection_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_faces": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "limit": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "min_skin_texture_close_up": {
+          "type": "number",
+          "minimum": 0
+        },
+        "skip_beauty_filter": {
+          "type": "boolean"
+        },
+        "overwrite": {
+          "type": "boolean"
+        },
+        "report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "step4_pose": {
+      "type": "object",
+      "properties": {
+        "front_yaw_max": {
+          "type": "number",
+          "minimum": 0
+        },
+        "three_quarter_yaw_max": {
+          "type": "number",
+          "minimum": 0
+        },
+        "profile_yaw_min": {
+          "type": "number",
+          "minimum": 0
+        },
+        "pitch_looking_max": {
+          "type": "number",
+          "minimum": 0
+        },
+        "pitch_looking_min": {
+          "type": "number"
+        },
+        "extreme_pitch_threshold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "extreme_roll_threshold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "all_images": {
+          "type": "boolean"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "overwrite_review": {
+          "type": "boolean"
+        },
+        "report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "step5_dedup": {
+      "type": "object",
+      "properties": {
+        "phash_threshold": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "angle_threshold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "time_window": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_csv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review_dir": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "step6_identity": {
+      "type": "object",
+      "properties": {
+        "base_thresholds": {
+          "type": "object",
+          "properties": {
+            "CLOSE_UP": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "UPPER_BODY": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "FULL_BODY": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "CLOSE_UP",
+            "UPPER_BODY",
+            "FULL_BODY"
+          ]
+        },
+        "pose_modifiers": {
+          "type": "object",
+          "properties": {
+            "FRONT": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "LOOKING_DOWN": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "LOOKING_UP": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "LEFT_3Q": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "RIGHT_3Q": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "LEFT_PROFILE": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "RIGHT_PROFILE": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            },
+            "EXTREME_POSE": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "FRONT",
+            "LOOKING_DOWN",
+            "LOOKING_UP",
+            "LEFT_3Q",
+            "RIGHT_3Q",
+            "LEFT_PROFILE",
+            "RIGHT_PROFILE",
+            "EXTREME_POSE"
+          ]
+        },
+        "device": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "cuda",
+            "cpu"
+          ]
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "eval_all_eligible": {
+          "type": "boolean"
+        },
+        "report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_csv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "backend": {
+          "type": "string",
+          "enum": [
+            "dino"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "step7_revision_b": {
+      "type": "object",
+      "properties": {
+        "universe": {"type": "string", "minLength": 1},
+        "step2_summary": {"type": "string", "minLength": 1},
+        "step3": {"type": "string", "minLength": 1},
+        "selection_pointer": {"type": "string", "minLength": 1},
+        "selection_groups": {"type": ["string", "null"], "minLength": 1},
+        "pose": {"type": "string", "minLength": 1},
+        "duplicates": {"type": "string", "minLength": 1},
+        "identity": {"type": ["string", "null"], "minLength": 1},
+        "min_count": {"type": "integer", "minimum": 35, "maximum": 45},
+        "target_count": {"type": "integer", "minimum": 35, "maximum": 45},
+        "max_count": {"type": "integer", "minimum": 35, "maximum": 45},
+        "max_per_source": {"type": "integer", "minimum": 1},
+        "max_mild_expression": {"type": "integer", "minimum": 0},
+        "angle_min": {"$ref": "#/$defs/angleCoverage"},
+        "angle_max": {"$ref": "#/$defs/angleCoverage"},
+        "pitch_min": {"type": "object", "properties": {"LOOKING_UP": {"type": "integer", "minimum": 0}, "LOOKING_DOWN": {"type": "integer", "minimum": 0}}, "required": ["LOOKING_UP", "LOOKING_DOWN"], "additionalProperties": false},
+        "composition_min": {"$ref": "#/$defs/compositionCoverage"},
+        "composition_max": {"$ref": "#/$defs/compositionCoverage"}
+      },
+      "required": ["universe", "step2_summary", "step3", "selection_pointer", "pose", "duplicates", "min_count", "target_count", "max_count", "max_per_source", "max_mild_expression", "angle_min", "angle_max", "pitch_min", "composition_min", "composition_max"],
+      "additionalProperties": false
+    },
+    "step7_selection": {
+      "type": "object",
+      "properties": {
+        "shot_min": {
+          "type": "object",
+          "properties": {
+            "CLOSE_UP": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "UPPER_BODY": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "FULL_BODY": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "CLOSE_UP",
+            "UPPER_BODY",
+            "FULL_BODY"
+          ]
+        },
+        "shot_max": {
+          "type": "object",
+          "properties": {
+            "CLOSE_UP": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "UPPER_BODY": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "FULL_BODY": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "CLOSE_UP",
+            "UPPER_BODY",
+            "FULL_BODY"
+          ]
+        },
+        "pose_min": {
+          "type": "object",
+          "properties": {
+            "FRONT": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "LEFT_3Q": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "RIGHT_3Q": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "LOOKING_DOWN": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "RIGHT_PROFILE": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "LEFT_PROFILE": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "OTHER": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "FRONT",
+            "LEFT_3Q",
+            "RIGHT_3Q",
+            "LOOKING_DOWN",
+            "RIGHT_PROFILE",
+            "LEFT_PROFILE",
+            "OTHER"
+          ]
+        },
+        "pose_max": {
+          "type": "object",
+          "properties": {
+            "FRONT": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "LEFT_3Q": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "RIGHT_3Q": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "LOOKING_DOWN": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "RIGHT_PROFILE": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "LEFT_PROFILE": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "OTHER": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "FRONT",
+            "LEFT_3Q",
+            "RIGHT_3Q",
+            "LOOKING_DOWN",
+            "RIGHT_PROFILE",
+            "LEFT_PROFILE",
+            "OTHER"
+          ]
+        },
+        "candidate_pool_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_scene_burst": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_reference_burst": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_csv": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "step8_review": {
+      "type": "object",
+      "properties": {
+        "initial_review_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "populate_defaults": {
+          "type": "boolean"
+        },
+        "candidates_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "shot_target_percent": {
+          "type": "object",
+          "properties": {
+            "CLOSE_UP": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "UPPER_BODY": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "FULL_BODY": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "CLOSE_UP",
+            "UPPER_BODY",
+            "FULL_BODY"
+          ]
+        },
+        "final_count_min": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "final_count_max": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "step9_restoration": {
+      "type": "object",
+      "properties": {
+        "codeformer_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "fidelity_weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_identity_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "max_identity_loss": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "min_fidelity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comparison_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "report_csv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "device": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "cuda",
+            "cpu"
+          ]
+        },
+        "restoration_face_dim_threshold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "restoration_eye_threshold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "reference_limit": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "step10_packaging": {
+      "type": "object",
+      "properties": {
+        "clothing_prompts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "hair_prompts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "expression_prompts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "background_prompts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "lighting_prompts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "step7_report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "step9_report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_csv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "device": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "cuda",
+            "cpu"
+          ]
+        },
+        "dimension_alignment": {
+          "type": "integer",
+          "minimum": 0,
+          "enum": [
+            16
+          ]
+        },
+        "caption_strategy": {
+          "type": "string",
+          "enum": [
+            "clip_attributes_with_pose"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "frame_extraction": {
+      "type": "object",
+      "properties": {
+        "sample_fps": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max_frames_per_video": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "policy_version": {
+          "type": "integer",
+          "enum": [
+            2
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "angleCoverage": {
+      "type": "object", "properties": {"FRONTAL": {"type": "integer", "minimum": 0}, "THREE_QUARTER": {"type": "integer", "minimum": 0}, "SIDE": {"type": "integer", "minimum": 0}},
+      "required": ["FRONTAL", "THREE_QUARTER", "SIDE"], "additionalProperties": false
+    },
+    "compositionCoverage": {
+      "type": "object", "properties": {"CLOSE_UP": {"type": "integer", "minimum": 0}, "UPPER_BODY": {"type": "integer", "minimum": 0}, "FULL_BODY": {"type": "integer", "minimum": 0}},
+      "required": ["CLOSE_UP", "UPPER_BODY", "FULL_BODY"], "additionalProperties": false
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Pipeline runtime configuration (partial local files allowed)"
+}
