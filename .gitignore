@@ -93,9 +93,7 @@ output/dataset_flux/*
 !output/dataset_flux/.gitkeep
 !output/dataset_flux/README.md
 
-output/reports/*
-!output/reports/.gitkeep
-!output/reports/README.md
+# Reports are tracked for Chappy collaboration; backup directories remain ignored.
 
 # Common raw media types if placed accidentally in root
 *.mp4

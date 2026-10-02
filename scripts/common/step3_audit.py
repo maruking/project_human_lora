@@ -10,7 +10,7 @@ import shutil
 import tempfile
 from collections import Counter
 from build_step2_reports import read_dataset, validate_generation, stats, video_key
-from common.metric_generation import preflight
+from common.step2_inputs import preflight_inputs
 
 # Provisional geometric diagnostic bins, NOT quality Gates or validated blink/speech labels.
 BLINK_DIAGNOSTIC_RATIO = 0.10
@@ -24,7 +24,14 @@ METRICS = ('face_laplacian_score','face_tenengrad_score','face_sharpness_score',
 def validate_input(report, root, manifests):
     parsed, digest = read_dataset(report)
     summary = validate_generation(parsed, report.with_name('step2_summary.json'), manifests)
-    expected, images, provenance, generation = preflight(root, manifests)
+    # STEP2 keeps explicit still input separate from its formal video CSV. Reuse
+    # that recorded boundary without accepting arbitrary non-manifest folders.
+    recorded_stills = summary.get('supplemental_input_generation')
+    supplemental = Path(recorded_stills['directory']) if recorded_stills is not None else None
+    formal, _, current_stills = preflight_inputs(root, manifests, supplemental)
+    expected, images, provenance, generation = formal
+    if current_stills != recorded_stills:
+        raise ValueError('STEP2 supplemental input generation mismatch; rerun STEP2 before STEP3')
     if summary['input_generation'] != generation:
         raise ValueError('STEP1/STEP2 generation fingerprint mismatch')
     if {r['filename'] for r in parsed} != set(provenance):

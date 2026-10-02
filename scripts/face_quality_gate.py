@@ -617,6 +617,9 @@ def main() -> int:
         parser.error("MediaPipe solutions required; install requirements-step3.txt into .step3_packages")
     manifests = resolve_project_path(get_section(config, 'paths').get('manifests_dir', 'work/manifests'))
     expected, generation, source_sha = validate_input(report, root, manifests)
+    print(f"STEP3 formal video input: {generation['frame_count']} frames. "
+          "Supplemental stills, when recorded by STEP2, are validated separately; "
+          "their face diagnostics use 03_revision_a_diagnostics.bat.", flush=True)
     if set(columns) & (set(NEW_COLUMNS) | set(DIAGNOSTIC_COLUMNS)):
         parser.error("Input already contains STEP3 columns")
     if loaded_sha != source_sha:
