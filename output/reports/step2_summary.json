@@ -1,0 +1,815 @@
+{
+  "step_name": "STEP2_TECHNICAL_METRICS",
+  "status": "PASS",
+  "status_meaning": "measurement and provenance completeness only; no face/LoRA quality judgment",
+  "input_records": 1893,
+  "processed": 1893,
+  "failed": 0,
+  "video_directories": 67,
+  "expected_videos": 67,
+  "expected_frames": 1893,
+  "frame_ids_unique": true,
+  "step1_count_match": true,
+  "step1_layout_match": true,
+  "relative_path_base": "project_root for internal input, input_root for external input",
+  "per_video": [
+    {
+      "video_id": "Sasha_v01",
+      "expected": 19,
+      "records": 19,
+      "processed": 19,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v03",
+      "expected": 120,
+      "records": 120,
+      "processed": 120,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v04",
+      "expected": 23,
+      "records": 23,
+      "processed": 23,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v05",
+      "expected": 32,
+      "records": 32,
+      "processed": 32,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v06",
+      "expected": 19,
+      "records": 19,
+      "processed": 19,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v07",
+      "expected": 22,
+      "records": 22,
+      "processed": 22,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v08",
+      "expected": 20,
+      "records": 20,
+      "processed": 20,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v09",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v10",
+      "expected": 26,
+      "records": 26,
+      "processed": 26,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v11",
+      "expected": 28,
+      "records": 28,
+      "processed": 28,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v12",
+      "expected": 24,
+      "records": 24,
+      "processed": 24,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v13",
+      "expected": 26,
+      "records": 26,
+      "processed": 26,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v14",
+      "expected": 29,
+      "records": 29,
+      "processed": 29,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v15",
+      "expected": 24,
+      "records": 24,
+      "processed": 24,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v16",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v17",
+      "expected": 26,
+      "records": 26,
+      "processed": 26,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v19",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v20",
+      "expected": 20,
+      "records": 20,
+      "processed": 20,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v21",
+      "expected": 29,
+      "records": 29,
+      "processed": 29,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v22",
+      "expected": 37,
+      "records": 37,
+      "processed": 37,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v23",
+      "expected": 20,
+      "records": 20,
+      "processed": 20,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v24",
+      "expected": 28,
+      "records": 28,
+      "processed": 28,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v25",
+      "expected": 29,
+      "records": 29,
+      "processed": 29,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v26",
+      "expected": 24,
+      "records": 24,
+      "processed": 24,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v27",
+      "expected": 26,
+      "records": 26,
+      "processed": 26,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v28",
+      "expected": 29,
+      "records": 29,
+      "processed": 29,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v29",
+      "expected": 22,
+      "records": 22,
+      "processed": 22,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v30",
+      "expected": 27,
+      "records": 27,
+      "processed": 27,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v31",
+      "expected": 29,
+      "records": 29,
+      "processed": 29,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v32",
+      "expected": 21,
+      "records": 21,
+      "processed": 21,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v33",
+      "expected": 33,
+      "records": 33,
+      "processed": 33,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v34",
+      "expected": 15,
+      "records": 15,
+      "processed": 15,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v35",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v36",
+      "expected": 39,
+      "records": 39,
+      "processed": 39,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v37",
+      "expected": 18,
+      "records": 18,
+      "processed": 18,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v38",
+      "expected": 27,
+      "records": 27,
+      "processed": 27,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v39",
+      "expected": 39,
+      "records": 39,
+      "processed": 39,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v40",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v41",
+      "expected": 19,
+      "records": 19,
+      "processed": 19,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v42",
+      "expected": 20,
+      "records": 20,
+      "processed": 20,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v44",
+      "expected": 22,
+      "records": 22,
+      "processed": 22,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v45",
+      "expected": 23,
+      "records": 23,
+      "processed": 23,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v46",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v47",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v48",
+      "expected": 23,
+      "records": 23,
+      "processed": 23,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v49",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v50",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v51",
+      "expected": 21,
+      "records": 21,
+      "processed": 21,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v52",
+      "expected": 57,
+      "records": 57,
+      "processed": 57,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v53",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v54",
+      "expected": 29,
+      "records": 29,
+      "processed": 29,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v55",
+      "expected": 21,
+      "records": 21,
+      "processed": 21,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v56",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v57",
+      "expected": 44,
+      "records": 44,
+      "processed": 44,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v58",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v59",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v60",
+      "expected": 20,
+      "records": 20,
+      "processed": 20,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v61",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v62",
+      "expected": 22,
+      "records": 22,
+      "processed": 22,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v63",
+      "expected": 20,
+      "records": 20,
+      "processed": 20,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v64",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v65",
+      "expected": 22,
+      "records": 22,
+      "processed": 22,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v66",
+      "expected": 21,
+      "records": 21,
+      "processed": 21,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v67",
+      "expected": 25,
+      "records": 25,
+      "processed": 25,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v68",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v70",
+      "expected": 24,
+      "records": 24,
+      "processed": 24,
+      "failed": 0,
+      "count_match": true
+    },
+    {
+      "video_id": "Sasha_v71",
+      "expected": 30,
+      "records": 30,
+      "processed": 30,
+      "failed": 0,
+      "count_match": true
+    }
+  ],
+  "distributions": {
+    "width": {
+      "min": 2160.0,
+      "p25": 2160.0,
+      "median": 2160.0,
+      "p75": 2160.0,
+      "max": 2160.0
+    },
+    "height": {
+      "min": 2896.0,
+      "p25": 3840.0,
+      "median": 3840.0,
+      "p75": 3840.0,
+      "max": 3948.0
+    },
+    "short_edge": {
+      "min": 2160.0,
+      "p25": 2160.0,
+      "median": 2160.0,
+      "p75": 2160.0,
+      "max": 2160.0
+    },
+    "long_edge": {
+      "min": 2896.0,
+      "p25": 3840.0,
+      "median": 3840.0,
+      "p75": 3840.0,
+      "max": 3948.0
+    },
+    "pixel_count": {
+      "min": 6255360.0,
+      "p25": 8294400.0,
+      "median": 8294400.0,
+      "p75": 8294400.0,
+      "max": 8527680.0
+    },
+    "mean_brightness": {
+      "min": 45.409,
+      "p25": 125.546,
+      "median": 140.528,
+      "p75": 151.477,
+      "max": 203.784
+    },
+    "global_laplacian": {
+      "min": 0.499,
+      "p25": 2.558,
+      "median": 3.865,
+      "p75": 6.069,
+      "max": 172.647
+    },
+    "global_tenengrad": {
+      "min": 6.366,
+      "p25": 161.856,
+      "median": 311.61,
+      "p75": 628.748,
+      "max": 12145.224
+    },
+    "laplacian_score": {
+      "min": 0.499,
+      "p25": 2.558,
+      "median": 3.865,
+      "p75": 6.069,
+      "max": 172.647
+    },
+    "tenengrad_score": {
+      "min": 6.366,
+      "p25": 161.856,
+      "median": 311.61,
+      "p75": 628.748,
+      "max": 12145.224
+    },
+    "brightness_mean": {
+      "min": 45.409,
+      "p25": 125.546,
+      "median": 140.528,
+      "p75": 151.477,
+      "max": 203.784
+    },
+    "brightness_std": {
+      "min": 26.315,
+      "p25": 49.636,
+      "median": 57.275,
+      "p75": 64.331,
+      "max": 96.456
+    },
+    "shadow_pixel_ratio": {
+      "min": 0.0,
+      "p25": 0.017,
+      "median": 0.036,
+      "p75": 0.08,
+      "max": 0.604
+    },
+    "highlight_pixel_ratio": {
+      "min": 0.0,
+      "p25": 0.007,
+      "median": 0.026,
+      "p75": 0.051,
+      "max": 0.336
+    },
+    "contrast_p90_p10": {
+      "min": 59.0,
+      "p25": 131.0,
+      "median": 151.0,
+      "p75": 172.0,
+      "max": 227.0
+    }
+  },
+  "statistics_note": "Diagnostic only; linear percentiles of stored (3-decimal metric) values",
+  "resolution_buckets_note": "Descriptive short-edge counts; these are not rejection thresholds",
+  "resolution_buckets": {
+    "short_edge_lt720": 0,
+    "short_edge_720_to1079": 0,
+    "short_edge_ge1080": 1893
+  },
+  "resolution_counts": [
+    {
+      "width": 2160,
+      "height": 2896,
+      "count": 50
+    },
+    {
+      "width": 2160,
+      "height": 2900,
+      "count": 15
+    },
+    {
+      "width": 2160,
+      "height": 3840,
+      "count": 1759
+    },
+    {
+      "width": 2160,
+      "height": 3888,
+      "count": 21
+    },
+    {
+      "width": 2160,
+      "height": 3900,
+      "count": 29
+    },
+    {
+      "width": 2160,
+      "height": 3948,
+      "count": 19
+    }
+  ],
+  "errors": [],
+  "supplemental_input_generation": {
+    "image_count": 58,
+    "files": {
+      "Sash_high_identity-img/652794808_18008722232838431_6335316425841053458_n.jpg": "7e79954866df79ee93eb2603785c36d6dc37308bb7965c8f72d004fc1da683f1",
+      "Sash_high_identity-img/654025529_18101141824898533_326058541450589604_n.jpg": "914f8228e99602a9d71ae2f4f9796ddcc5122a5011fc49b05dd4a079bea8b5b7",
+      "Sash_high_identity-img/SaveTik.co_7543503138088537379_2.jpeg": "eec26220770cc91fb2d77dc2718a6f4c6752ccb07e02fe03b31dab942f3c9094",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105042.png": "b00b7424e495a3008ed527dad58967eb5ec58d47c7126c9388c29d4821b1a608",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105148.png": "42d1c0835c99d8c65838be3837379c1b787341efd5be8282aa94540a17ba85a5",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105231.png": "6187956f2c2acf6538a9b62fa5073b99285dc12f297420b33493ee67313cbbb3",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105321.png": "32aa884ff668c9053c4e857e687a2b244d608ae28018dca86e5aff375e6f0c28",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105344.png": "4dbced93c1e4d05b516c65feef30da7cc9bfa6917f24e4e54927dfdd2e592a85",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105443.png": "9f4b634a607a78ba43ccadab3bd406113bae311413d986245238c4d14bf6902c",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105518.png": "ca5b6f723dff330e6dcaa087927cc16683eff75cae8019b43c04386117c9c931",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105543.png": "c57f8bd0fcb184c2fffa1c85b8fadbe6768b8f8b3835c50c6c583b8677d957f1",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105613.png": "53a9bb64b93e84e63b25f4c6082ea85125e566c01fb1d525ca12be4c56cdcc56",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105646.png": "dc9ea3ccdfa2b31227715069579327efef5b183f906bd7a613b2916404b02595",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105704.png": "049d74a0967de03b00b4962c072c78fe213dfb707f06c29ccaa9b434081a00c7",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105728.png": "90f9728e27c63cb400814958a792456cc85a50949473cc5a0b9c5630608d743b",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105758.png": "0a344fd2e2cd601eb381b694c3e5d867d8cc9a1eb68dffedc8cb1657843071fe",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105828.png": "29965b319177addbe26daa605bbb2333a7a1d71be92677c4baa2f8cca41fc4b5",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105849.png": "416c8530d72728390876e184a12d8ca4e09af0c71ffeed3b89f3a4c2a8885d59",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105921.png": "ee9dddef4cb239ed4ee462efab5f1c298c382ceb3d46b9c0bc739671b40af700",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 105945.png": "1cb1bd26a0b52d41017659f7c3be69469be5b3f0a01aeec689bee81e6b04d0db",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110008.png": "0fbe7db8f9b6c52430dac8268b2b5fff54db7e78244c242b2c6666b0f878d2aa",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110039.png": "2144136bb1d9e3e9bd4b1b132b88c224f8c54962ba06dfdbe6b597572002482d",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110056.png": "860c29b3669de73f5dd4c370b3fc068de4a68c99d64d343dca4f27cac079addf",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110120.png": "1d4ff76f0841980ed89b5dcd3499d2625ae80463771e515302853811d29336f0",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110146.png": "8fc91b287245c84dacf198e8926168a23dafec8e757c6fb4d124a44895af10fb",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110206.png": "c2fcbe37c8c289aacb378c9fa17cc89df816d72d3a96c50f69bb2660d850368e",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110239.png": "f4a1cf625d5e5e85df26685d4974a075bdbd906b9df54a0749f5f9c763fd3af8",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110314.png": "8a0196bb5640a5fba0510741f1cdb5f6faaa258ae90716a61349945c95a035ec",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110343.png": "b3239ae3f3571b39c42e48cf3e6a3a2ca0f78f19a0620f6f8c8715187ef2835e",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110409.png": "572862e0937b5ab122f78853f6db2b5d3acdc3b1b2bc2662762e086a03b5107a",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110424.png": "2a1b6fa8f24cc5ea4a658d6851c65c5f986488949ccb7d07c7d09d4e390151cd",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110439.png": "16bb9d481f23ed13e9e856fbe29858cf11db3a1f314dcac577aed1066e270119",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110504.png": "6a6adfe01ab3f532088b9fddfff186e13aebcf6f76b944ba93e3b05bb1858b0a",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110609.png": "a0187e624e4d50d20edcb5cd1acc1e6c644a896dae14b98fdc748d2daa502645",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110631.png": "6ffe9d03f9da2515801fad6dfb9f8cf045d65c4b9afff09930e42745a586d558",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110644.png": "c4ddd636159cacc32e7d0fab42fd6069d8c5aba60b930399c5f2d3ea49bf2e5e",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110709.png": "3c87f029ac71000d6e12774197f3c38cd61e2f7b4ac95437ca25f93628b2c901",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110734.png": "0eada9a3cf06146442f336116d5d12c367c7a9eff1948b7c58e6c467749e0a9b",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110759.png": "169c7e586e4f0dbdb5a24a043c8377c5be3007db70a5c0124b416cbf145370e7",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110828.png": "5973edb6ea5a111bd4b9449ecfa121de07721899997b351e95ca61d0ca3bbe6b",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110857.png": "929f498adea2a9e6b64e3ab3efb5f3c751db5b7a45df2883e4012473e993cd8d",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110933.png": "039598d8883d320f0faf23e0a92e89930e7c8f4431dc8e385b759b5862aaab20",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 110956.png": "39f50451c23a76c75723bfcbf9b8ca3bdf2d6932d66b2be28894cbe17f5c3da1",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111016.png": "c10bde558c9ee0e1d92019cd35725988a13099309e682aa93395101c19f27f03",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111038.png": "82329e6ebf99d44898b69126cd292a9b8a604eaf6df70247fdbbea04ecb551c8",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111214.png": "8eddea217ac67630f87aa72c7322ab5c14f654135e0a7c2102687c4a173b1086",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111248.png": "9d0903274b427c66e064f12ca61d2902ec4177fc3c665aa9917ebadf66c973f6",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111314.png": "eccda1ac898b0071e7a7e5e555b6a5950d377ddba1bd62d84c5dcbb4de5bec42",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111340.png": "4dcea64e759071488186391c35a7cca65df7deafc8386a2adcc3db30a5476efb",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111403.png": "58c342a9abcf28674abf22911d8e2425fadcb8fa603bb677ab6b5cb4dc61e082",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111733.png": "ccbea4421970d01964abd42afc4edb6a730d04e12206af8eb7494f82553bade6",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111838.png": "8ad01e4df7a74e7d3c853f1976fff086c8607af47f79d8bf0c4212b7f367932a",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111857.png": "e08a6b7a2c2c68f6a312a5d6edadd218afdb9c13197e19148413e123c322c05b",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 111946.png": "da9f2740e721b0ee72b797b2b74cb69a24c4171736edb29eb07eeac6a2a726ca",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 112003.png": "8c65e6116b08f0e265bae2e1cfc82c99b8a1afad978aa49b041b635477344d26",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 112018.png": "ce96ca9f1169a10beac00bc5e098f956629374b3d62bd63f6d3fbfd03de1b6fe",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 112040.png": "75b2c74ead988b567ea3050291c24c8a23df99de5822c1d04bef2b3b060bdf2e",
+      "Sash_high_identity-img/スクリーンショット 2026-09-30 112113.png": "645715ef7039298124ede051f9acef8af90304ecc9979798a26c02640bb78e67"
+    },
+    "sha256": "b09674fe16b281285380bd5ae7c3d3585b2f787347d7672c74dd053bbbc968c4",
+    "input_kind": "SUPPLEMENTAL_STILL",
+    "directory": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\work\\frames_raw\\Sash_high_identity-img"
+  },
+  "supplemental_records": 58,
+  "supplemental_failed": 0,
+  "total_measured_images": 1951,
+  "all_images_csv": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step2_all_images_report.csv",
+  "supplemental_csv": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step2_supplemental_report.csv",
+  "rank_universes": "formal CSV: video frames; supplemental CSV: stills; all-images CSV: combined images",
+  "input_generation": {
+    "sha256": "bd72f194f62260fb728b77b26c75c5491b178908bff53393e197c11137bf9a40",
+    "extraction_policy_version": 2,
+    "sample_fps_requested": 2.0,
+    "max_frames_per_video": 120,
+    "frame_count": 1893,
+    "video_count": 67,
+    "metadata": "STEP1 manifests, summary and per-video extraction metadata"
+  },
+  "input_frame_count": 1893,
+  "processed_count": 1893,
+  "success_count": 1893,
+  "error_count": 0,
+  "video_count": 67,
+  "csv_records": 1893,
+  "historical_records_retained": 0,
+  "legacy_historical_merge": false,
+  "global_blur_flag_count": null,
+  "global_blur_flag_note": "No STEP2 min_blur_score configured; no threshold invented",
+  "technical_highest10": [
+    "Sasha_v53/Sasha_v53_005.png",
+    "Sasha_v53/Sasha_v53_022.png",
+    "Sasha_v53/Sasha_v53_007.png",
+    "Sasha_v53/Sasha_v53_004.png",
+    "Sasha_v53/Sasha_v53_006.png",
+    "Sasha_v53/Sasha_v53_009.png",
+    "Sasha_v53/Sasha_v53_003.png",
+    "Sasha_v53/Sasha_v53_015.png",
+    "Sasha_v53/Sasha_v53_008.png",
+    "Sasha_v53/Sasha_v53_019.png"
+  ],
+  "technical_lowest10": [
+    "Sasha_v25/Sasha_v25_001.png",
+    "Sasha_v59/Sasha_v59_002.png",
+    "Sasha_v59/Sasha_v59_012.png",
+    "Sasha_v70/Sasha_v70_001.png",
+    "Sasha_v59/Sasha_v59_003.png",
+    "Sasha_v59/Sasha_v59_004.png",
+    "Sasha_v59/Sasha_v59_023.png",
+    "Sasha_v59/Sasha_v59_025.png",
+    "Sasha_v59/Sasha_v59_006.png",
+    "Sasha_v59/Sasha_v59_008.png"
+  ]
+}

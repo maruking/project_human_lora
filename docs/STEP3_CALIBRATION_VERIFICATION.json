@@ -1,0 +1,43 @@
+{
+  "status": "CALIBRATION_READY",
+  "gate_calibration_status": "AWAITING HUMAN LABELS",
+  "authoritative_data_changed": false,
+  "gate_thresholds_changed": false,
+  "source_row_count": 2001,
+  "source_sha256": "2589176c4a2eb22d098a1f97500654cde0e0ce6dfda0873cdeac25893f6b0051",
+  "raw_images_hash_mtime_preserved": 2001,
+  "protected_files_unchanged": 1101,
+  "review_frames": 180,
+  "videos": 71,
+  "scales": {
+    "": 23,
+    "CLOSE_UP": 52,
+    "FULL_BODY": 52,
+    "UPPER_BODY": 53
+  },
+  "video_cap": 5,
+  "max_per_video": 4,
+  "duplicates": 0,
+  "full_frame_byte_copies": 180,
+  "deterministic_plain_crops": 157,
+  "human_label_cells_filled": 0,
+  "replay_files_identical": 347,
+  "tests": {
+    "previous": 94,
+    "new": 15,
+    "total": 109,
+    "status": "PASS",
+    "node_export_fixture": "PASS",
+    "csv_json_unicode_roundtrip": "PASS"
+  },
+  "boundary_available_covered": 59,
+  "boundary_empty": 1,
+  "browser_visual_verification": "NOT_PERFORMED: file protocol rejected by browser security policy",
+  "documentation_links": "PASS",
+  "data_lineage_preserved": true,
+  "full_row_preservation": true,
+  "historical_evidence_preserved": true,
+  "config_ssot_preserved": true,
+  "ready_for_gate_tuning": false,
+  "ready_for_step4": false
+}
