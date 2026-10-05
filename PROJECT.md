@@ -30,8 +30,8 @@ schema fields will be introduced compatibly in scoped later work.
 | 1 | Source mapping, normalized working copies, frame extraction | Duration-aware generation validated |
 | 2 | Whole-frame technical metrics and derived human reports | Current generation/report layer validated |
 | 3 | BEST v2.2 balanced critical quality and version-separated review (DEC-0020) | Production and 135-image Human Review completed; practical baseline approved for STEP4, general quality accuracy unvalidated; see [current Knowledge](knowledge/current/step3-best-ranking.md) |
-| 4 | Pose/composition classification | Existing code; not candidate selection |
-| 5 | Duplicate analysis | Existing code; not identity evaluation |
+| 4 | Stored pose / face-scale descriptors, full-row audit | Current production summary available; no pose accuracy/final selection claim |
+| 5 | Source-aware duplicate clusters / BEST representatives | STEP5 v2 synthetic validation; production pending ★maru; no deletion/quality rescoring/quotas; [DEC-0022](knowledge/decisions/DEC-0022-step5-conservative-dedup-clusters.md) |
 | 6 | Identity evaluation | Existing backend; no new backend implied |
 | 7 | Candidate scoring/selection | Existing configured quota maps; full audit retained |
 | 8 | Human decision/review | Existing review assistant; decision persistence needs audit review |

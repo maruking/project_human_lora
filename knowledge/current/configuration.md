@@ -10,6 +10,25 @@ related_cases: []
 
 # Current Knowledge: Configuration Single Source of Truth
 
+## STEP5 v2 SSOT — 2026-10-05
+
+Explicit step5_dedup paths/version and frozen rules: phash_threshold10,
+temporal_phash_threshold14 (64-bit Hamming distance), angle_threshold12 /
+tight_angle_threshold8 (degrees), time_window6 (temporal_index distance, not
+seconds). These are current config defaults, not independent Knowledge settings.
+review_dir/representative copies are legacy; new HTML/summary paths are explicit.
+No unrelated Gate/ranking setting changes. See
+[DEC-0022](../decisions/DEC-0022-step5-conservative-dedup-clusters.md).
+
+## STEP4 v2 paths — 2026-10-05
+
+step4_pose_composition adds output version and input/report/summary paths only.
+Angle thresholds remain owned by step4_pose; face-scale area thresholds remain
+owned by step3_face_gate. No numeric threshold changed or duplicated. Legacy
+step4_pose input/output settings remain intact for historical classify_face_pose.py.
+The normal STEP4 BAT now runs the stored-measurement v2 entrypoint. See
+[DEC-0021](../decisions/DEC-0021-step4-stored-pose-face-scale.md).
+
 ## Current policy
 Runtime settings are defined in `config/config.yaml`, loaded by `scripts/common/config.py`.
 Explicit CLI > local YAML > internal fallback. If the local file is absent, load

@@ -97,14 +97,32 @@ step4_pose:
   overwrite_review: false
   report: '@reports/step3_dataset_report.csv'
   output: '@reports/step4_dataset_report.csv'
+step4_pose_composition:
+  version: step4_pose_composition_v2
+  report: '@reports/step3_best_ranking.csv'
+  step3_summary: '@reports/step3_best_ranking_summary.json'
+  output: '@reports/step4_pose_composition.csv'
+  summary: '@reports/step4_pose_summary.json'
+  video_summary: '@reports/step4_video_pose_summary.csv'
+  markdown: docs/STEP4_POSE_COMPOSITION_SUMMARY.md
 step5_dedup:
+  version: step5_dedup_v2
   phash_threshold: 10
+  temporal_phash_threshold: 14
   angle_threshold: 12.0
+  tight_angle_threshold: 8.0
   time_window: 6
   limit: 0
-  report: '@reports/step4_dataset_report.csv'
+  report: '@reports/step4_pose_composition.csv'
+  step4_summary: '@reports/step4_pose_summary.json'
+  step3_report: '@reports/step3_best_ranking.csv'
+  step3_summary: '@reports/step3_best_ranking_summary.json'
   output_csv: '@reports/step5_dataset_report.csv'
-  review_dir: '@reports/step5_duplicates_review'
+  summary: '@reports/step5_dedup_summary.json'
+  markdown: docs/STEP5_DEDUP_SUMMARY.md
+  review_html: docs/STEP5_DEDUP_REVIEW.html
+  pose_review: docs/STEP5_REPRESENTATIVE_POSE_REVIEW.html
+  pose_summary: '@reports/step5_representative_pose_summary.csv'
 step6_identity:
   base_thresholds:
     CLOSE_UP: 0.62

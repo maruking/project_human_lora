@@ -1,0 +1,137 @@
+{
+  "step4_version": "step4_pose_composition_v2",
+  "total_rows": 1951,
+  "ranking_eligible_rows": 1880,
+  "input_kind_all_rows": {
+    "formal_video": 1893,
+    "supplemental_still": 58
+  },
+  "input_kind": {
+    "formal_video": 1823,
+    "supplemental_still": 57
+  },
+  "statuses": {
+    "MEASURED": 1698,
+    "NOT_APPLICABLE_STEP3_FATAL": 71,
+    "NOT_EVALUABLE": 182
+  },
+  "pose_bin": {
+    "FRONTAL": 1153,
+    "THREE_QUARTER_LEFT": 274,
+    "THREE_QUARTER_RIGHT": 245,
+    "PROFILE_LEFT": 15,
+    "PROFILE_RIGHT": 11,
+    "NOT_EVALUABLE": 182
+  },
+  "vertical_pose": {
+    "LOOKING_UP": 488,
+    "LEVEL": 1161,
+    "LOOKING_DOWN": 49,
+    "NOT_EVALUABLE": 182
+  },
+  "face_scale_bin": {
+    "CLOSE_UP": 329,
+    "UPPER_BODY": 784,
+    "FULL_BODY": 767,
+    "NOT_EVALUABLE": 0
+  },
+  "distribution_scope": "ranking_eligible=true, including missing/error records",
+  "cross_tables": {
+    "pose_bin_x_face_scale_bin": {
+      "FRONTAL": {
+        "CLOSE_UP": 231,
+        "FULL_BODY": 363,
+        "UPPER_BODY": 559
+      },
+      "NOT_EVALUABLE": {
+        "FULL_BODY": 169,
+        "UPPER_BODY": 13
+      },
+      "PROFILE_LEFT": {
+        "CLOSE_UP": 1,
+        "FULL_BODY": 7,
+        "UPPER_BODY": 7
+      },
+      "PROFILE_RIGHT": {
+        "CLOSE_UP": 1,
+        "FULL_BODY": 5,
+        "UPPER_BODY": 5
+      },
+      "THREE_QUARTER_LEFT": {
+        "CLOSE_UP": 44,
+        "FULL_BODY": 124,
+        "UPPER_BODY": 106
+      },
+      "THREE_QUARTER_RIGHT": {
+        "CLOSE_UP": 52,
+        "FULL_BODY": 99,
+        "UPPER_BODY": 94
+      }
+    },
+    "pose_bin_x_input_kind": {
+      "FRONTAL": {
+        "formal_video": 1123,
+        "supplemental_still": 30
+      },
+      "NOT_EVALUABLE": {
+        "formal_video": 179,
+        "supplemental_still": 3
+      },
+      "PROFILE_LEFT": {
+        "formal_video": 13,
+        "supplemental_still": 2
+      },
+      "PROFILE_RIGHT": {
+        "formal_video": 10,
+        "supplemental_still": 1
+      },
+      "THREE_QUARTER_LEFT": {
+        "formal_video": 265,
+        "supplemental_still": 9
+      },
+      "THREE_QUARTER_RIGHT": {
+        "formal_video": 233,
+        "supplemental_still": 12
+      }
+    },
+    "face_scale_bin_x_input_kind": {
+      "CLOSE_UP": {
+        "formal_video": 315,
+        "supplemental_still": 14
+      },
+      "FULL_BODY": {
+        "formal_video": 750,
+        "supplemental_still": 17
+      },
+      "UPPER_BODY": {
+        "formal_video": 758,
+        "supplemental_still": 26
+      }
+    }
+  },
+  "human_review_dependency": "NONE",
+  "reject_or_quota_introduced": false,
+  "input_report_sha256": "6400f2a09d30b0a99488872c435c0fae039644cbc27619d90b09a31e0d7126ca",
+  "input_summary_sha256": "afe320e6385abf268b560ab05b7125f936a034cbd4754097221b9e5c22c16d87",
+  "input_ranking_version": "best_rank_v2.2",
+  "thresholds": {
+    "front_yaw_max": 15.0,
+    "three_quarter_yaw_max": 42.0,
+    "profile_yaw_min": 42.0,
+    "pitch_looking_min": -20.0,
+    "pitch_looking_max": 20.0,
+    "shot_close_up_threshold": 0.12,
+    "shot_full_body_threshold": 0.04
+  },
+  "yaw_sign_convention": "positive RIGHT; negative LEFT; repository convention, not anatomical",
+  "face_scale_semantics": "face bbox area / image area; not literal body visibility",
+  "output_paths": {
+    "output": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step4_pose_composition.csv",
+    "summary": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step4_pose_summary.json",
+    "video_summary": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step4_video_pose_summary.csv",
+    "markdown": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\docs\\STEP4_POSE_COMPOSITION_SUMMARY.md"
+  },
+  "output_csv_sha256": "5557e3c809a4f9b40d5ee531b684d34f5c5bb4d34006074702210af63fa6df3e",
+  "video_summary_sha256": "42f8e2fa1229972b16ffbfefd252fad00f79e73728e89eb97db3c076f7eb32c2",
+  "markdown_sha256": "c01ef1c1c12e7cfc062ed2cfdab51a3bb14ebe5e754e3cffeac7da37fe93883f"
+}

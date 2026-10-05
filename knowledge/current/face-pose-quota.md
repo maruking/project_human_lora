@@ -12,6 +12,25 @@ related_cases: []
 
 # Current Knowledge: Face Pose & Composition Quota Distribution
 
+## Active STEP4 v2 — measurement only (2026-10-05)
+
+[DEC-0021](../decisions/DEC-0021-step4-stored-pose-face-scale.md) defines
+step4_pose_composition_v2: full BEST v2.2 input, stored measured yaw/pitch/roll,
+no inference/ranking/rejection/quotas/Human Review features. face_scale_bin uses
+existing Face Gate SSOT area thresholds (current0.12/0.04); shot_type is its alias,
+not literal body visibility. Face height ratio remains raw, not 25%/10% categories.
+Yaw <=15 frontal, 15<abs<42 three-quarter, >=42 profile under current SSOT;
+positive RIGHT/negative LEFT is repository convention, not mirror-independent
+anatomy. Pitch endpoints -20/+20 are LEVEL. Roll/position bins are NOT_CLASSIFIED.
+Fatal/missing/error rows stay in the full audit. Synthetic/six-row checks only;
+production distribution pending ★maru. Old STEP4 code and the historical sections
+below are retained; height-based categories are not active STEP4 v2 semantics.
+The subsequent [production summary](../../docs/STEP4_POSE_COMPOSITION_SUMMARY.md)
+now supplies the complete measured/missing-pose distribution; the implementation-time
+pending description above is historical. STEP7 quotas remain out of scope.
+Normal run_all now runs STEP5 v2, then stops before STEP6 for cluster/pose review;
+see [deduplication Knowledge](deduplication.md).
+
 ## Active STEP7 Revision B (2026-10-02)
 
 Normal STEP7 BAT now selects report-only proposals using `step7_revision_b` SSOT

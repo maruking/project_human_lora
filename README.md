@@ -12,6 +12,14 @@ Unlike conventional scrapers or naive upscalers that yield plastic "AI-looking" 
 
 ---
 
+## Current STEP5 operation — Deduplication v2 (2026-10-05)
+
+Current STEP5: `bat/05_face_deduplication.bat` runs source-aware duplicate clustering
+from authoritative STEP4 v2, keeps all rows and annotates STEP3 BEST representatives.
+Inspect generated summary/pose/cluster HTML before STEP6; normal runner stops after
+STEP5. Production has not been run by Codex. See
+[STEP5 v2 implementation](docs/STEP5_DEDUP_V2_IMPLEMENTATION.md).
+
 ## Current STEP3 operation — BEST v2.2 (2026-10-05)
 
 Run `bat/03_step3_best_ranking.bat` for balanced critical-quality ranking from
@@ -38,6 +46,12 @@ and [DEC-0019](knowledge/decisions/DEC-0019-general-eye-quality-best-v21.md).
 The legacy STEP4+ report integration remains deferred; run STEP3 standalone.
 
 ## Architecture & Pipeline Flow
+
+STEP4 v2 now reads stored BEST v2.2 pose/geometry without inference or selection.
+Run `bat/04_classify_face_pose.bat`, then share `docs/STEP4_POSE_COMPOSITION_SUMMARY.md`
+with Chappy. Face-scale area labels do not prove body visibility. Missing/fatal
+rows remain in the audit. `run_all.bat` stops after STEP4; STEP5 integration with
+the new table is deferred. [Implementation and limits](docs/STEP4_POSE_COMPOSITION_IMPLEMENTATION.md).
 
 ```mermaid
 flowchart TD

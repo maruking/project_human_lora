@@ -178,6 +178,9 @@ config/step3_revision_a.local.json
 # Disposable BEST review copies; history/CSV stay trackable.
 output/reports/step3_best_review/
 output/reports/.step3_best_operation.lock
+/output/reports/.step4_pose_operation.lock
+/output/reports/.step5_dedup_operation.lock
+/output/reports/.step5_stage_*/
 
 # Historical calibration inputs contain private source pixels and local metadata.
 /input/canonical_sharpness*/

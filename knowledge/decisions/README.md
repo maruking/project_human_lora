@@ -51,3 +51,7 @@ Each record explains **why** a specific choice was made, what alternatives were 
 - [DEC-0019 — Generic eye quality / BEST v2.1](DEC-0019-general-eye-quality-best-v21.md), SUPERSEDED by DEC-0020; old implementation and review evidence preserved.
 
 - [DEC-0020 — Balanced critical quality / BEST v2.2](DEC-0020-balanced-critical-quality-best-v22.md), ACCEPTED design; original decision records synthetic/9-case validation and then-pending production. Subsequent production/135-image review is recorded in [current Knowledge](../current/step3-best-ranking.md) and [review report](../../docs/STEP3_BEST_RANKING_V22_ROUND1_3_CHAPPY_REPORT.md); original Decision body/status unchanged.
+
+- [DEC-0021 — STEP4 stored pose / authoritative face scale](DEC-0021-step4-stored-pose-face-scale.md), ACCEPTED user definition; measurement-only, synthetic/six-row validation. Historical DEC-0005 unchanged; STEP4 production pending ★maru.
+
+- [DEC-0022 — STEP5 conservative duplicate clusters](DEC-0022-step5-conservative-dedup-clusters.md), ACCEPTED user architecture; full-row audit, BEST representatives, source-aware pHash and diagnostic pose review. Synthetic validation; full STEP5 production pending ★maru.

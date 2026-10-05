@@ -43,9 +43,15 @@ call "%~dp004_classify_face_pose.bat"
 if errorlevel 1 goto :pipeline_error
 
 echo.
+echo.
 echo >>> Running STEP 05: Redundancy Deduplication...
 call "%~dp005_face_deduplication.bat"
 if errorlevel 1 goto :pipeline_error
+
+echo.
+echo [STOP] Review STEP5 cluster sizes and pose retention with Chappy before STEP6.
+echo STEP6+ compatibility and identity validation require separate review.
+exit /b 0
 
 echo.
 echo >>> Running STEP 06: Identity Similarity Evaluation (GPU)...

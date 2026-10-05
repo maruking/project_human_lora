@@ -11,7 +11,8 @@ Developers and AI coding agents should consult these files first to understand c
 | :--- | :--- | :--- | :--- | :--- |
 | **STEP3 BEST Ranking / current practice** | [step3-best-ranking.md](step3-best-ranking.md) | v2.2 baseline, measurement/semantic boundaries, versioned review and dated production evidence | ACTIVE; production/review completed, limited quality validation | MEDIUM |
 | **Face-quality architecture and historical Gates** | [`face-quality.md`](face-quality.md) | Current v2.2 overview; earlier Gates and generation results retained as historical evidence | ACTIVE; see current BEST Knowledge | MEDIUM |
-| **Face Pose & Quota Distribution** | [`face-pose-quota.md`](face-pose-quota.md) | Step 04 & 07: Head angles (Yaw/Pitch) and shot-type quotas (Close/Med/Full) | ACTIVE | HIGH |
+| **Deduplication / representatives** | [deduplication.md](deduplication.md) | STEP5 v2 full-row source-aware clusters, BEST representatives, pose/cluster review | ACTIVE; production pending | MEDIUM |
+| **Face Pose & Quota Distribution** | [`face-pose-quota.md`](face-pose-quota.md) | STEP4 v2 stored pose/face-scale descriptors; STEP7 quotas separate | ACTIVE; STEP4 production pending | MEDIUM |
 | **Identity Verification** | [`identity-evaluation.md`](identity-evaluation.md) | Step 06: InsightFace embedding similarity and imposter exclusion | ACTIVE | HIGH |
 | **Selective Face Restoration** | [`selective-restoration.md`](selective-restoration.md) | Step 09: Component-only neural restoration and 100% camera skin preservation | ACTIVE | HIGH |
 | **FLUX LoRA Dataset Packaging** | [`lora-dataset-flux.md`](lora-dataset-flux.md) | Step 10: Multi-aspect bucketing, prompt captioning, and trigger strategy | ACTIVE | HIGH |
