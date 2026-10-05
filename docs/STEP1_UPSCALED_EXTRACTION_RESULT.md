@@ -43,10 +43,10 @@ for this listing, not made a global default.
 
 ## Verification / evidence
 
-- [Complete image CSV](../output/reports/step1_image_inventory.csv)
-- [Inventory receipt](../output/reports/step1_image_inventory.json)
-- [Execution verification](../output/reports/step1_upscaled_execution_audit/verification.json)
-- [Extraction log](../output/reports/step1_upscaled_execution_audit/extraction.log)
+- [Complete image CSV](../output/reports/bkup/reports_archive_20261002_210730_647/step1_image_inventory.csv)
+- [Inventory receipt](../output/reports/bkup/reports_archive_20261002_210730_647/step1_image_inventory.json)
+- [Execution verification](../output/reports/bkup/reports_archive_20261002_210730_647/step1_upscaled_execution_audit/verification.json)
+- [Extraction log](../output/reports/bkup/reports_archive_20261002_210730_647/step1_upscaled_execution_audit/extraction.log)
 - [STEP1 summary](../work/manifests/step1_summary.json)
 
 The extractor verified generated PNGs and hashes. The inventory checked exact

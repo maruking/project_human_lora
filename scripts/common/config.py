@@ -121,10 +121,21 @@ def configure_parser(parser: argparse.ArgumentParser, config: dict, section: str
                 parser.error(str(exc))
         defaults[action.dest] = value
     parser.set_defaults(**defaults)
+    # Review copies are disposable outputs, never source roots (all STEP CLIs).
+    from common.step3_review import review_roots, require_source
+    roots = review_roots(config)
+    input_destinations = {'images', 'source', 'supplemental', 'supplemental_dir', 'reference', 'videos', 'input'}
+    def input_path(value):
+        return require_source(resolve_project_path(value), roots)
     # Resolve explicit relative CLI paths too, independently of the caller's cwd.
     for action in parser._actions:
         if action.type is Path:
-            action.type = resolve_project_path
+            if action.dest in input_destinations:
+                if action.default is not None:
+                    require_source(action.default, roots)
+                action.type = input_path
+            else:
+                action.type = resolve_project_path
 
 
 def resolve_config_path(value: str | Path, config: dict) -> Path:

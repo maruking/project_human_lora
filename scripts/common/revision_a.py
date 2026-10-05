@@ -1,13 +1,48 @@
 """Separate provisional diagnostics and human-authoritative selection state."""
+from common.step3_review import is_review_copy, require_source
+
 import math
 from pathlib import Path
 import cv2
 import numpy as np
 
 
+def face_mask(points, box, height, width, oval_indices):
+    """Shared native-pixel face oval; identical Revision A bbox fallback."""
+    mask = np.zeros((height, width), dtype=np.uint8)
+    if points is not None:
+        coords = np.array([(round(points[i].x*width), round(points[i].y*height))
+                           for i in sorted(oval_indices)], dtype=np.int32)
+        cv2.fillConvexPoly(mask, cv2.convexHull(coords), 255)
+        return mask, 'FACEMESH_FACE_OVAL_CONVEX_HULL'
+    x, y, bw, bh = box
+    mask[y:y+bh, x:x+bw] = 255
+    return mask, 'BBOX_FALLBACK_NO_MESH'
+
+
+def load_review_settings(path=None):
+    import hashlib
+    import json
+    root = Path(__file__).resolve().parents[2]
+    if path is None:
+        path = root / 'config/step3_revision_a.local.json'
+        if not path.is_file():
+            path = root / 'config/step3_revision_a.example.json'
+    else:
+        path = Path(path)
+        if not path.is_absolute():
+            path = root / path
+    data = path.read_bytes()
+    settings = json.loads(data.decode('utf-8-sig'))
+    validate_settings(settings)
+    return settings, str(path.resolve()), hashlib.sha256(data).hexdigest()
+
+
 class FormalInventory:
     """Exclude only an explicitly declared supplemental subtree from STEP1 audit."""
     def __init__(self, root, supplemental):
+        require_source(root)
+        require_source(supplemental)
         self.root = Path(root).resolve()
         self.supplemental = Path(supplemental).resolve()
         if self.supplemental == self.root or not self.supplemental.is_relative_to(self.root):
@@ -20,7 +55,7 @@ class FormalInventory:
         return self.root / name
 
     def rglob(self, pattern):
-        return (p for p in self.root.rglob(pattern) if not p.resolve().is_relative_to(self.supplemental))
+        return (p for p in self.root.rglob(pattern) if not is_review_copy(p) and not p.resolve().is_relative_to(self.supplemental))
 
 
 def validate_settings(s):

@@ -9,6 +9,10 @@ from __future__ import annotations
 
 from common.config import configure_parser, configure_constants, load_for_cli, get_section, resolve_project_path
 from common.video_manifest import manifest_lock
+from common.step3_gate_policy import diagnostic_evidence, POLICY_COLUMNS
+from common.revision_a import eye_metrics, pixel_metrics, face_mask, load_review_settings
+from common.step3_review import successful_review, review_roots, require_source
+from contextlib import nullcontext
 from common.step3_audit import validate_input, publish, geometry_diagnostics, safe_output, build_artifacts
 
 import argparse
@@ -41,13 +45,12 @@ except ImportError:
 
 
 
-# PoC initial thresholds. Tune after visual inspection.
 FACE_CROP_MARGIN = 0.20
 FACE_CORE_SCALE = 0.80  # Scale for inner core face sharpness (avoids hair/background edges)
 MIN_FACE_VISIBILITY_SCORE = 70.0
 MIN_FACE_SHARPNESS_PERCENTILE = 20.0
-MIN_GLOBAL_LAPLACIAN = 25.0  # Integrated STEP 2 pre-filter: drop severe whole-image motion blur
-MIN_FACE_LAPLACIAN = 50.0    # Absolute face core blur threshold to eliminate hand/motion blur
+MIN_GLOBAL_LAPLACIAN = 25.0  # Historical native diagnostic cutoff only
+MIN_FACE_LAPLACIAN = 50.0    # Superseded native Hard Gate; diagnostic cutoff only
 
 # Shot classification thresholds (based on face_area_ratio)
 SHOT_CLOSE_UP_THRESHOLD = 0.12
@@ -73,8 +76,8 @@ MIN_FACE_BRIGHTNESS = 95.0             # Minimum face crop brightness mean to av
 MIN_FACE_TO_GLOBAL_RATIO = 0.65        # Minimum ratio of face brightness to global image brightness
 
 # Beauty filter & skin over-smoothing detection thresholds (Plastic Skin Index)
-MIN_SKIN_TEXTURE_CLOSEUP = 0.050       # Minimum normalized cheek skin texture for CLOSE_UP
-MIN_SKIN_TEXTURE_UPPER_BODY = 0.035    # Minimum normalized cheek skin texture for UPPER_BODY
+MIN_SKIN_TEXTURE_CLOSEUP = 0.050       # Diagnostic cutoff for normalized cheek skin texture for CLOSE_UP
+MIN_SKIN_TEXTURE_UPPER_BODY = 0.035    # Diagnostic cutoff for normalized cheek skin texture for UPPER_BODY
 MAX_PLASTICITY_RATIO = 45.0            # Max eye_sharpness / skin_texture_score before flagging beauty filter
 
 LAPLACIAN_WEIGHT = 0.50
@@ -95,6 +98,10 @@ NEW_COLUMNS = (
     "eye_sharpness", "mouth_sharpness",
     "skin_texture_score", "plasticity_ratio", "beauty_filter_detected",
     "face_laplacian_score", "face_tenengrad_score",
+    "face_laplacian_canonical_192", "face_tenengrad_canonical_192",
+    "face_sharpness_canonical_short_edge", "face_sharpness_resize_method",
+    "face_core_canonical_width", "face_core_canonical_height",
+    "face_sharpness_metric", "face_sharpness_gate_threshold",
     "face_laplacian_percentile", "face_tenengrad_percentile", "face_sharpness_score",
     "face_visibility_score", "occlusion_detected", "occlusion_level", "face_visibility_signals",
     "eye_ratio_left", "eye_ratio_right", "eye_brightness_ratio", "eye_texture_ratio",
@@ -113,6 +120,7 @@ def image_path(root: Path, filename: str) -> tuple[Path, Path]:
         raise ValueError("Invalid relative filename")
     relative = Path(filename)
     source = (root / relative).resolve()
+    require_source(source)
     if relative.is_absolute() or not source.is_relative_to(root.resolve()) or not source.is_file():
         raise ValueError("Frame is outside the active generation or missing")
     return source, relative
@@ -569,8 +577,10 @@ def main() -> int:
     parser.add_argument("--review", type=Path, default=default_review)
     parser.add_argument("--crops", type=Path, default=default_crops)
     parser.add_argument("--limit", type=int, default=None, help="Limit number of images to process (useful for verification)")
-    parser.add_argument("--min-global-laplacian", type=float, default=MIN_GLOBAL_LAPLACIAN, help="Minimum global laplacian score (drops severe whole-image motion blur)")
-    parser.add_argument("--min-face-laplacian", type=float, default=MIN_FACE_LAPLACIAN, help="Minimum face core laplacian score (drops blurry faces)")
+    parser.add_argument("--min-global-laplacian", type=float, default=MIN_GLOBAL_LAPLACIAN, help="Historical native global diagnostic cutoff; not a Hard Gate")
+    parser.add_argument("--min-face-laplacian", type=float, default=MIN_FACE_LAPLACIAN, help="Superseded native face diagnostic cutoff; not a Hard Gate")
+    parser.add_argument("--face-sharpness-canonical-short-edge", type=int, choices=[192], default=192, help="Approved canonical face-core short edge; config SSOT")
+    parser.add_argument("--min-face-laplacian-canonical", type=float, default=36.901392, help="Canonical face-core Hard Gate; config SSOT")
     parser.add_argument("--min-source-short-edge-fullbody", type=int, default=MIN_SOURCE_SHORT_EDGE_FULLBODY,
                         help="Minimum source image short edge for FULL_BODY shots (default: 720)")
     parser.add_argument("--min-face-dim-close-up", type=int, default=MIN_FACE_DIM_CLOSE_UP,
@@ -580,20 +590,23 @@ def main() -> int:
     parser.add_argument("--min-face-dim-full-body", type=int, default=MIN_FACE_DIM_FULL_BODY,
                         help="Minimum face width/height in pixels for FULL_BODY (default: 80)")
     parser.add_argument("--min-eye-sharpness", type=float, default=MIN_EYE_SHARPNESS,
-                        help="Minimum normalized Tenengrad on eye patches (default: 1.60)")
+                        help="Diagnostic cutoff for normalized Tenengrad on eye patches (default: 1.60)")
     parser.add_argument("--min-skin-texture-close-up", type=float, default=MIN_SKIN_TEXTURE_CLOSEUP,
-                        help="Minimum normalized cheek skin texture for CLOSE_UP (default: 0.050)")
+                        help="Diagnostic cutoff for normalized cheek skin texture for CLOSE_UP (default: 0.050)")
     parser.add_argument("--min-skin-texture-upper-body", type=float, default=MIN_SKIN_TEXTURE_UPPER_BODY,
-                        help="Minimum normalized cheek skin texture for UPPER_BODY (default: 0.035)")
+                        help="Diagnostic cutoff for normalized cheek skin texture for UPPER_BODY (default: 0.035)")
     parser.add_argument("--max-plasticity-ratio", type=float, default=MAX_PLASTICITY_RATIO,
-                        help="Maximum eye/skin ratio before rejecting as beauty filter (default: 45.0)")
+                        help="Diagnostic maximum eye/skin ratio (default: 45.0)")
     parser.add_argument("--skip-beauty-filter", action="store_true",
-                        help="Skip rejection for beauty filters/plastic skin")
+                        help="Legacy compatibility option; beauty evidence is always diagnostic-only")
+    parser.add_argument("--review-diagnostic-config", type=Path, default=None, help="Shared Revision A JSON bins, diagnostics ONLY; defaults to local then example")
     parser.add_argument("--copy-review", action="store_true", help="Copy generation-scoped review images and crops; CSV remains authoritative")
     parser.add_argument("--overwrite", action="store_true", help="Overwrite existing review and crop files")
     parser.add_argument("--config", type=Path, help="Alternate YAML config (relative to project root)")
     configure_parser(parser, config, 'step3_face_gate', aliases={}, paths={'images': 'raw_frames_dir', 'review': 'facegate_review_dir', 'crops': 'facegate_crops_dir'})
     args = parser.parse_args()
+    reports = review_roots(config)[0].parent
+    require_source(args.images, review_roots(config))
     report, root = args.report.resolve(), args.images.resolve()
     output, review, crops = args.output.resolve(), args.review.resolve(), args.crops.resolve()
     if not report.is_file() or not root.is_dir():
@@ -642,7 +655,10 @@ def main() -> int:
             raise ValueError("Generation changed during inference")
         failed = any(r["face_gate_status"] == "error" for r in rows)
         artifacts = build_artifacts(rows, columns, generation, source_sha, vars(args), partial=args.limit is not None)
-        publish(output, artifacts, failed=failed, partial=args.limit is not None)
+        review_transaction = (successful_review(rows, paths, reports, root)
+                              if not failed and args.limit is None else nullcontext())
+        with review_transaction:
+            publish(output, artifacts, failed=failed, partial=args.limit is not None)
         if args.copy_review and not failed:
             materialize_review(rows, paths, review, crops, hashlib.sha256(artifacts["dataset.csv"]).hexdigest()[:16], args.overwrite)
         print(f"STEP3: {len(rows)} rows, eligible={sum(r['face_eligible']=='true' for r in rows)}, errors={sum(r['face_gate_status']=='error' for r in rows)}; {output}")
@@ -665,9 +681,22 @@ def materialize_review(rows, paths, review, crops, report_key, overwrite=False):
             print(f"WARNING: Optional review copy failed: {relative}: {exc}",flush=True)
 
 
+def canonical_face_copy(crop, short_edge):
+    """Aspect-preserving measurement COPY matching the canonical experiment."""
+    if crop.size == 0 or min(crop.shape[:2]) < 1:
+        raise ValueError("Empty canonical measurement ROI")
+    h, w = crop.shape[:2]
+    factor = short_edge / min(h, w)
+    dims = (max(1, int(round(w * factor))), max(1, int(round(h * factor))))
+    method = "IDENTITY" if dims == (w, h) else "INTER_AREA" if factor < 1 else "INTER_CUBIC"
+    image = crop.copy() if method == "IDENTITY" else cv2.resize(crop, dims, interpolation=cv2.INTER_AREA if factor < 1 else cv2.INTER_CUBIC)
+    return image, method
+
+
 def analyze_rows(rows, root, args):
     paths: dict[int, tuple[Path, Path]] = {}
     metrics: list[int] = []
+    diagnostic_settings, diagnostic_path, diagnostic_sha = load_review_settings(args.review_diagnostic_config)
     with mp.solutions.face_detection.FaceDetection(model_selection=1, min_detection_confidence=DETECTION_CONFIDENCE) as detector, \
          mp.solutions.face_mesh.FaceMesh(static_image_mode=True, max_num_faces=MAX_FACES,
                                          refine_landmarks=False, min_detection_confidence=DETECTION_CONFIDENCE) as mesh:
@@ -675,7 +704,12 @@ def analyze_rows(rows, root, args):
             row.update({column: "" for column in NEW_COLUMNS})
             row["step3_step_name"] = "STEP3_FACE_GATE"
             row["face_eligible"] = "false"
-            row.update({k: "" for k in DIAGNOSTIC_COLUMNS})
+            row.update({k: "" for k in DIAGNOSTIC_COLUMNS + POLICY_COLUMNS})
+            row.update(face_sharpness_metric="face_laplacian_canonical_192",
+                       face_sharpness_canonical_short_edge=str(args.face_sharpness_canonical_short_edge),
+                       face_sharpness_gate_threshold=str(args.min_face_laplacian_canonical))
+            row.update(eye_openness_state="UNKNOWN", face_exposure_state="UNKNOWN",
+                       review_diagnostic_config_path=diagnostic_path, review_diagnostic_config_sha256=diagnostic_sha)
             row["anatomical_metric_status"] = "not_applicable_no_face"
             row["primary_face_selection_method"] = "largest_clipped_bbox_area_first_detection_tie"
             name = row.get("filename") or ""
@@ -717,7 +751,19 @@ def analyze_rows(rows, root, args):
                 # Process FaceMesh and extract anatomical patches strictly (eyes, mouth)
                 mesh_result = mesh.process(rgb)
                 landmarks = matching_landmarks(mesh_result, box, width, height)
-                row.update(geometry_diagnostics(landmarks, width, height))
+                geo = geometry_diagnostics(landmarks, width, height)
+                row.update(geo)
+                row.update(eye_metrics(float(geo["left_eye_openness"]) if landmarks else None,
+                                       float(geo["right_eye_openness"]) if landmarks else None, diagnostic_settings))
+                try:
+                    oval = {i for edge in mp.solutions.face_mesh.FACEMESH_FACE_OVAL for i in edge} if landmarks else ()
+                    mask, row["face_exposure_roi_method"] = face_mask(landmarks, box, height, width, oval)
+                    exposure = pixel_metrics(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), mask, None, diagnostic_settings)
+                    row.update({key: exposure[key] for key in ("face_highlight_clip_ratio", "face_bright_region_ratio",
+                                                              "face_dynamic_range", "face_exposure_state")})
+                except (ValueError, TypeError, OverflowError, IndexError, AttributeError, cv2.error) as exc:
+                    # New diagnostic failure cannot become a new eligibility Hard Gate.
+                    row.update(face_exposure_state="UNKNOWN", face_exposure_diagnostic_error=str(exc))
                 row["anatomical_metric_status"] = "measured" if landmarks else "missing_landmarks"
                 row["beauty_filter_applicability"] = "not_applicable_full_body" if shot_type == "FULL_BODY" else "measured" if landmarks else "missing_landmarks"
 
@@ -759,6 +805,13 @@ def analyze_rows(rows, root, args):
                 lap, ten = sharpness(core_crop)
                 row["face_laplacian_score"] = f"{lap:.3f}"
                 row["face_tenengrad_score"] = f"{ten:.3f}"
+                canonical, method = canonical_face_copy(core_crop, args.face_sharpness_canonical_short_edge)
+                canonical_lap, canonical_ten = sharpness(canonical)
+                row.update(face_laplacian_canonical_192=format(canonical_lap,".17g"),
+                           face_tenengrad_canonical_192=format(canonical_ten,".17g"),
+                           face_sharpness_resize_method=method,
+                           face_core_canonical_width=str(canonical.shape[1]),
+                           face_core_canonical_height=str(canonical.shape[0]))
                 if count == 1:
                     metrics.append(index)
 
@@ -785,80 +838,88 @@ def analyze_rows(rows, root, args):
             row["face_tenengrad_percentile"] = f"{ten:.2f}"
             sharp = (LAPLACIAN_WEIGHT * lap + TENENGRAD_WEIGHT * ten) / (LAPLACIAN_WEIGHT + TENENGRAD_WEIGHT)
             row["face_sharpness_score"] = f"{sharp:.2f}"
-        reasons: list[str] = []
-        if row["face_gate_status"] == "error":
-            row.update(face_gate_reason="analysis_error", face_eligible="false", face_gate_category="REVIEW_UNKNOWN")
-            continue
-        if row["face_gate_status"] != "error" and row["face_detected"] != "true":
-            reasons.append("no_face")
-        elif row["face_count"] != "1":
-            reasons.append("multiple_faces")
-
-        # 1. Global blur pre-filter (drop severe whole-image motion blur)
-        global_lap = float(row["laplacian_score"]) if row.get("laplacian_score") else 0.0
-        if global_lap < args.min_global_laplacian:
-            reasons.append("global_blurry")
-
-        # 2. Shot type & Dynamic resolution gate
-        shot = row.get("shot_type") or ""
-        src_short = int(row["source_short_edge"]) if row.get("source_short_edge") else 0
-        min_dim = int(row["face_min_dimension"]) if row.get("face_min_dimension") else 0
-
-        if row["face_detected"] == "true":
-            if shot == "FULL_BODY":
-                if src_short < args.min_source_short_edge_fullbody:
-                    reasons.append("low_resolution_source")
-                if min_dim < args.min_face_dim_full_body:
-                    reasons.append("face_too_small")
-            elif shot == "UPPER_BODY":
-                if min_dim < args.min_face_dim_upper_body:
-                    reasons.append("face_too_small")
-            else:  # CLOSE_UP
-                if min_dim < args.min_face_dim_close_up:
-                    reasons.append("face_too_small")
-
-        # 3. Face visibility & FaceMesh confirmation (Hard Gate)
-        if row["face_detected"] == "true" and (row.get("facemesh_detected") != "true" or not row["face_visibility_score"] or
-                                                float(row["face_visibility_score"]) < MIN_FACE_VISIBILITY_SCORE):
-            reasons.append("low_visibility")
-
-        # 3.5 Central face hair occlusion & Eye biological presence (Hard Gate)
-        if row["face_detected"] == "true":
-            face_g = float(row["face_central_gradient"]) if row.get("face_central_gradient") else 0.0
-            if face_g > MAX_FACE_CENTRAL_GRADIENT:
-                reasons.append("hair_covered_face")
-            if shot != "FULL_BODY" and row.get("eye_presence_valid") != "true":
-                reasons.append("one_eye_occluded")
-
-        # 3.8 Face underexposure & Backlit shadow check (Hard Gate)
-        if row["face_detected"] == "true":
-            face_br = float(row["face_brightness_mean"]) if row.get("face_brightness_mean") else 0.0
-            backlit_r = float(row["face_to_global_brightness_ratio"]) if row.get("face_to_global_brightness_ratio") else 1.0
-            if face_br < MIN_FACE_BRIGHTNESS:
-                reasons.append("face_underexposed")
-            elif face_br < 105.0 and backlit_r < MIN_FACE_TO_GLOBAL_RATIO:
-                reasons.append("face_backlit_underexposed")
-
-        # 3.9 Beauty filter & plastic skin smoothing check (Hard Gate)
-        if row["face_detected"] == "true" and not args.skip_beauty_filter:
-            if row.get("beauty_filter_detected") == "true":
-                reasons.append("beauty_filter_detected")
-
-        # 4. Anatomical eye sharpness & Face blur
-        eye_s = float(row["eye_sharpness"]) if row.get("eye_sharpness") else 0.0
-        face_lap = float(row["face_laplacian_score"]) if row.get("face_laplacian_score") else 0.0
-        if row["face_detected"] == "true":
-            # For upper-body and close-up, eyes must have sharp gradients
-            if shot != "FULL_BODY" and eye_s < args.min_eye_sharpness:
-                reasons.append("face_blurry")
-            elif face_lap < args.min_face_laplacian:
-                reasons.append("face_blurry")
-
-        row["face_gate_reason"] = ";".join(reasons) if reasons else "eligible"
-        row["face_eligible"] = str(not reasons).lower()
-        row["face_gate_category"] = category(row)
+        apply_gate(row, args)
 
     return rows, paths
+
+def apply_gate(row, args):
+    """Apply retained predicates and approved canonical Gate to one audit row."""
+    reasons: list[str] = []
+    if row["face_gate_status"] == "error":
+        row.update(face_gate_reason="analysis_error", face_eligible="false", face_gate_category="REVIEW_UNKNOWN", diagnostic_state="REJECT", eye_presence_gate_state="NOT_EVALUATED_ERROR")
+        return row
+    if row["face_gate_status"] != "error" and row["face_detected"] != "true":
+        reasons.append("no_face")
+    elif row["face_count"] != "1":
+        reasons.append("multiple_faces")
+
+    # 2. Shot type & Dynamic resolution gate
+    shot = row.get("shot_type") or ""
+    src_short = int(row["source_short_edge"]) if row.get("source_short_edge") else 0
+    min_dim = int(row["face_min_dimension"]) if row.get("face_min_dimension") else 0
+
+    if row["face_detected"] == "true":
+        if shot == "FULL_BODY":
+            if src_short < args.min_source_short_edge_fullbody:
+                reasons.append("low_resolution_source")
+            if min_dim < args.min_face_dim_full_body:
+                reasons.append("face_too_small")
+        elif shot == "UPPER_BODY":
+            if min_dim < args.min_face_dim_upper_body:
+                reasons.append("face_too_small")
+        else:  # CLOSE_UP
+            if min_dim < args.min_face_dim_close_up:
+                reasons.append("face_too_small")
+
+    # 3. Face visibility & FaceMesh confirmation (Hard Gate)
+    if row["face_detected"] == "true" and (row.get("facemesh_detected") != "true" or not row["face_visibility_score"] or
+                                            float(row["face_visibility_score"]) < MIN_FACE_VISIBILITY_SCORE):
+        reasons.append("low_visibility")
+
+    row["eye_presence_gate_state"] = "NOT_APPLICABLE_NO_FACE"
+    # 3.5 Central face hair occlusion & Eye biological presence (Hard Gate)
+    if row["face_detected"] == "true":
+        face_g = float(row["face_central_gradient"]) if row.get("face_central_gradient") else 0.0
+        if face_g > MAX_FACE_CENTRAL_GRADIENT:
+            reasons.append("hair_covered_face")
+        available = (row.get("facemesh_detected") == "true" and
+                     all(row.get(k) not in (None, "") and math.isfinite(float(row[k]))
+                         for k in ("left_eye_presence_ratio", "right_eye_presence_ratio")) and
+                     row.get("eye_presence_valid") in ("true", "false"))
+        row["eye_presence_gate_state"] = ("SKIPPED_INSUFFICIENT_SCALE" if min_dim < args.min_face_dim_upper_body else
+                                          "APPLICABLE" if available else "NOT_APPLICABLE_MISSING_MEASUREMENT")
+        if row["eye_presence_gate_state"] == "APPLICABLE" and row["eye_presence_valid"] == "false":
+            reasons.append("one_eye_occluded")
+
+    # 3.8 Face underexposure & Backlit shadow check (Hard Gate)
+    if row["face_detected"] == "true":
+        face_br = float(row["face_brightness_mean"]) if row.get("face_brightness_mean") else 0.0
+        backlit_r = float(row["face_to_global_brightness_ratio"]) if row.get("face_to_global_brightness_ratio") else 1.0
+        if face_br < MIN_FACE_BRIGHTNESS:
+            reasons.append("face_underexposed")
+        elif face_br < 105.0 and backlit_r < MIN_FACE_TO_GLOBAL_RATIO:
+            reasons.append("face_backlit_underexposed")
+
+    # Canonical face-core Hard Gate; eyes/native blur/skin remain diagnostics.
+    row.update(diagnostic_evidence(row, args))
+    if row["face_detected"] == "true" and row["face_count"] == "1":
+        value = row.get("face_laplacian_canonical_192")
+        if not value or not math.isfinite(float(value)):
+            row.update(face_gate_status="error", face_gate_error="Missing/nonfinite canonical face measurement",
+                       face_gate_error_category="ValueError", face_gate_reason="analysis_error",
+                       face_eligible="false", face_gate_category="REVIEW_UNKNOWN", diagnostic_state="REJECT")
+            return row
+        if float(value) < args.min_face_laplacian_canonical:
+            reasons.append("face_blurry")
+
+    row["face_gate_reason"] = ";".join(reasons) if reasons else "eligible"
+    row["face_eligible"] = str(not reasons).lower()
+    row["face_gate_category"] = category(row)
+
+    row["diagnostic_state"] = "REJECT" if reasons else "BORDERLINE" if (row["diagnostic_concern_families"] == "EYE_DETAIL;SKIN_PROCESSING" or
+        row["half_eye_suspected"] == "true" or row["overexposure_white_haze_suspected"] == "true" or
+        row["review_measurement_unavailable"] == "true") else "PASS"
+    return row
 
 
 if __name__ == "__main__":

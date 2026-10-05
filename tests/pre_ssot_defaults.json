@@ -1,0 +1,222 @@
+{
+  "step1_extract": {
+    "constants": {},
+    "cli": {
+      "num_frames": 50,
+      "trim_start": 0.5,
+      "trim_end": 0.5,
+      "subfolders": true,
+      "ffmpeg": null,
+      "ffprobe": null,
+      "overwrite": false
+    }
+  },
+  "step2_blur": {
+    "constants": {},
+    "cli": {}
+  },
+  "step3_face_gate": {
+    "constants": {
+      "FACE_CROP_MARGIN": 0.2,
+      "FACE_CORE_SCALE": 0.8,
+      "MIN_FACE_VISIBILITY_SCORE": 70.0,
+      "MIN_FACE_SHARPNESS_PERCENTILE": 20.0,
+      "MIN_GLOBAL_LAPLACIAN": 25.0,
+      "MIN_FACE_LAPLACIAN": 50.0,
+      "SHOT_CLOSE_UP_THRESHOLD": 0.12,
+      "SHOT_FULL_BODY_THRESHOLD": 0.04,
+      "MIN_SOURCE_SHORT_EDGE_FULLBODY": 720,
+      "MIN_FACE_DIM_CLOSE_UP": 140,
+      "MIN_FACE_DIM_UPPER_BODY": 110,
+      "MIN_FACE_DIM_FULL_BODY": 80,
+      "MIN_EYE_SHARPNESS": 1.6,
+      "MAX_FACE_CENTRAL_GRADIENT": 65.0,
+      "MIN_SINGLE_EYE_FEATURE_RATIO": 0.07,
+      "MIN_AVG_EYE_FEATURE_RATIO": 0.08,
+      "MAX_EYE_ASYMMETRY_RATIO": 2.2,
+      "MIN_FACE_BRIGHTNESS": 95.0,
+      "MIN_FACE_TO_GLOBAL_RATIO": 0.65,
+      "MIN_SKIN_TEXTURE_CLOSEUP": 0.05,
+      "MIN_SKIN_TEXTURE_UPPER_BODY": 0.035,
+      "MAX_PLASTICITY_RATIO": 45.0,
+      "LAPLACIAN_WEIGHT": 0.5,
+      "TENENGRAD_WEIGHT": 0.5,
+      "DETECTION_CONFIDENCE": 0.5,
+      "MAX_FACES": 10
+    },
+    "cli": {
+      "limit": null,
+      "min_global_laplacian": 25.0,
+      "min_face_laplacian": 50.0,
+      "min_source_short_edge_fullbody": 720,
+      "min_face_dim_close_up": 140,
+      "min_face_dim_upper_body": 110,
+      "min_face_dim_full_body": 80,
+      "min_eye_sharpness": 1.6,
+      "min_skin_texture_close_up": 0.05,
+      "min_skin_texture_upper_body": 0.035,
+      "max_plasticity_ratio": 45.0,
+      "skip_beauty_filter": false,
+      "overwrite": false
+    }
+  },
+  "step4_pose": {
+    "constants": {
+      "FRONT_YAW_MAX": 15.0,
+      "THREE_QUARTER_YAW_MAX": 42.0,
+      "PROFILE_YAW_MIN": 42.0,
+      "PITCH_LOOKING_MAX": 20.0,
+      "PITCH_LOOKING_MIN": -20.0,
+      "EXTREME_PITCH_THRESHOLD": 35.0,
+      "EXTREME_ROLL_THRESHOLD": 35.0
+    },
+    "cli": {
+      "all_images": false,
+      "limit": 0,
+      "overwrite_review": false
+    }
+  },
+  "step5_dedup": {
+    "constants": {},
+    "cli": {
+      "phash_threshold": 10,
+      "angle_threshold": 12.0,
+      "time_window": 6,
+      "limit": 0
+    }
+  },
+  "step6_identity": {
+    "constants": {
+      "BASE_THRESHOLDS": {
+        "CLOSE_UP": 0.62,
+        "UPPER_BODY": 0.58,
+        "FULL_BODY": 0.52
+      },
+      "POSE_MODIFIERS": {
+        "FRONT": 0.0,
+        "LOOKING_DOWN": -0.04,
+        "LOOKING_UP": -0.04,
+        "LEFT_3Q": -0.05,
+        "RIGHT_3Q": -0.05,
+        "LEFT_PROFILE": -0.1,
+        "RIGHT_PROFILE": -0.1,
+        "EXTREME_POSE": -0.12
+      }
+    },
+    "cli": {
+      "device": "auto",
+      "limit": 0,
+      "eval_all_eligible": false
+    }
+  },
+  "step7_selection": {
+    "constants": {
+      "SHOT_MIN": {
+        "CLOSE_UP": 10,
+        "UPPER_BODY": 25,
+        "FULL_BODY": 18
+      },
+      "SHOT_MAX": {
+        "CLOSE_UP": 14,
+        "UPPER_BODY": 35,
+        "FULL_BODY": 25
+      },
+      "POSE_MIN": {
+        "FRONT": 15,
+        "LEFT_3Q": 12,
+        "RIGHT_3Q": 12,
+        "LOOKING_DOWN": 6,
+        "RIGHT_PROFILE": 3,
+        "LEFT_PROFILE": 1,
+        "OTHER": 1
+      },
+      "POSE_MAX": {
+        "FRONT": 22,
+        "LEFT_3Q": 20,
+        "RIGHT_3Q": 20,
+        "LOOKING_DOWN": 12,
+        "RIGHT_PROFILE": 3,
+        "LEFT_PROFILE": 1,
+        "OTHER": 2
+      }
+    },
+    "cli": {
+      "target_count": 65,
+      "max_scene_burst": 8,
+      "max_reference_burst": 15,
+      "limit": 0
+    }
+  },
+  "step8_review": {
+    "constants": {},
+    "cli": {
+      "target_count": 45,
+      "populate_defaults": false
+    }
+  },
+  "step9_restoration": {
+    "constants": {},
+    "cli": {
+      "codeformer_path": null,
+      "fidelity_weight": 0.8,
+      "min_identity_threshold": 0.6,
+      "max_identity_loss": 0.08,
+      "min_fidelity": 0.82,
+      "limit": 0
+    }
+  },
+  "step10_packaging": {
+    "constants": {
+      "CLOTHING_PROMPTS": [
+        "wearing an elegant black evening dress",
+        "wearing a stylish black top",
+        "wearing a casual white t-shirt",
+        "wearing a warm knitted sweater",
+        "wearing a denim jacket and pants",
+        "wearing an oversized comfortable hoodie",
+        "wearing a floral summer dress",
+        "wearing casual modern streetwear",
+        "wearing athletic sportswear",
+        "wearing stylish casual clothes"
+      ],
+      "HAIR_PROMPTS": [
+        "long dark hair falling over shoulders",
+        "hair tied up in a neat ponytail",
+        "hair styled in a messy bun",
+        "wavy brunette hair with natural texture",
+        "sleek straight dark hair",
+        "short bob hairstyle",
+        "natural textured hair"
+      ],
+      "EXPRESSION_PROMPTS": [
+        "gentle warm smile looking at camera",
+        "subtle cheerful smile",
+        "calm neutral expression with soft gaze",
+        "serious focused expression",
+        "candid smiling laughter",
+        "pensive contemplative look"
+      ],
+      "BACKGROUND_PROMPTS": [
+        "clean modern indoor apartment with soft interior",
+        "cozy living room with warm wooden furniture",
+        "bright contemporary room with white minimalist background",
+        "urban city street with subtle bokeh",
+        "outdoor cafe patio with natural ambiance",
+        "studio environment with neutral clean background",
+        "sunlit room with window shadows in background"
+      ],
+      "LIGHTING_PROMPTS": [
+        "soft diffused natural daylight",
+        "warm cinematic indoor ambient lighting",
+        "soft golden hour sunlight with gentle shadows",
+        "clean professional studio lighting",
+        "cool atmospheric interior lighting",
+        "bright airy window light"
+      ]
+    },
+    "cli": {
+      "trigger": "character",
+      "limit": 0
+    }
+  }
+}

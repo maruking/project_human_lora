@@ -1,0 +1,462 @@
+{
+  "scope": "SMALL_STORED_METRIC_CHECK_NO_FULL_RANKING_NO_INFERENCE",
+  "ranking_sha256": "93f22c705f6f63f9f36871948bafcd3c62113a9f0ce604d0fe397f3782b7aa8f",
+  "total_scored": 12,
+  "normalization_scope": "stored compatible eligible-universe positive anchors/bonus pools only",
+  "new_global_ranks": "NOT_COMPUTED",
+  "missing_requested_examples": [],
+  "comparisons": [
+    {
+      "frame_id": "Sash_high_identity-img/652794808_18008722232838431_6335316425841053458_n.jpg",
+      "input_kind": "supplemental_still",
+      "old_global_rank": "7",
+      "v2_best_score": 88.43682939415726,
+      "v21_best_score": 88.40905161637949,
+      "score_delta": -0.027777777777771462,
+      "changed_components": {
+        "relative_quality_bonus_eye_detail": {
+          "v2": 0.9861111111111112,
+          "v21": 0.9583333333333333
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 1.0,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "OPEN;OPEN",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 0.0,
+        "eye_obstruction_penalty": 0.0,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 0.0,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "prior_blur_or_reference_fixture"
+    },
+    {
+      "frame_id": "Sasha_v08/Sasha_v08_011.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "40",
+      "v2_best_score": 78.2418294400766,
+      "v21_best_score": 63.8859418625683,
+      "score_delta": -14.355887577508298,
+      "changed_components": {
+        "eye_obstruction_penalty": {
+          "v2": 0.0,
+          "v21": 3.440667042312203
+        },
+        "half_eye_penalty": {
+          "v2": 5.0,
+          "v21": 5.7088874999999994
+        },
+        "contribution_eye_detail": {
+          "v2": 11.148888167891407,
+          "v21": 2.0433192608043593
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 1.4064192335552412,
+          "v21": 0.30565510544619534
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 0.23225405861861437,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "HALF_OPEN_EXISTING_DIAGNOSTIC;HALF_OPEN_EXISTING_DIAGNOSTIC",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 5.7088874999999994,
+        "eye_obstruction_penalty": 3.440667042312203,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 0.0,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "current_v2_human_reject"
+    },
+    {
+      "frame_id": "Sasha_v08/Sasha_v08_004.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "48",
+      "v2_best_score": 76.77026516880353,
+      "v21_best_score": 62.801186199726075,
+      "score_delta": -13.969078969077458,
+      "changed_components": {
+        "eye_obstruction_penalty": {
+          "v2": 0.0,
+          "v21": 3.9246062365504715
+        },
+        "half_eye_penalty": {
+          "v2": 5.0,
+          "v21": 5.6331375
+        },
+        "contribution_eye_detail": {
+          "v2": 9.540273454713347,
+          "v21": 1.161739873159533
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 1.2425304961161472,
+          "v21": 0.2097288451429698
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 0.20817670597788818,
+        "expected_eye_sides": "left",
+        "eye_quality_reason": "HALF_OPEN_EXISTING_DIAGNOSTIC",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 5.6331375,
+        "eye_obstruction_penalty": 3.9246062365504715,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 0.0,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "current_v2_human_reject"
+    },
+    {
+      "frame_id": "Sasha_v05/Sasha_v05_003.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "90",
+      "v2_best_score": 69.208507038428,
+      "v21_best_score": 66.08530215167323,
+      "score_delta": -3.1232048867547633,
+      "changed_components": {
+        "contribution_eye_detail": {
+          "v2": 9.542681952636844,
+          "v21": 6.560274654900245
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 1.3103588321625956,
+          "v21": 1.169561243144424
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 1.0,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "OPEN;OPEN",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 0.0,
+        "eye_obstruction_penalty": 0.0,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 0.0,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "current_v2_human_reject"
+    },
+    {
+      "frame_id": "Sasha_v08/Sasha_v08_008.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "129",
+      "v2_best_score": 63.256574437384195,
+      "v21_best_score": 54.95417454727091,
+      "score_delta": -8.302399890113286,
+      "changed_components": {
+        "half_eye_penalty": {
+          "v2": 5.0,
+          "v21": 5.4493
+        },
+        "contribution_eye_detail": {
+          "v2": 10.125960323012698,
+          "v21": 3.0725965283867764
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 1.3427835223612221,
+          "v21": 0.5430474268738573
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 0.45507,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "HALF_OPEN_EXISTING_DIAGNOSTIC;HALF_OPEN_EXISTING_DIAGNOSTIC",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 5.4493,
+        "eye_obstruction_penalty": 0.0,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 0.0,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "current_v2_human_reject"
+    },
+    {
+      "frame_id": "Sasha_v19/Sasha_v19_024.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "135",
+      "v2_best_score": 62.45187650104546,
+      "v21_best_score": 58.48353164320956,
+      "score_delta": -3.968344857835902,
+      "changed_components": {
+        "eye_obstruction_penalty": {
+          "v2": 0.0,
+          "v21": 0.7593133674125754
+        },
+        "blur_penalty": {
+          "v2": 0.1537484773150466,
+          "v21": 1.3550238386905773
+        },
+        "contribution_eye_detail": {
+          "v2": 12.903233103139275,
+          "v21": 11.06053763347343
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 1.4602735442923889,
+          "v21": 1.295212884910438
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 0.8987582176783233,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "OPEN;OPEN",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 0.0,
+        "eye_obstruction_penalty": 0.7593133674125754,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 1.3550238386905773,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "current_v2_human_reject"
+    },
+    {
+      "frame_id": "Sasha_v33/Sasha_v33_006.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "145",
+      "v2_best_score": 61.505897879418846,
+      "v21_best_score": 59.97479278125117,
+      "score_delta": -1.5311050981676786,
+      "changed_components": {
+        "blur_penalty": {
+          "v2": 4.47804542863715,
+          "v21": 5.26266379171571
+        },
+        "contribution_eye_detail": {
+          "v2": 5.904541847433775,
+          "v21": 5.260104302248981
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 1.0647698228927553,
+          "v21": 0.9627206329884359
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 1.0,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "OPEN;OPEN",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 0.0,
+        "eye_obstruction_penalty": 0.0,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 5.26266379171571,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "current_v2_human_reject"
+    },
+    {
+      "frame_id": "Sasha_v19/Sasha_v19_025.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "151",
+      "v2_best_score": 61.18018380751172,
+      "v21_best_score": 54.174979556571664,
+      "score_delta": -7.005204250940054,
+      "changed_components": {
+        "eye_obstruction_penalty": {
+          "v2": 0.0,
+          "v21": 1.5955590507976571
+        },
+        "blur_penalty": {
+          "v2": 0.6788823158886188,
+          "v21": 2.7648052748757004
+        },
+        "contribution_eye_detail": {
+          "v2": 12.21246044107406,
+          "v21": 9.205356742899314
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 1.4410857207075387,
+          "v21": 1.1244671777269708
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 0.787258793226979,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "OPEN;OPEN",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 0.0,
+        "eye_obstruction_penalty": 1.5955590507976571,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 2.7648052748757004,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "current_v2_human_reject"
+    },
+    {
+      "frame_id": "Sasha_v08/Sasha_v08_005.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "152",
+      "v2_best_score": 61.11911489438252,
+      "v21_best_score": 54.63372359567961,
+      "score_delta": -6.485391298702908,
+      "changed_components": {
+        "half_eye_penalty": {
+          "v2": 5.0,
+          "v21": 5.3349
+        },
+        "blur_penalty": {
+          "v2": 3.5998881512327365,
+          "v21": 5.227662804736101
+        },
+        "contribution_eye_detail": {
+          "v2": 5.565378805526919,
+          "v21": 1.6871617751271826
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 0.9479582651345635,
+          "v21": 0.3034586503347535
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 0.46651,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "HALF_OPEN_EXISTING_DIAGNOSTIC;OPEN_RATIO_ASYMMETRY_NOT_A_DEFECT",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 5.3349,
+        "eye_obstruction_penalty": 0.0,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 5.227662804736101,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "current_v2_human_reject"
+    },
+    {
+      "frame_id": "Sasha_v44/Sasha_v44_019.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "157",
+      "v2_best_score": 60.66622505196847,
+      "v21_best_score": 54.136395663626395,
+      "score_delta": -6.529829388342073,
+      "changed_components": {
+        "eye_obstruction_penalty": {
+          "v2": 0.0,
+          "v21": 1.5255177669943574
+        },
+        "blur_penalty": {
+          "v2": 2.623356302577165,
+          "v21": 4.092116289599913
+        },
+        "contribution_eye_detail": {
+          "v2": 10.055464094254098,
+          "v21": 6.840815319777633
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 1.373445707844815,
+          "v21": 1.052542847996302
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 0.796597631067419,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "OPEN;OPEN",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 0.0,
+        "eye_obstruction_penalty": 1.5255177669943574,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 4.092116289599913,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "prior_blur_or_reference_fixture"
+    },
+    {
+      "frame_id": "Sasha_v30/Sasha_v30_010.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "224",
+      "v2_best_score": 57.63699456860668,
+      "v21_best_score": 48.85825111058314,
+      "score_delta": -8.778743458023541,
+      "changed_components": {
+        "eye_obstruction_penalty": {
+          "v2": 1.0714285714285716,
+          "v21": 2.6740335112883145
+        },
+        "blur_penalty": {
+          "v2": 3.336879102430026,
+          "v21": 5.4373178317009225
+        },
+        "contribution_eye_detail": {
+          "v2": 9.569946746451125,
+          "v21": 5.02111601053225
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 1.342372104357192,
+          "v21": 0.8155030513831507
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 0.6434621984948914,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "OPEN;OPEN",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 0.0,
+        "eye_obstruction_penalty": 2.6740335112883145,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 5.4373178317009225,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "prior_blur_or_reference_fixture"
+    },
+    {
+      "frame_id": "Sasha_v63/Sasha_v63_020.png",
+      "input_kind": "formal_video",
+      "old_global_rank": "1059",
+      "v2_best_score": 39.53356971045393,
+      "v21_best_score": 35.46529359677085,
+      "score_delta": -4.068276113683083,
+      "changed_components": {
+        "half_eye_penalty": {
+          "v2": 5.0,
+          "v21": 5.976862499999999
+        },
+        "blur_penalty": {
+          "v2": 7.527126955538023,
+          "v21": 8.562514688417238
+        },
+        "contribution_eye_detail": {
+          "v2": 2.151776974238148,
+          "v21": 0.44493517564145213
+        },
+        "relative_quality_bonus_eye_detail": {
+          "v2": 0.4235619285629244,
+          "v21": 0.07437784635575168
+        }
+      },
+      "v21_explanation": {
+        "eye_quality_score": 0.40231375,
+        "expected_eye_sides": "left;right",
+        "eye_quality_reason": "HALF_OPEN_EXISTING_DIAGNOSTIC;HALF_OPEN_EXISTING_DIAGNOSTIC",
+        "eye_measurement_failure": "false",
+        "eye_closed_penalty": 0.0,
+        "eye_half_open_penalty": 5.976862499999999,
+        "eye_obstruction_penalty": 0.0,
+        "eye_measurement_penalty": 0.0,
+        "blur_penalty": 8.562514688417238,
+        "dark_exposure_penalty": 0.0,
+        "haze_penalty": 0.0
+      },
+      "source_class": "prior_blur_or_reference_fixture"
+    }
+  ]
+}

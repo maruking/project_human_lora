@@ -167,3 +167,38 @@ config/step3_revision_a.local.json
 **/bkup/
 **/backup/
 **/backups/
+
+# Disposable private STEP3 review image copies (reports/CSV remain tracked).
+/output/reports/passed/
+/output/reports/borderline/
+/output/reports/.step3-review-stage-*/
+
+/output/reports/reject/
+
+# Disposable BEST review copies; history/CSV stay trackable.
+output/reports/step3_best_review/
+output/reports/.step3_best_operation.lock
+
+# Historical calibration inputs contain private source pixels and local metadata.
+/input/canonical_sharpness*/
+
+# Private media may also appear in report examples; keep text reports shareable.
+/output/reports/**/*.png
+/output/reports/**/*.jpg
+/output/reports/**/*.jpeg
+/output/reports/**/*.webp
+/output/reports/**/*.gif
+/output/reports/**/*.bmp
+/output/reports/**/*.tif
+/output/reports/**/*.tiff
+
+# Additional configured intermediate image outputs; keep explanatory templates.
+/work/pose_review/*
+!/work/pose_review/.gitkeep
+!/work/pose_review/README.md
+/work/frames_deduplicated/*
+!/work/frames_deduplicated/.gitkeep
+!/work/frames_deduplicated/README.md
+
+# Source code, Agent Rules, Knowledge, tests, documentation, configuration
+# templates and non-media reports remain eligible for version control.

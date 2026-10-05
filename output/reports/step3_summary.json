@@ -3,6 +3,7 @@
     "config": null,
     "copy_review": false,
     "crops": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\work\\facegate_face_crops",
+    "face_sharpness_canonical_short_edge": 192,
     "images": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\work\\frames_raw",
     "limit": null,
     "max_plasticity_ratio": 45.0,
@@ -11,6 +12,7 @@
     "min_face_dim_full_body": 80,
     "min_face_dim_upper_body": 110,
     "min_face_laplacian": 50.0,
+    "min_face_laplacian_canonical": 36.901392,
     "min_global_laplacian": 25.0,
     "min_skin_texture_close_up": 0.05,
     "min_skin_texture_upper_body": 0.035,
@@ -19,14 +21,15 @@
     "overwrite": false,
     "report": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step2_dataset_report.csv",
     "review": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\work\\facegate_review",
+    "review_diagnostic_config": null,
     "skip_beauty_filter": false
   },
   "counts": {
     "analysis_error_count": 0,
     "beauty_fullbody_skipped_count": 750,
     "blink_suspected_count": 2,
-    "eligible_count": 1,
-    "eligible_ratio": 0.000528,
+    "eligible_count": 139,
+    "eligible_ratio": 0.073428,
     "face_detected_count": 1824,
     "facemesh_detected_count": 1645,
     "frame_count": 1893,
@@ -34,18 +37,18 @@
     "mouth_very_open_count": 90,
     "multiple_faces_count": 1,
     "no_face_count": 69,
-    "rejected_count": 1892,
+    "rejected_count": 1754,
     "single_face_count": 1823
   },
   "cross_analysis": {
     "global_bottom_10_percent": {
       "analysis_error_count": 0,
-      "beauty_filter_count": 58,
+      "beauty_filter_count": 0,
       "beauty_fullbody_skipped_count": 111,
       "blink_suspected_count": 0,
-      "eligible_count": 0,
-      "eligible_ratio": 0.0,
-      "face_blurry_count": 172,
+      "eligible_count": 1,
+      "eligible_ratio": 0.005263,
+      "face_blurry_count": 169,
       "face_detected_count": 172,
       "facemesh_detected_count": 160,
       "frame_count": 190,
@@ -53,17 +56,17 @@
       "mouth_very_open_count": 3,
       "multiple_faces_count": 0,
       "no_face_count": 18,
-      "rejected_count": 190,
+      "rejected_count": 189,
       "single_face_count": 172
     },
     "global_top_10_percent": {
       "analysis_error_count": 0,
-      "beauty_filter_count": 39,
+      "beauty_filter_count": 0,
       "beauty_fullbody_skipped_count": 82,
       "blink_suspected_count": 0,
-      "eligible_count": 1,
-      "eligible_ratio": 0.005263,
-      "face_blurry_count": 180,
+      "eligible_count": 56,
+      "eligible_ratio": 0.294737,
+      "face_blurry_count": 95,
       "face_detected_count": 181,
       "facemesh_detected_count": 152,
       "frame_count": 190,
@@ -71,7 +74,7 @@
       "mouth_very_open_count": 4,
       "multiple_faces_count": 0,
       "no_face_count": 9,
-      "rejected_count": 189,
+      "rejected_count": 134,
       "single_face_count": 181
     }
   },
@@ -84,6 +87,43 @@
       0.35
     ]
   },
+  "face_gate_architecture": {
+    "borderline": "eligible AND ((EYE_DETAIL AND SKIN_PROCESSING) OR half-eye/blink OR exposure concern OR diagnostic measurement unavailable); no A/B/C",
+    "diagnostic_counts": {
+      "beauty_filter_suspected": 939,
+      "eye_detail_suspected": 464,
+      "global_blur_suspected": 1806,
+      "half_eye_suspected": 633,
+      "native_face_blur_suspected": 1823,
+      "overexposure_white_haze_suspected": 0,
+      "plasticity_suspected": 179,
+      "review_measurement_unavailable": 0,
+      "skin_detail_suspected": 935
+    },
+    "diagnostic_state_counts": {
+      "BORDERLINE": 88,
+      "PASS": 51,
+      "REJECT": 1754
+    },
+    "eye_presence_gate_counts": {
+      "APPLICABLE": 1645,
+      "NOT_APPLICABLE_MISSING_MEASUREMENT": 179,
+      "NOT_APPLICABLE_NO_FACE": 69
+    },
+    "metric": "face_laplacian_canonical_192",
+    "resize": "aspect preserved; INTER_AREA shrink / INTER_CUBIC enlarge / IDENTITY copy",
+    "review_diagnostic_configs": [
+      "022eb27579df03850a3c35e1bba1da14fd7bc569651422895a729b5d73a2a6f2"
+    ],
+    "short_edges": [
+      "192"
+    ],
+    "temporary_review_outputs": "configured reports/passed and reports/borderline; disposable copies, never lineage/input",
+    "thresholds": [
+      "36.901392"
+    ],
+    "version": "canonical192_review_v2"
+  },
   "full_row_preservation": true,
   "input_generation": {
     "extraction_policy_version": 2,
@@ -95,6 +135,16 @@
     "video_count": 67
   },
   "partial": false,
+  "review_counts": {
+    "BORDERLINE": 88,
+    "PASS": 51,
+    "REJECT": 1754,
+    "eye_presence_applicable": 1645,
+    "eye_presence_skipped_insufficient_scale": 0,
+    "half_eye_suspected": 633,
+    "official_eligible": 139,
+    "overexposure_white_haze_suspected": 0
+  },
   "source_columns": [
     "temporal_index",
     "extraction_policy_version",
@@ -135,5 +185,5 @@
   ],
   "status": "PASS",
   "step2_csv_sha256": "23115e15a8bd5869646c98b23422ac0c0f742f78f91bfcbb3bf7f4f13287d060",
-  "step3_csv_sha256": "de7d772bba8017fb4079698864539ab274452347db74ecf3e8624454d129523d"
+  "step3_csv_sha256": "6f393e3f00b78f08fc31baa8600eece422221dbbeb72132867a8976777120f5f"
 }

@@ -1,4 +1,6 @@
 """Maru-run Revision A: ALL formal frames + supplemental stills, separate A/B/C."""
+from common.step3_review import is_review_copy, require_source
+
 import argparse
 from collections import Counter
 import csv
@@ -32,9 +34,10 @@ def read_csv(path):
 
 
 def supplemental_inventory(directory):
+    require_source(directory)
     if not directory.is_dir():
         raise ValueError(f'Missing supplemental directory: {directory}')
-    files = sorted(p for p in directory.rglob('*') if p.is_file() and
+    files = sorted(p for p in directory.rglob('*') if not is_review_copy(p) and p.is_file() and
                    p.suffix.lower() in {'.png', '.jpg', '.jpeg', '.webp'})
     if not files:
         raise ValueError('Supplemental directory contains no supported images')
@@ -48,6 +51,8 @@ def validate_inputs(config, supplemental):
     from common.metric_generation import preflight
     from common.revision_a import FormalInventory
     from build_step2_reports import read_dataset, validate_generation
+    from common.step3_review import review_roots
+    review_roots(config)
     paths = config['paths']
     raw = resolve_config_path(paths['raw_frames_dir'], config)
     manifests = resolve_config_path(paths['manifests_dir'], config)
@@ -89,7 +94,7 @@ def validate_inputs(config, supplemental):
 def measure(image, official, detector, mesh, settings, gate):
     import cv2
     import numpy as np
-    from common.revision_a import eye_metrics, pixel_metrics
+    from common.revision_a import eye_metrics, pixel_metrics, face_mask
     from common.step3_audit import geometry_diagnostics
     h, w = image.shape[:2]
     result = dict(width=w, height=h, face_count=None, face_roi_method='NONE',
@@ -127,13 +132,10 @@ def measure(image, official, detector, mesh, settings, gate):
         # Face oval avoids background and hair; native pixels, no resizing/restoration.
         import mediapipe as mp
         indices = sorted({i for edge in mp.solutions.face_mesh.FACEMESH_FACE_OVAL for i in edge})
-        coords = np.array([(round(points[i].x*w), round(points[i].y*h)) for i in indices], dtype=np.int32)
-        cv2.fillConvexPoly(mask, cv2.convexHull(coords), 255)
-        result['face_roi_method'] = 'FACEMESH_FACE_OVAL_CONVEX_HULL'
+        mask, result['face_roi_method'] = face_mask(points, box, h, w, indices)
         texture = gate.cheek_skin_texture_metrics(image, points, box, 0, 'FULL_BODY', 0, 0, 0)[0]
     else:
-        mask[y:y+bh, x:x+bw] = 255
-        result['face_roi_method'] = 'BBOX_FALLBACK_NO_MESH'
+        mask, result['face_roi_method'] = face_mask(None, box, h, w, ())
         result['diagnostic_status'] = 'UNKNOWN_NO_MESH'
     result.update(pixel_metrics(cv2.cvtColor(image, cv2.COLOR_BGR2GRAY), mask, texture, settings))
     return result

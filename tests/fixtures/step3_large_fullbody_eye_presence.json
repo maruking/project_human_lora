@@ -1,0 +1,18 @@
+{
+  "source": "Existing canonical192 official CSV, before this revision; evidence only, not inference replay",
+  "observed": {
+    "filename": "Sasha_v03/Sasha_v03_118.png",
+    "shot_type": "FULL_BODY",
+    "face_min_dimension": "545",
+    "left_eye_presence_ratio": "0.000",
+    "right_eye_presence_ratio": "0.000",
+    "eye_presence_valid": "false",
+    "facemesh_detected": "true",
+    "face_eligible": "true",
+    "face_gate_reason": "eligible",
+    "diagnostic_state": "PASS",
+    "face_laplacian_canonical_192": "45.705250786410438"
+  },
+  "expected_reason": "one_eye_occluded",
+  "expected_review_state": "REJECT"
+}

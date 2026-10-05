@@ -16,9 +16,11 @@ from common.step2_inputs import preflight_inputs
 BLINK_DIAGNOSTIC_RATIO = 0.10
 MOUTH_DIAGNOSTIC_BINS = (0.03, 0.15, 0.35)
 METRICS = ('face_laplacian_score','face_tenengrad_score','face_sharpness_score',
+           'face_laplacian_canonical_192','face_tenengrad_canonical_192',
            'eye_sharpness','mouth_sharpness','face_visibility_score','face_brightness_mean',
            'face_min_dimension','face_area_ratio','skin_texture_score','plasticity_ratio',
-           'eye_openness_mean','mouth_open_ratio')
+           'eye_openness_mean','mouth_open_ratio','eye_open_min','eye_open_asymmetry',
+           'face_highlight_clip_ratio','face_bright_region_ratio','face_dynamic_range')
 
 
 def validate_input(report, root, manifests):
@@ -73,7 +75,7 @@ def distribution(rows):
     for metric in METRICS:
         values=[float(r[metric]) for r in rows if r.get(metric)!='' and r.get(metric) is not None]
         data=stats(values) if values else dict(count=0,mean='',std='',**{k:'' for k in ('min','p01','p05','p10','p25','p50','p75','p90','p95','p99','max')})
-        result.append(dict(metric=metric,**data,missing_count=sum(not r.get(metric) for r in rows),
+        result.append(dict(metric=metric,**data,missing_count=sum(r.get(metric) in ('', None) for r in rows),
                            not_applicable_count=sum(r.get('face_detected')=='false' for r in rows),
                            analysis_error_count=sum(r['face_gate_status']=='error' for r in rows)))
     return result
@@ -99,6 +101,18 @@ def build_artifacts(rows, source_columns, generation, source_sha, arguments, par
         raise ValueError('Empty/duplicate audit universe')
     if not partial and len(rows)!=generation['frame_count']:
         raise ValueError('Incomplete production audit')
+    # Keep the authoritative machine CSV and add Excel-compatible local links.
+    # Root comes from the recorded STEP3 arguments, including CLI overrides.
+    if arguments.get('images'):
+        root = Path(arguments['images']).resolve()
+        rows = [dict(row) for row in rows]
+        for row in rows:
+            relative = Path(row['filename'])
+            target = (root / relative).resolve()
+            if relative.is_absolute() or not target.is_relative_to(root):
+                raise ValueError('Image link escapes the recorded STEP3 image directory')
+            row['image_path'] = str(target)
+            row['image_open'] = '=HYPERLINK("' + str(target).replace('"', '""') + '","画像を開く")'
     fields=list(source_columns)+sorted(set().union(*(set(r) for r in rows))-set(source_columns))
     dataset=csv_bytes(rows,fields)
     digest=hashlib.sha256(dataset).hexdigest()
@@ -115,7 +129,7 @@ def build_artifacts(rows, source_columns, generation, source_sha, arguments, par
         record=dict(video_id=video,**summarize(group))
         for reason in reason_names:
             record['reason_'+reason+'_count']=sum(reason in r['face_gate_reason'].split(';') for r in group)
-        for metric in ('face_laplacian_score','face_tenengrad_score','eye_sharpness','skin_texture_score','plasticity_ratio'):
+        for metric in ('face_laplacian_score','face_tenengrad_score','face_laplacian_canonical_192','eye_sharpness','skin_texture_score','plasticity_ratio'):
             values=sorted(float(r[metric]) for r in group if r.get(metric))
             from statistics import median
             record['median_'+metric]=round(median(values),6) if values else ''
@@ -130,15 +144,42 @@ def build_artifacts(rows, source_columns, generation, source_sha, arguments, par
                  partial=partial,counts=counts,cross_analysis=cross,arguments={k:str(v) if isinstance(v,Path) else v for k,v in arguments.items()},
                  diagnostic_policy=dict(blink_ratio=BLINK_DIAGNOSTIC_RATIO,mouth_bins=MOUTH_DIAGNOSTIC_BINS,hard_gate=False),
                  full_row_preservation=not partial,source_columns=source_columns)
+    canonical_policy = any(r.get('face_sharpness_metric') == 'face_laplacian_canonical_192' for r in rows)
+    if canonical_policy:
+        from common.step3_gate_policy import FLAGS
+        summary['face_gate_architecture'] = dict(version='canonical192_review_v2',
+            metric='face_laplacian_canonical_192',
+            short_edges=sorted({r['face_sharpness_canonical_short_edge'] for r in rows}),
+            thresholds=sorted({r['face_sharpness_gate_threshold'] for r in rows}),
+            resize='aspect preserved; INTER_AREA shrink / INTER_CUBIC enlarge / IDENTITY copy',
+            diagnostic_counts={f:sum(r.get(f)=='true' for r in rows) for f in FLAGS},
+            diagnostic_state_counts=dict(Counter(r.get('diagnostic_state','UNKNOWN') for r in rows)),
+            eye_presence_gate_counts=dict(Counter(r.get('eye_presence_gate_state','UNKNOWN') for r in rows)),
+            review_diagnostic_configs=sorted({r.get('review_diagnostic_config_sha256','') for r in rows}),
+            temporary_review_outputs='configured reports/passed and reports/borderline; disposable copies, never lineage/input',
+            borderline='eligible AND ((EYE_DETAIL AND SKIN_PROCESSING) OR half-eye/blink OR exposure concern OR diagnostic measurement unavailable); no A/B/C')
+    summary['review_counts'] = dict(
+        official_eligible=sum(r['face_eligible']=='true' for r in rows),
+        **{state:sum(r.get('diagnostic_state')==state for r in rows) for state in ('PASS','BORDERLINE','REJECT')},
+        half_eye_suspected=sum(r.get('half_eye_suspected')=='true' for r in rows),
+        overexposure_white_haze_suspected=sum(r.get('overexposure_white_haze_suspected')=='true' for r in rows),
+        eye_presence_applicable=sum(r.get('eye_presence_gate_state')=='APPLICABLE' for r in rows),
+        eye_presence_skipped_insufficient_scale=sum(r.get('eye_presence_gate_state')=='SKIPPED_INSUFFICIENT_SCALE' for r in rows))
     lines=['# STEP3 Face Quality Summary','',f"Status: {summary['status']}; rows: {len(rows)}; eligible: {counts['eligible_count']}; errors: {counts['analysis_error_count']}",'',
            'Regenerated solely from STEP3 CSV values. Source SHA256: '+digest,'',
            'All STEP2 values retained. Reasons overlap; primary categories are exclusive. Rejected includes error rows.',
            'Face percentiles use successful single-face rows (historical midrank formula). shot_type is provisional face scale, not STEP4 pose/composition.',
            'Geometric blink and mouth bins are provisional diagnostics, not validated blink/expression/speech labels and never rejection gates.',
-           'Beauty/filter and occlusion outputs are heuristic flags, not verified causes. FULL_BODY bypasses beauty rejection. Missing metrics are blank, not measured zero.','',
+           ('Native global/face sharpness, eye/skin/beauty/plasticity are diagnostic-only. Canonical192 is the face sharpness Hard Gate. Missing metrics are blank, not measured zero.' if canonical_policy else 'Historical architecture: beauty/filter and occlusion outputs are heuristic flags, not verified causes. FULL_BODY bypasses beauty rejection. Missing metrics are blank, not measured zero.'),'',
+           '## Review diagnostics (not A/B/C)', '', '```json', json.dumps(summary['review_counts'],indent=2), '```', '',
            '## Detection and eligibility','', '```json',json.dumps(counts,indent=2),'```','',
            '## Reasons (overlap and exclusive categories)','', '| Type | Reason | Frames | % | Videos |','|---|---|---:|---:|---:|']
     lines += [f"| {r['count_type']} | {r['reason']} | {r['frame_count']} | {r['percentage']} | {r['video_count']} |" for r in reasons]
+    if canonical_policy:
+        lines += ['', '## Canonical face Gate audit', '',
+                  'Native50 is superseded for Hard Gate use; native columns/percentiles remain historical-scale diagnostics. Canonical evaluates every detected single-face row directly, independent of eye sharpness. no_face/multiple_faces, visibility/FaceMesh, size/resolution, exposure/backlight, hair and per-eye presence formulas/cutoffs remain unchanged; eye-presence applicability now uses measured scale regardless of shot.',
+                  'BORDERLINE is a separate review state: EYE_DETAIL plus SKIN_PROCESSING, or suspected half-eye/blink, or exposure concern. Native blur alone never causes BORDERLINE. These diagnostics never change eligibility or A/B/C. Eye-presence Hard Gate uses available per-eye evidence and configured upper-body minimum face dimension regardless of shot.',
+                  '```json', json.dumps(summary['face_gate_architecture'],indent=2), '```']
     lines += ['', '## STEP2 × STEP3','', 'Top/bottom 10% use stored quality_rank with ceil(N × 0.10), ties already ordered by STEP2.', '```json',json.dumps(cross,indent=2),'```','', '## Video concentration','', '| Video | Frames | Eligible | Ratio | No face | Multiple | Errors |','|---|---:|---:|---:|---:|---:|---:|']
     lines += [f"| {r['video_id']} | {r['frame_count']} | {r['eligible_count']} | {r['eligible_ratio']} | {r['no_face_count']} | {r['multiple_faces_count']} | {r['analysis_error_count']} |" for r in videos]
     lines += ['', '## Distributions','', 'Population std, linear percentiles of stored values; missing includes N/A and errors (not additive categories).', '', '| Metric | Count | Missing | N/A (no face) | Errors | Min | P50 | P90 | Max |','|---|---:|---:|---:|---:|---:|---:|---:|---:|']

@@ -1,4 +1,6 @@
 """Explicit supplemental still input, separate from the formal STEP1 generation."""
+from common.step3_review import is_review_copy, require_source
+
 import hashlib
 import json
 from pathlib import Path
@@ -17,17 +19,19 @@ class FormalSource:
     def __fspath__(self): return str(self.root)
     def __truediv__(self, name): return self.root/name
     def rglob(self, pattern):
-        return (p for p in self.root.rglob(pattern) if not p.resolve().is_relative_to(self.supplemental))
+        return (p for p in self.root.rglob(pattern) if not is_review_copy(p) and not p.resolve().is_relative_to(self.supplemental))
 
 
 def preflight_inputs(source, manifests, supplemental=None):
+    require_source(source)
+    if supplemental is not None: require_source(supplemental)
     view = FormalSource(source, supplemental) if supplemental is not None else source
     formal = preflight(view, manifests)
     if supplemental is None:
         return formal, [], None
     if not supplemental.is_dir():
         raise ValueError(f'Declared supplemental directory missing: {supplemental}')
-    files = sorted((p for p in supplemental.rglob('*') if p.is_file() and
+    files = sorted((p for p in supplemental.rglob('*') if not is_review_copy(p) and p.is_file() and
                     p.suffix.lower() in {'.png','.jpg','.jpeg','.webp'}),key=lambda p:image_order(p,source))
     if not files:
         raise ValueError('Declared supplemental directory has no supported images')

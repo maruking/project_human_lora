@@ -50,12 +50,15 @@ step2_blur:
   # outliers: '@reports/step2_diagnostic_outliers.csv'
   retain_missing_records: false
 step3_face_gate:
+  review_diagnostic_config: null # shared Revision A local JSON, then example; diagnostic bins only
   face_crop_margin: 0.2
   face_core_scale: 0.8
   min_face_visibility_score: 70.0
   min_face_sharpness_percentile: 20.0
-  min_global_laplacian: 25.0
-  min_face_laplacian: 50.0
+  min_global_laplacian: 25.0  # Native diagnostic cutoff only
+  min_face_laplacian: 50.0  # Superseded native Hard Gate; diagnostic cutoff only
+  face_sharpness_canonical_short_edge: 192
+  min_face_laplacian_canonical: 36.901392
   shot_close_up_threshold: 0.12
   shot_full_body_threshold: 0.04
   min_source_short_edge_fullbody: 720
@@ -249,3 +252,35 @@ step10_packaging:
   device: auto
   dimension_alignment: 16
   caption_strategy: clip_attributes_with_pose
+
+# STEP3 BEST v2.2: common positive quality + small relative bonus - measured evidence.
+step3_best_ranking:
+  ranking_version: best_rank_v2.2
+  absolute_share: 0.90
+  relative_share: 0.10
+  anchor_low: 0.05
+  anchor_high: 0.95
+  weak_evidence_scale: 0.25
+  min_supplemental: 10
+  review_size: 45
+  max_per_video: 4
+  canonical_short_edge: 192
+  detection_confidence: 0.5
+  shadow_pixel_max: 40
+  diagnostic_config: null
+  positive_weights:
+    sharpness: 0.20
+    eye_detail: 0.15
+    mouth_detail: 0.10
+    contrast: 0.15
+    visibility: 0.15
+    face_size: 0.10
+    exposure: 0.15
+  penalty_weights:
+    blur: 0.15
+    obstruction: 0.15
+    half_eye: 0.10
+    low_contrast: 0.10
+    shadow: 0.10
+    clipping_haze: 0.10
+    uncertainty: 0.10

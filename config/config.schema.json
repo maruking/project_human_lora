@@ -141,7 +141,10 @@
       "type": "object",
       "properties": {
         "supplemental_dir": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "minLength": 1
         },
         "report": {
@@ -193,6 +196,16 @@
           "minimum": 0
         },
         "min_global_laplacian": {
+          "type": "number",
+          "minimum": 0
+        },
+        "face_sharpness_canonical_short_edge": {
+          "type": "integer",
+          "enum": [
+            192
+          ]
+        },
+        "min_face_laplacian_canonical": {
           "type": "number",
           "minimum": 0
         },
@@ -308,6 +321,13 @@
         "output": {
           "type": "string",
           "minLength": 1
+        },
+        "review_diagnostic_config": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Shared Revision A JSON bins, review diagnostics only. Null uses local then example."
         }
       },
       "additionalProperties": false
@@ -521,26 +541,116 @@
     "step7_revision_b": {
       "type": "object",
       "properties": {
-        "universe": {"type": "string", "minLength": 1},
-        "step2_summary": {"type": "string", "minLength": 1},
-        "step3": {"type": "string", "minLength": 1},
-        "selection_pointer": {"type": "string", "minLength": 1},
-        "selection_groups": {"type": ["string", "null"], "minLength": 1},
-        "pose": {"type": "string", "minLength": 1},
-        "duplicates": {"type": "string", "minLength": 1},
-        "identity": {"type": ["string", "null"], "minLength": 1},
-        "min_count": {"type": "integer", "minimum": 35, "maximum": 45},
-        "target_count": {"type": "integer", "minimum": 35, "maximum": 45},
-        "max_count": {"type": "integer", "minimum": 35, "maximum": 45},
-        "max_per_source": {"type": "integer", "minimum": 1},
-        "max_mild_expression": {"type": "integer", "minimum": 0},
-        "angle_min": {"$ref": "#/$defs/angleCoverage"},
-        "angle_max": {"$ref": "#/$defs/angleCoverage"},
-        "pitch_min": {"type": "object", "properties": {"LOOKING_UP": {"type": "integer", "minimum": 0}, "LOOKING_DOWN": {"type": "integer", "minimum": 0}}, "required": ["LOOKING_UP", "LOOKING_DOWN"], "additionalProperties": false},
-        "composition_min": {"$ref": "#/$defs/compositionCoverage"},
-        "composition_max": {"$ref": "#/$defs/compositionCoverage"}
+        "universe": {
+          "type": "string",
+          "minLength": 1
+        },
+        "step2_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "step3": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selection_pointer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selection_groups": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "pose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "duplicates": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identity": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "min_count": {
+          "type": "integer",
+          "minimum": 35,
+          "maximum": 45
+        },
+        "target_count": {
+          "type": "integer",
+          "minimum": 35,
+          "maximum": 45
+        },
+        "max_count": {
+          "type": "integer",
+          "minimum": 35,
+          "maximum": 45
+        },
+        "max_per_source": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_mild_expression": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "angle_min": {
+          "$ref": "#/$defs/angleCoverage"
+        },
+        "angle_max": {
+          "$ref": "#/$defs/angleCoverage"
+        },
+        "pitch_min": {
+          "type": "object",
+          "properties": {
+            "LOOKING_UP": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "LOOKING_DOWN": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "LOOKING_UP",
+            "LOOKING_DOWN"
+          ],
+          "additionalProperties": false
+        },
+        "composition_min": {
+          "$ref": "#/$defs/compositionCoverage"
+        },
+        "composition_max": {
+          "$ref": "#/$defs/compositionCoverage"
+        }
       },
-      "required": ["universe", "step2_summary", "step3", "selection_pointer", "pose", "duplicates", "min_count", "target_count", "max_count", "max_per_source", "max_mild_expression", "angle_min", "angle_max", "pitch_min", "composition_min", "composition_max"],
+      "required": [
+        "universe",
+        "step2_summary",
+        "step3",
+        "selection_pointer",
+        "pose",
+        "duplicates",
+        "min_count",
+        "target_count",
+        "max_count",
+        "max_per_source",
+        "max_mild_expression",
+        "angle_min",
+        "angle_max",
+        "pitch_min",
+        "composition_min",
+        "composition_max"
+      ],
       "additionalProperties": false
     },
     "step7_selection": {
@@ -934,17 +1044,228 @@
         }
       },
       "additionalProperties": false
+    },
+    "step3_best_ranking": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_size",
+        "max_per_video",
+        "canonical_short_edge",
+        "positive_weights",
+        "penalty_weights",
+        "ranking_version"
+      ],
+      "properties": {
+        "review_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_per_video": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "canonical_short_edge": {
+          "const": 192
+        },
+        "detection_confidence": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "shadow_pixel_max": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 255
+        },
+        "diagnostic_config": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "positive_weights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sharpness",
+            "eye_detail",
+            "mouth_detail",
+            "contrast",
+            "visibility",
+            "face_size",
+            "exposure"
+          ],
+          "properties": {
+            "sharpness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "eye_detail": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "mouth_detail": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "contrast": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "visibility": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "face_size": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "exposure": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "penalty_weights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "blur",
+            "obstruction",
+            "half_eye",
+            "low_contrast",
+            "shadow",
+            "clipping_haze",
+            "uncertainty"
+          ],
+          "properties": {
+            "blur": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "obstruction": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "half_eye": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "low_contrast": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "shadow": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "clipping_haze": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "uncertainty": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "ranking_version": {
+          "const": "best_rank_v2.2"
+        },
+        "absolute_share": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 1
+        },
+        "relative_share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.2
+        },
+        "anchor_low": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "anchor_high": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "weak_evidence_scale": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.25
+        },
+        "min_supplemental": {
+          "type": "integer",
+          "minimum": 10
+        }
+      }
     }
   },
   "additionalProperties": false,
   "$defs": {
     "angleCoverage": {
-      "type": "object", "properties": {"FRONTAL": {"type": "integer", "minimum": 0}, "THREE_QUARTER": {"type": "integer", "minimum": 0}, "SIDE": {"type": "integer", "minimum": 0}},
-      "required": ["FRONTAL", "THREE_QUARTER", "SIDE"], "additionalProperties": false
+      "type": "object",
+      "properties": {
+        "FRONTAL": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "THREE_QUARTER": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "SIDE": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "FRONTAL",
+        "THREE_QUARTER",
+        "SIDE"
+      ],
+      "additionalProperties": false
     },
     "compositionCoverage": {
-      "type": "object", "properties": {"CLOSE_UP": {"type": "integer", "minimum": 0}, "UPPER_BODY": {"type": "integer", "minimum": 0}, "FULL_BODY": {"type": "integer", "minimum": 0}},
-      "required": ["CLOSE_UP", "UPPER_BODY", "FULL_BODY"], "additionalProperties": false
+      "type": "object",
+      "properties": {
+        "CLOSE_UP": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "UPPER_BODY": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "FULL_BODY": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "CLOSE_UP",
+        "UPPER_BODY",
+        "FULL_BODY"
+      ],
+      "additionalProperties": false
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",

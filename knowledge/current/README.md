@@ -1,0 +1,22 @@
+# Current Knowledge Index
+
+This directory contains the **currently active policies and operating boundaries** across each stage of the pipeline.  
+Developers and AI coding agents should consult these files first to understand current production logic.
+
+---
+
+## Active Policy Documents
+
+| Topic | File | Scope | Status | Confidence |
+| :--- | :--- | :--- | :--- | :--- |
+| **BEST face-quality ranking** | [`face-quality.md`](face-quality.md) | STEP3 relative ranking / durable review; historical Gates retained as evidence | ACTIVE; production pending | MEDIUM |
+| **Face Pose & Quota Distribution** | [`face-pose-quota.md`](face-pose-quota.md) | Step 04 & 07: Head angles (Yaw/Pitch) and shot-type quotas (Close/Med/Full) | ACTIVE | HIGH |
+| **Identity Verification** | [`identity-evaluation.md`](identity-evaluation.md) | Step 06: InsightFace embedding similarity and imposter exclusion | ACTIVE | HIGH |
+| **Selective Face Restoration** | [`selective-restoration.md`](selective-restoration.md) | Step 09: Component-only neural restoration and 100% camera skin preservation | ACTIVE | HIGH |
+| **FLUX LoRA Dataset Packaging** | [`lora-dataset-flux.md`](lora-dataset-flux.md) | Step 10: Multi-aspect bucketing, prompt captioning, and trigger strategy | ACTIVE | HIGH |
+| **Configuration SSOT** | [configuration.md](configuration.md) | Step00–10 runtime configuration and actual implementation gaps | ACTIVE | MEDIUM |
+| **Video / Frame Organization** | [video-frame-organization.md](video-frame-organization.md) | Step1 stable IDs, original provenance, copies and per-video frames | ACTIVE | MEDIUM |
+
+- [Technical image metrics](technical-image-metrics.md): STEP2 measurement, provenance and diagnostic boundaries (DEC-0008).
+
+- [Project governance](project-governance.md): mandatory Rules entry, full-frame lineage and planned implementation boundaries.

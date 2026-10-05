@@ -3,6 +3,8 @@
 No scoring, selection, deletion or image transformation. Stills do not change
 the formal video extraction counts. Run only after successful STEP1 completion.
 """
+from common.step3_review import is_review_copy, require_source
+
 import argparse
 import csv
 import json
@@ -22,6 +24,10 @@ def read_csv(path):
 
 
 def build(raw, manifests, supplemental, reports):
+    from common.step3_review import REGISTERED_ROOTS
+    REGISTERED_ROOTS.update((Path(reports).resolve()/name for name in ("passed","borderline")))
+    require_source(raw)
+    require_source(supplemental)
     if not supplemental.is_dir() or supplemental == raw or not supplemental.is_relative_to(raw):
         raise ValueError('Declare an existing supplemental subtree inside the frame root')
     summary = json.loads((manifests/'step1_summary.json').read_text(encoding='utf-8-sig'))
@@ -55,7 +61,7 @@ def build(raw, manifests, supplemental, reports):
     video_count = len(rows)
     if video_count != summary['frames_extracted']:
         raise ValueError('STEP1 summary/frame inventory mismatch')
-    stills = sorted((p for p in supplemental.rglob('*') if p.is_file() and p.suffix.lower() in EXTENSIONS), key=natural_key)
+    stills = sorted((p for p in supplemental.rglob('*') if not is_review_copy(p) and p.is_file() and p.suffix.lower() in EXTENSIONS), key=natural_key)
     if not stills:
         raise ValueError('No supplemental images found')
     for path in stills:
@@ -67,7 +73,7 @@ def build(raw, manifests, supplemental, reports):
                          image_sha256=sha256_file(path), sha256_source='DIRECT_FILE_HASH', source_video_path='',
                          source_video_sha256='', extraction_policy_version='', sample_fps_requested='', sample_fps_effective=''))
     expected = {r['filename'] for r in rows}
-    actual = {p.relative_to(raw).as_posix() for p in raw.rglob('*') if p.is_file() and p.suffix.lower() in EXTENSIONS}
+    actual = {p.relative_to(raw).as_posix() for p in raw.rglob('*') if not is_review_copy(p) and p.is_file() and p.suffix.lower() in EXTENSIONS}
     if len(expected) != len(rows) or actual != expected:
         raise ValueError('Actual frame-root image inventory differs from declared formal + supplemental inputs')
     reports.mkdir(parents=True, exist_ok=True)

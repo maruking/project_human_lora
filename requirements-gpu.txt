@@ -1,0 +1,23 @@
+# ==============================================================================
+# Real Human LoRA Dataset Pipeline - GPU Requirements (NVIDIA CUDA)
+# ==============================================================================
+# First, install base requirements:
+#   pip install -r requirements.txt
+#
+# Then install PyTorch with CUDA 12.1 (or adjust for your CUDA version):
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#
+# Finally, install remaining GPU acceleration packages:
+#   pip install -r requirements-gpu.txt
+
+# Vision Transformers & Multi-modal Captioning (Step 10)
+transformers>=4.40.0
+accelerate>=0.28.0
+
+# Face Feature Extraction & Identity Evaluation (Step 6)
+insightface>=0.7.3
+onnxruntime-gpu>=1.17.0
+
+# Selective Face Restoration & CodeFormer Support (Step 9)
+facexlib>=0.3.0
+basicsr>=1.4.2

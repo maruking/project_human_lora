@@ -1,4 +1,6 @@
 """STEP7 Revision B: generation-safe CSV joins and report-only selection."""
+from common.step3_review import is_review_copy, require_source
+
 import argparse
 import csv
 import hashlib
@@ -67,7 +69,7 @@ def load_inputs(args, config):
     if generation != summary2['input_generation']['sha256'] or set(formal)!=set(hashes):
         raise ValueError('STEP2 formal universe differs from current STEP1 generation')
     inventory=set(p.relative_to(args.images).as_posix() for p in args.images.rglob('*')
-                  if p.is_file() and p.suffix.lower() in ('.png','.jpg','.jpeg','.webp'))
+                  if not is_review_copy(p) and p.is_file() and p.suffix.lower() in ('.png','.jpg','.jpeg','.webp'))
     supplemental=summary2.get('supplemental_input_generation',{}).get('files',{})
     if inventory != set(formal)|set(supplemental): raise ValueError('Raw inventory differs from current STEP2 universe')
     hashes.update(supplemental)

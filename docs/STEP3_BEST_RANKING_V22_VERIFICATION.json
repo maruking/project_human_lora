@@ -1,0 +1,20 @@
+{
+  "checks": {
+    "output/reports/step3_best_ranking.csv": true,
+    "output/reports/step3_best_ranking_summary.json": true,
+    "output/reports/step3_best_review_history.json": true,
+    "output/reports/step3_best_review_history_by_version.json": true,
+    "output/reports/step3_best_review_reject_feedback_best_rank_v2.1.csv": true,
+    "scripts/common/best_eye_quality.py": true,
+    "preserved_v21_code_bytes": true,
+    "local_config_only_version_and_label_changed": true,
+    "ranking_numeric_settings_unchanged": true,
+    "official_summary_still_v21": true,
+    "no_production_v22_review_copies": true,
+    "known_history_versions_preserved": true
+  },
+  "best_tests_passed": 111,
+  "config_tests_passed": 8,
+  "bat_help_passed": true,
+  "full_production_executed": false
+}

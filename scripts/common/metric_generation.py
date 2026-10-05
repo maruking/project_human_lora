@@ -1,4 +1,6 @@
 """Validate the complete STEP1 generation before any image metric computation."""
+from common.step3_review import is_review_copy, require_source
+
 from collections import Counter
 import csv
 import hashlib
@@ -14,13 +16,14 @@ def read_json(path):
 
 
 def preflight(source: Path, directory: Path):
+    require_source(source)
     expected = read_step1_counts(directory)
     summary = read_json(directory / 'step1_summary.json')
     if (summary['status'] != 'PASS' or summary['frames_extracted'] != sum(expected.values())
             or summary['total_videos'] != len(expected) or summary['failed'] != 0
             or summary['extraction_failed'] != 0 or summary['successful'] != len(expected)):
         raise ValueError('STEP1 summary and extraction counts/status differ')
-    images = sorted((p for p in source.rglob('*') if p.is_file() and
+    images = sorted((p for p in source.rglob('*') if not is_review_copy(p) and p.is_file() and
                      p.suffix.lower() in {'.png', '.jpg', '.jpeg', '.webp'}),
                     key=lambda p: image_order(p, source))
     counts = Counter(p.relative_to(source).parts[0] for p in images)

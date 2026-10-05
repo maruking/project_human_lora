@@ -1,5 +1,6 @@
 """STEP2 provenance, diagnostics and completeness (no quality gates)."""
 from __future__ import annotations
+from common.step3_review import is_review_copy, require_source
 
 from collections import Counter
 import csv
@@ -50,8 +51,11 @@ def image_order(path: Path, source: Path) -> tuple:
 
 def measure_images(source: Path, project: Path, columns: list[str], scorer, *, images=None, provenance=None) -> list[dict]:
     images = images if images is not None else sorted((path for path in source.rglob("*")
-                     if path.is_file() and path.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}),
+                     if not is_review_copy(path) and path.is_file() and path.suffix.lower() in {".png", ".jpg", ".jpeg", ".webp"}),
                     key=lambda path: image_order(path, source))
+    require_source(source)
+    if any(is_review_copy(p) for p in images):
+        raise ValueError("Review copies cannot be measured as source images")
     rows = []
     previous_video = None
     for index, path in enumerate(images, start=1):

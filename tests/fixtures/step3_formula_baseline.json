@@ -1,0 +1,12 @@
+{
+  "sharpness": "48bda78051aa328f41959158c6069943d5668c0c07fb8eb70680e17fb6eda932",
+  "visibility": "e78d24b5b1f94b94808b953b0532d4275792e4fbc74c90ebcff75092b82c8ed5",
+  "eye_ratio": "a284084268340a8b5e86d009684c1a7f7787b81133e7f083869ca67fc90d7a3c",
+  "eye_presence_metrics": "8e678d1edd5cbe7fcb153976eae509e5e96c1b4b4600dbedd9a0075a04abbfa0",
+  "anatomical_sharpness": "2461a3cb353a4cf40bde82b6b58490caa815cce15770793f44327b874381ae80",
+  "cheek_skin_texture_metrics": "9ef9d046bc6cc35efcd6318d8430eb9ca1615524003fa3f00ed268c8e0a7a919",
+  "central_face_gradient": "f2d048ba95ccb5e415e6c4ad22c90f306ef1c7a5e7755e5c44d88862d490fd81",
+  "patch_normalized_tenengrad": "195856056a36e9f88464ee7fa54ad789f6cf139179cc91e823c0d087b660008e",
+  "crop_face_core": "828377d50361bbc615bd5e25079d7878d8882e0afc7383485aecfae537fdc6b7",
+  "percentiles": "b48efe343311a3cd3ef0bdb53ed2d6fa35101993c7e2e1301b395b02e10ef739"
+}

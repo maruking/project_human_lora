@@ -1,12 +1,17 @@
 ---
 topic: face-quality
-last_updated: 2026-10-02
-confidence: HIGH
+last_updated: 2026-10-05
+confidence: MEDIUM
 status: ACTIVE
 related_decisions:
   - DEC-0002
   - DEC-0003
   - DEC-0010
+  - DEC-0016
+  - DEC-0017
+  - DEC-0018
+  - DEC-0019
+  - DEC-0020
 related_failures:
   - FAIL-0002
 related_cases:
@@ -16,6 +21,45 @@ related_cases:
 ---
 
 # Current Knowledge: Face Quality & Beauty Filter Rejection
+
+## Active STEP3 — BEST v2.2 (DEC-0020)
+
+[DEC-0020](../decisions/DEC-0020-balanced-critical-quality-best-v22.md) uses
+base quality times equal geometric mean of eye/detail/exposure/reliability,
+minus remaining geometry concern. Old eye credit loss/direct critical penalties
+are removed. Both canonical measurements and a robust local median use existing
+positive references, not a new physical blur threshold. Face size and useful
+contrast saturate; lighting asymmetry is not visibility loss. Explicit measurement
+coverage/statuses do not establish ROI truth. v05 ROI truth and visual haze remain
+unresolved; no arbitrary threshold, source exception or Human scoring feature.
+
+v2.2 starts Round1 independently of v1/v2/v2.1. Feedback reconciles only active
+review duplicates after hash validation. Minimum/small-sample validation only;
+production and Human calibration pending. See
+[implementation](../../docs/STEP3_BEST_RANKING_V22_IMPLEMENTATION.md).
+
+## Historical STEP3 — BEST v2.1 (DEC-0019)
+
+[DEC-0019](../decisions/DEC-0019-general-eye-quality-best-v21.md) retains v2 common
+positive scaling, positive-only kind bonus and minimal fatal predicates. Both eyes
+are evaluated separately for opening, corroborated obstruction concern and missing
+measurement. Weaker expected eye controls eye credit. Profile context uses existing
+yaw boundary and measured ROI projection; it is not a pose preference. Soft blur
+and exposure agreement use existing anchors only. No Human Reject or source name
+is a scoring feature. Tenengrad/mouth defect scaling remains unresolved.
+
+Normal BAT rescores stored measurements, then stops. best_rank_v2.1 review starts
+at Round1 and ignores v1/v2 shown flags. Configured review45/minimum10 stills/cap4
+rules remain sampling only. v1/v2 code, histories, copies and decisions are preserved.
+[Implementation and 12-example comparison](../../docs/STEP3_BEST_RANKING_V21_IMPLEMENTATION.md).
+Minimum tests pass; no production v2.1 ranking/extraction. Human observation can
+still disagree with eye-state/ROI/exposure diagnostics; new arbitrary thresholds
+were not invented to force those counterexamples down. STEP4+ remains unchanged.
+
+## Historical policies and evidence
+
+All Gate descriptions and numeric results below predate DEC-0017 and remain
+historical context; they are not BEST eligibility/scoring controls.
 
 > STEP0 implementation audit: the historical values below are not the current runtime defaults. Actual gates are recorded in `config/config.example.yaml` and [configuration.md](configuration.md), including global/face Laplacian 25/50 and plasticity maximum 45. Step2 itself computes metrics without an 80.0 rejection gate.
 
@@ -156,3 +200,16 @@ PASS, production rerun pending ★maru. See [scoped fix result](../../docs/STEP3
 Execution/scope correction: maru executes BAT/Python. Current code includes ALL formal STEP1 images + supplemental images; the previous138-row diagnostic run is partial historical evidence only. Corrected full-input execution is pending. See [Maru instructions](../../docs/STEP3_REVISION_A_MARU_RUN.md). No all-input A/B/C counts are validated yet.
 
 [DEC-0012](../decisions/DEC-0012-separate-selection-groups.md) keeps dataset-selection A/B/C separate from official face_eligible. Human Reject C takes priority. B/CONFIRMED is a usable reserve; B/UNDECIDED is provisional and requires human confirmation before use. Diagnostic NORMAL/OPEN never silently promotes to A. The new eye/exposure/detail bins are unvalidated, not Gates, and are applied to all scales including FULL_BODY. [EXP-20261002-008](../../experiments/EXP-20261002-008-step3-revision-a-diagnostics.md) verifies138-row preservation and repeatability, not LoRA suitability (confidence MEDIUM, accuracy INCONCLUSIVE). Supplementals have their own inventory/generation, not formal STEP1 identities.
+
+
+## Historical initial canonical192 architecture — 2026-10-03 (review policy superseded by DEC-0015)
+
+[DEC-0014](../decisions/DEC-0014-canonical192-face-gate.md) supersedes native/eye-first/beauty Hard Gates described historically above. Official sharpness metric is face-core Laplacian at aspect-preserved canonical short edge192; approved threshold comes from STEP3 config SSOT. Native global/face, eye, skin, beauty and plasticity retain their formulas/columns as diagnostics. Existing face/FaceMesh/visibility, size/resolution, exposure/backlight and hair/one-eye predicates are unchanged. A separate diagnostic BORDERLINE (EYE_DETAIL plus SKIN_PROCESSING) keeps face_eligible true. No A/B/C. Implementation/synthetic validation complete; full production execution pending maru. Existing official reports still describe the prior architecture until rerun. See [implementation result](../../docs/STEP3_CANONICAL192_IMPLEMENTATION.md).
+
+## Active STEP3 review gaps revision — 2026-10-03
+
+[DEC-0015](../decisions/DEC-0015-eye-applicability-review-outputs.md) retains canonical192 Gate/SSOT threshold and supersedes the preceding review/applicability policy. Eye presence applies at measured face scale >= existing configured upper-body minimum regardless of shot; small/missing measurements remain explicit N/A. Shared Revision A half-eye/exposure diagnostics add review BORDERLINE only, alongside the existing two-family concern. Full successful runs always refresh disposable reports/passed and reports/borderline copies; failed/partial runs keep the prior successful copies. Copies/aliases/staging are excluded from pipeline source inventories and generation identity. A/B/C unchanged. Synthetic tests complete; production rerun and Chappy/Human Review pending. See [result](../../docs/STEP3_REVIEW_GAPS_IMPLEMENTATION.md).
+
+Supplemental user-authorized operation: [Reject review copy result](../../docs/STEP3_REJECT_REVIEW_COPY_RESULT.md) records current PASS51/BORDERLINE88/REJECT1754. Existing results were copied via separate03_copy_reject_review.bat; no Gate rerun or A/B/C changes. Configured reports/reject is also a disposable private review output, excluded from inputs/lineage and Git. Normal STEP3 still automatically refreshes passed/borderline only.
+
+Complete listing correction: STEP2 includes58 declared stills that normal STEP3 currently does not evaluate. [All-images list result](../../docs/STEP3_ALL_IMAGES_LIST_RESULT.md) creates step3_all_images_report.csv with1951 rows, including58 explicit NOT_EVALUATED stills and image links. Missing evaluation is not PASS/REJECT/A/B/C. Formal STEP3 results and review copies are unchanged. Scope clarification on same-Gate supplemental evaluation is pending; no production inference performed.
