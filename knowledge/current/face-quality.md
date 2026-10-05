@@ -34,9 +34,13 @@ coverage/statuses do not establish ROI truth. v05 ROI truth and visual haze rema
 unresolved; no arbitrary threshold, source exception or Human scoring feature.
 
 v2.2 starts Round1 independently of v1/v2/v2.1. Feedback reconciles only active
-review duplicates after hash validation. Minimum/small-sample validation only;
-production and Human calibration pending. See
-[implementation](../../docs/STEP3_BEST_RANKING_V22_IMPLEMENTATION.md).
+review duplicates after hash validation. Implementation-time minimum/small-sample
+validation was followed by ★maru's production ranking and 135-image Human Review
+(4 Reject; 131 history PENDING, not final ACCEPT/A). v2.2 is the practical baseline
+approved to proceed to STEP4; general quality accuracy remains unvalidated. See
+[current BEST Knowledge](step3-best-ranking.md),
+[production review](../../docs/STEP3_BEST_RANKING_V22_ROUND1_3_CHAPPY_REPORT.md) and
+[historical implementation](../../docs/STEP3_BEST_RANKING_V22_IMPLEMENTATION.md).
 
 ## Historical STEP3 — BEST v2.1 (DEC-0019)
 

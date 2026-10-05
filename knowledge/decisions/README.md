@@ -50,4 +50,4 @@ Each record explains **why** a specific choice was made, what alternatives were 
 
 - [DEC-0019 — Generic eye quality / BEST v2.1](DEC-0019-general-eye-quality-best-v21.md), SUPERSEDED by DEC-0020; old implementation and review evidence preserved.
 
-- [DEC-0020 — Balanced critical quality / BEST v2.2](DEC-0020-balanced-critical-quality-best-v22.md), ACCEPTED design; synthetic and9 stored cases only; production/Human Review pending.
+- [DEC-0020 — Balanced critical quality / BEST v2.2](DEC-0020-balanced-critical-quality-best-v22.md), ACCEPTED design; original decision records synthetic/9-case validation and then-pending production. Subsequent production/135-image review is recorded in [current Knowledge](../current/step3-best-ranking.md) and [review report](../../docs/STEP3_BEST_RANKING_V22_ROUND1_3_CHAPPY_REPORT.md); original Decision body/status unchanged.

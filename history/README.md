@@ -42,3 +42,5 @@
 - [HIST-015 — STEP3 REJECT Boundary Review](HIST-015_STEP3_REJECT_BOUNDARY_REVIEW.md).
 
 - [HIST-016 — STEP3 Revision A diagnostics](HIST-016_STEP3_REVISION_A_DIAGNOSTICS.md).
+
+- [HIST-017 — STEP3 4K to BEST Ranking v2.2](HIST-017_STEP3_4K_TO_BEST_RANKING.md): native metric domain shift, canonical measurement, failed Gate/percentile interpretations, ranking evolution and bounded Human Review baseline.

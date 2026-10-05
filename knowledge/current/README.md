@@ -9,7 +9,8 @@ Developers and AI coding agents should consult these files first to understand c
 
 | Topic | File | Scope | Status | Confidence |
 | :--- | :--- | :--- | :--- | :--- |
-| **BEST face-quality ranking** | [`face-quality.md`](face-quality.md) | STEP3 relative ranking / durable review; historical Gates retained as evidence | ACTIVE; production pending | MEDIUM |
+| **STEP3 BEST Ranking / current practice** | [step3-best-ranking.md](step3-best-ranking.md) | v2.2 baseline, measurement/semantic boundaries, versioned review and dated production evidence | ACTIVE; production/review completed, limited quality validation | MEDIUM |
+| **Face-quality architecture and historical Gates** | [`face-quality.md`](face-quality.md) | Current v2.2 overview; earlier Gates and generation results retained as historical evidence | ACTIVE; see current BEST Knowledge | MEDIUM |
 | **Face Pose & Quota Distribution** | [`face-pose-quota.md`](face-pose-quota.md) | Step 04 & 07: Head angles (Yaw/Pitch) and shot-type quotas (Close/Med/Full) | ACTIVE | HIGH |
 | **Identity Verification** | [`identity-evaluation.md`](identity-evaluation.md) | Step 06: InsightFace embedding similarity and imposter exclusion | ACTIVE | HIGH |
 | **Selective Face Restoration** | [`selective-restoration.md`](selective-restoration.md) | Step 09: Component-only neural restoration and 100% camera skin preservation | ACTIVE | HIGH |

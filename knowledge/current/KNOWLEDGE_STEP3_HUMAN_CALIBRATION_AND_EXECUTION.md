@@ -1,5 +1,11 @@
 # KNOWLEDGE — STEP3 Face Quality / Human Calibration / Execution Policy
 
+> Historical generation/algorithm snapshot: the STEP3 counts and Gate boundaries
+> below describe Revision1 and subsequent calibration at that time, not current
+> BEST v2.2. Execution ownership remains applicable. For current state and completed
+> production/review evidence, see [STEP3 BEST Knowledge](step3-best-ranking.md).
+> The original observations and policies below are preserved.
+
 ## Current STEP3 truth
 
 STEP3 の責務は Face Quality / face-region diagnostics。
