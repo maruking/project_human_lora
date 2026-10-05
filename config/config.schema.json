@@ -388,29 +388,82 @@
       "description": "Stored BEST v2.2 measurement/classification only. Thresholds reuse step4_pose and step3_face_gate.",
       "additionalProperties": false,
       "properties": {
-        "version": {"const": "step4_pose_composition_v2"},
-        "report": {"type": "string", "minLength": 1},
-        "step3_summary": {"type": "string", "minLength": 1},
-        "output": {"type": "string", "minLength": 1},
-        "summary": {"type": "string", "minLength": 1},
-        "video_summary": {"type": "string", "minLength": 1},
-        "markdown": {"type": "string", "minLength": 1}
+        "version": {
+          "const": "step4_pose_composition_v2"
+        },
+        "report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "step3_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "video_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "markdown": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "step5_dedup": {
       "type": "object",
       "properties": {
-        "version": {"const": "step5_dedup_v2"},
-        "temporal_phash_threshold": {"type": "integer", "minimum": 0, "maximum": 64},
-        "tight_angle_threshold": {"type": "number", "minimum": 0},
-        "step4_summary": {"type": "string", "minLength": 1},
-        "step3_report": {"type": "string", "minLength": 1},
-        "step3_summary": {"type": "string", "minLength": 1},
-        "summary": {"type": "string", "minLength": 1},
-        "markdown": {"type": "string", "minLength": 1},
-        "review_html": {"type": "string", "minLength": 1},
-        "pose_review": {"type": "string", "minLength": 1},
-        "pose_summary": {"type": "string", "minLength": 1},
+        "version": {
+          "const": "step5_dedup_v2"
+        },
+        "temporal_phash_threshold": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        },
+        "tight_angle_threshold": {
+          "type": "number",
+          "minimum": 0
+        },
+        "step4_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "step3_report": {
+          "type": "string",
+          "minLength": 1
+        },
+        "step3_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "markdown": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review_html": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pose_review": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pose_summary": {
+          "type": "string",
+          "minLength": 1
+        },
         "phash_threshold": {
           "type": "integer",
           "minimum": 0,
@@ -529,11 +582,11 @@
           ]
         },
         "device": {
-          "type": "string",
           "enum": [
             "auto",
+            "cpu",
             "cuda",
-            "cpu"
+            "gpu"
           ]
         },
         "limit": {
@@ -556,13 +609,119 @@
           "minLength": 1
         },
         "backend": {
-          "type": "string",
           "enum": [
+            "insightface",
             "dino"
           ]
+        },
+        "version": {
+          "const": "step6_identity_v2"
+        },
+        "identity_threshold": {
+          "const": 0.55
+        },
+        "min_reference_count": {
+          "const": 3
+        },
+        "max_reference_count": {
+          "const": 20
+        },
+        "step5_summary": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "markdown": {
+          "type": "string"
+        },
+        "review_html": {
+          "type": "string"
+        },
+        "reference_csv": {
+          "type": "string"
+        },
+        "reference_summary": {
+          "type": "string"
+        },
+        "reference_markdown": {
+          "type": "string"
+        },
+        "reference_html": {
+          "type": "string"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "version"
+            ],
+            "properties": {
+              "version": {
+                "const": "step6_identity_v2"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "version",
+              "backend",
+              "model_name",
+              "device",
+              "identity_threshold",
+              "min_reference_count",
+              "max_reference_count",
+              "limit",
+              "report",
+              "step5_summary",
+              "output_csv",
+              "summary",
+              "markdown",
+              "review_html",
+              "reference_csv",
+              "reference_summary",
+              "reference_markdown",
+              "reference_html"
+            ],
+            "properties": {
+              "backend": {
+                "const": "insightface"
+              },
+              "model_name": {
+                "const": "buffalo_l"
+              },
+              "device": {
+                "enum": [
+                  "auto",
+                  "cpu",
+                  "cuda"
+                ]
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "base_thresholds"
+                  ]
+                },
+                {
+                  "required": [
+                    "pose_modifiers"
+                  ]
+                },
+                {
+                  "required": [
+                    "eval_all_eligible"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
     },
     "step7_revision_b": {
       "type": "object",
@@ -1241,6 +1400,361 @@
         "min_supplemental": {
           "type": "integer",
           "minimum": 10
+        }
+      }
+    },
+    "step7_candidates_v2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "candidate_pool_target",
+        "candidate_pool_min",
+        "candidate_pool_max",
+        "max_per_video",
+        "max_supplemental_still",
+        "pose_min",
+        "vertical_min",
+        "scale_min",
+        "report",
+        "step6_summary",
+        "output_csv",
+        "candidates_csv",
+        "summary",
+        "markdown",
+        "review_html",
+        "limit",
+        "quality_guard_multiplier",
+        "quality_core_target",
+        "coverage_repair_slots_max"
+      ],
+      "properties": {
+        "version": {
+          "const": "step7_quality_coverage_v2.1"
+        },
+        "candidate_pool_target": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 70
+        },
+        "candidate_pool_min": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 70
+        },
+        "candidate_pool_max": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 70
+        },
+        "max_per_video": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_supplemental_still": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pose_min": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "FRONTAL",
+            "THREE_QUARTER_LEFT",
+            "THREE_QUARTER_RIGHT",
+            "PROFILE_LEFT",
+            "PROFILE_RIGHT"
+          ],
+          "properties": {
+            "FRONTAL": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "THREE_QUARTER_LEFT": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "THREE_QUARTER_RIGHT": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "PROFILE_LEFT": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "PROFILE_RIGHT": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "vertical_min": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "LOOKING_UP",
+            "LOOKING_DOWN"
+          ],
+          "properties": {
+            "LOOKING_UP": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "LOOKING_DOWN": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "scale_min": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "CLOSE_UP",
+            "UPPER_BODY",
+            "FULL_BODY"
+          ],
+          "properties": {
+            "CLOSE_UP": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "UPPER_BODY": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "FULL_BODY": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "report": {
+          "type": "string"
+        },
+        "step6_summary": {
+          "type": "string"
+        },
+        "output_csv": {
+          "type": "string"
+        },
+        "candidates_csv": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "markdown": {
+          "type": "string"
+        },
+        "review_html": {
+          "type": "string"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quality_guard_multiplier": {
+          "type": "number",
+          "minimum": 1
+        },
+        "quality_core_target": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "coverage_repair_slots_max": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "step8_folder_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "review_root",
+        "candidates_csv",
+        "full_csv",
+        "step7_summary",
+        "manifest",
+        "preparation_summary",
+        "selection_csv",
+        "summary",
+        "markdown",
+        "final_count_min",
+        "final_count_target",
+        "final_count_max",
+        "pose_guidance",
+        "scale_guidance",
+        "vertical_guidance"
+      ],
+      "properties": {
+        "version": {
+          "const": "step8_folder_review_v2"
+        },
+        "review_root": {
+          "type": "string"
+        },
+        "candidates_csv": {
+          "type": "string"
+        },
+        "full_csv": {
+          "type": "string"
+        },
+        "step7_summary": {
+          "type": "string"
+        },
+        "manifest": {
+          "type": "string"
+        },
+        "preparation_summary": {
+          "type": "string"
+        },
+        "selection_csv": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "markdown": {
+          "type": "string"
+        },
+        "final_count_min": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "final_count_target": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "final_count_max": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pose_guidance": {
+          "type": "object",
+          "required": [
+            "FRONTAL",
+            "THREE_QUARTER_LEFT",
+            "THREE_QUARTER_RIGHT",
+            "PROFILE_LEFT",
+            "PROFILE_RIGHT",
+            "NOT_EVALUABLE"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "FRONTAL": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "THREE_QUARTER_LEFT": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "THREE_QUARTER_RIGHT": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "PROFILE_LEFT": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "PROFILE_RIGHT": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "NOT_EVALUABLE": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "scale_guidance": {
+          "type": "object",
+          "required": [
+            "CLOSE_UP",
+            "UPPER_BODY",
+            "FULL_BODY"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "CLOSE_UP": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "UPPER_BODY": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "FULL_BODY": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "vertical_guidance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "LOOKING_UP",
+            "LOOKING_DOWN"
+          ],
+          "properties": {
+            "LOOKING_UP": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "LOOKING_DOWN": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
         }
       }
     }

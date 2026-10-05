@@ -1,0 +1,27 @@
+{
+  "status": "HISTORICAL_NOT_ACTIVE",
+  "step6_identity": {
+    "base_thresholds": {
+      "CLOSE_UP": 0.62,
+      "UPPER_BODY": 0.58,
+      "FULL_BODY": 0.52
+    },
+    "pose_modifiers": {
+      "FRONT": 0.0,
+      "LOOKING_DOWN": -0.04,
+      "LOOKING_UP": -0.04,
+      "LEFT_3Q": -0.05,
+      "RIGHT_3Q": -0.05,
+      "LEFT_PROFILE": -0.1,
+      "RIGHT_PROFILE": -0.1,
+      "EXTREME_POSE": -0.12
+    },
+    "device": "auto",
+    "limit": 0,
+    "eval_all_eligible": false,
+    "report": "@reports/step5_dataset_report.csv",
+    "output_csv": "@reports/step6_dataset_report.csv",
+    "model_name": "facebook/dino-vitb16",
+    "backend": "dino"
+  }
+}

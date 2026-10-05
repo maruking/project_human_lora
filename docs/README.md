@@ -35,3 +35,15 @@ representative pose/cluster HTML; these outputs are not pre-existing results.
 - [以前のdocsバックアップ](bkup/)
 
 元ファイルは削除せず移動。現行ランキング1,951行、STEP2/旧Gateの正式report、版別Human Review履歴、v2.2レビュー、原画像・現行動画・manifestは保持しています。
+
+- [STEP6 v2 implementation](STEP6_IDENTITY_V2_IMPLEMENTATION.md) and [reference-only audit](STEP6_REFERENCE_AUDIT.md).
+
+- [STEP7 v2 implementation](STEP7_CANDIDATE_V2_IMPLEMENTATION.md): Chappy review before ★maru production; no STEP8 final decisions yet.
+
+## STEP7 current-version Reject correction
+
+[Eligibility patch report](STEP7_CURRENT_VERSION_REJECT_PATCH.md): authoritative same-version Human Reject exclusion; unchanged BEST/minima/identity and read-only correction audit.
+
+- [STEP7 v2.1 implementation](STEP7_CANDIDATE_V21_IMPLEMENTATION.md): bounded quality guard/core and optional soft coverage, Chappy approval before ★maru production.
+
+- [STEP8 folder-review implementation](STEP8_FOLDER_REVIEW_IMPLEMENTATION.md): Explorer copy selection, guarded ACCEPT, validated CSV handoff and user instructions.

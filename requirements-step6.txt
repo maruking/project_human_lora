@@ -1,0 +1,8 @@
+# Dedicated Python3.10 environment; do not install into STEP2-5 environments.
+insightface==0.7.3
+onnxruntime-gpu[cuda,cudnn]==1.23.2
+numpy==1.26.4
+opencv-python-headless==4.11.0.86
+albumentations==1.4.3
+pyyaml==6.0.3
+jsonschema==4.26.0

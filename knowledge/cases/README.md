@@ -14,3 +14,5 @@ This directory documents concrete input frames, anomalous edge cases, and counte
 - [CASE-0003 — Low-resolution pixelation/high edges](CASE-0003-low-resolution-pixelated-high-edges.md), LOW, user-reported.
 
 - [CASE-0004 — Large FULL_BODY eye-presence bypass](CASE-0004-large-fullbody-eye-bypass.md), MEDIUM; stored CSV evidence and regression fixture, no new inference.
+
+- [CASE-0005 — Semantic facial obstruction residual](CASE-0005-semantic-face-obstruction-residual.md), LOW; user-reported limitation, exemplar identity unavailable, detector work deferred.

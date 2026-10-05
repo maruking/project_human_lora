@@ -119,26 +119,24 @@ step5_dedup:
   pose_review: docs/STEP5_REPRESENTATIVE_POSE_REVIEW.html
   pose_summary: '@reports/step5_representative_pose_summary.csv'
 step6_identity:
-  base_thresholds:
-    CLOSE_UP: 0.62
-    UPPER_BODY: 0.58
-    FULL_BODY: 0.52
-  pose_modifiers:
-    FRONT: 0.0
-    LOOKING_DOWN: -0.04
-    LOOKING_UP: -0.04
-    LEFT_3Q: -0.05
-    RIGHT_3Q: -0.05
-    LEFT_PROFILE: -0.1
-    RIGHT_PROFILE: -0.1
-    EXTREME_POSE: -0.12
+  version: step6_identity_v2
+  backend: insightface
+  model_name: buffalo_l
   device: auto
+  identity_threshold: 0.55
+  min_reference_count: 3
+  max_reference_count: 20
   limit: 0
-  eval_all_eligible: false
   report: '@reports/step5_dataset_report.csv'
+  step5_summary: '@reports/step5_dedup_summary.json'
   output_csv: '@reports/step6_dataset_report.csv'
-  model_name: facebook/dino-vitb16
-  backend: dino
+  summary: '@reports/step6_identity_summary.json'
+  markdown: docs/STEP6_IDENTITY_SUMMARY.md
+  review_html: docs/STEP6_IDENTITY_REVIEW.html
+  reference_csv: '@reports/step6_reference_audit.csv'
+  reference_summary: '@reports/step6_reference_summary.json'
+  reference_markdown: docs/STEP6_REFERENCE_AUDIT.md
+  reference_html: docs/STEP6_REFERENCE_REVIEW.html
 step7_selection:
   shot_min:
     CLOSE_UP: 10
@@ -296,3 +294,84 @@ step3_best_ranking:
     shadow: 0.10
     clipping_haze: 0.10
     uncertainty: 0.10
+
+# Active STEP7 review options; legacy STEP7 sections above remain historical.
+step7_candidates_v2:
+  version: step7_quality_coverage_v2.1
+  candidate_pool_target: 70
+  candidate_pool_min: 60
+  candidate_pool_max: 70
+  quality_guard_multiplier: 2.0
+  quality_core_target: 60
+  coverage_repair_slots_max: 10
+  max_per_video: 6
+  max_supplemental_still: 15
+  pose_min:
+    FRONTAL: 15
+    THREE_QUARTER_LEFT: 10
+    THREE_QUARTER_RIGHT: 10
+    PROFILE_LEFT: 2
+    PROFILE_RIGHT: 2
+  vertical_min:
+    LOOKING_UP: 2
+    LOOKING_DOWN: 2
+  scale_min:
+    CLOSE_UP: 12
+    UPPER_BODY: 18
+    FULL_BODY: 12
+  report: '@reports/step6_dataset_report.csv'
+  step6_summary: '@reports/step6_identity_summary.json'
+  output_csv: '@reports/step7_candidate_selection.csv'
+  candidates_csv: '@reports/step7_review_candidates.csv'
+  summary: '@reports/step7_candidate_summary.json'
+  markdown: docs/STEP7_CANDIDATE_SUMMARY.md
+  review_html: docs/STEP7_CANDIDATE_REVIEW.html
+  limit: 0
+
+# Folder-based final Human Review; legacy step8_review remains historical.
+step8_folder_review:
+  version: step8_folder_review_v2
+  review_root: work/step8_review
+  candidates_csv: '@reports/step7_review_candidates.csv'
+  full_csv: '@reports/step7_candidate_selection.csv'
+  step7_summary: '@reports/step7_candidate_summary.json'
+  manifest: '@reports/step8_review_manifest.csv'
+  preparation_summary: '@reports/step8_review_preparation.json'
+  selection_csv: '@reports/step8_human_selection.csv'
+  summary: '@reports/step8_selection_summary.json'
+  markdown: docs/STEP8_SELECTION_SUMMARY.md
+  final_count_min: 35
+  final_count_target: 40
+  final_count_max: 45
+  pose_guidance:
+    FRONTAL:
+    - 12
+    - 17
+    THREE_QUARTER_LEFT:
+    - 7
+    - 10
+    THREE_QUARTER_RIGHT:
+    - 7
+    - 10
+    PROFILE_LEFT:
+    - 1
+    - 3
+    PROFILE_RIGHT:
+    - 1
+    - 3
+    NOT_EVALUABLE:
+    - 0
+    - 2
+  scale_guidance:
+    CLOSE_UP:
+    - 8
+    - 12
+    UPPER_BODY:
+    - 16
+    - 24
+    FULL_BODY:
+    - 6
+    - 12
+  vertical_guidance:
+    LOOKING_UP: 1
+    LOOKING_DOWN: 1

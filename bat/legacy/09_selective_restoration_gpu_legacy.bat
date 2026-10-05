@@ -8,18 +8,18 @@ if errorlevel 1 (
 )
 
 echo ==============================================================================
-echo [STEP 07] BEST Quality and Coverage Review Pool v2.1
-echo Review options only. STEP8 Human Review decides final inclusion.
+echo [STEP 09] [GPU] Selective Face Restoration (Raw Camera Skin Preserved)
+echo Effective input/output paths are printed by the Python step; defaults are defined in config.
 echo Effective input/output paths are printed by the Python step; defaults are defined in config.
 echo ==============================================================================
 
-%PY_CMD% "%PROJECT_DIR%scripts\step7_candidate_selection_v21.py" %*
+%PY_CMD% "%PROJECT_DIR%scripts\selective_restoration.py" %*
 if errorlevel 1 (
     echo.
-    echo [ERROR] Candidate selection failed with exit code %errorlevel%.
+    echo [ERROR] Selective restoration failed with exit code %errorlevel%.
     exit /b %errorlevel%
 )
 
 echo.
-echo [SUCCESS] STEP 07: Candidate selection completed successfully.
+echo [SUCCESS] STEP 09: Selective restoration completed successfully.
 exit /b 0

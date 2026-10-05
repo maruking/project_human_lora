@@ -72,9 +72,9 @@ flowchart TD
     end
 
     subgraph Phase3["Phase 3: Identity & Candidate Selection"]
-        S05 --> S06["06_evaluate_identity_gpu.bat<br/>(DINO Cosine Similarity)"]
+        S05 --> S06["06_evaluate_identity_gpu.bat<br/>(InsightFace Identity v2)"]
         R -.-> S06
-        S06 --> S07["07_score_lora_candidates.bat<br/>(Configured Shot/Pose Min-Max Quotas)"]
+        S06 --> S07["07_score_lora_candidates.bat<br/>(BEST + Coverage Review Options)"]
         S07 --> S08["08_prepare_human_review.bat<br/>(Selected Folder and Console Review)"]
     end
 
@@ -155,8 +155,8 @@ bat\02_technical_metrics.bat        :: Technical measurement and STEP1 completen
 bat\03_face_quality_gate.bat        :: Local sharpness & beauty filter rejection
 bat\04_classify_face_pose.bat       :: Head angles & composition classification
 bat\05_face_deduplication.bat       :: Deduplication hashing
-bat\06_evaluate_identity_gpu.bat    :: [GPU] DINO similarity matching
-bat\07_score_lora_candidates.bat    :: Configured quota selection into work/candidates/
+bat\06_evaluate_identity_gpu.bat    :: [GPU] InsightFace identity v2
+bat\07_score_lora_candidates.bat    :: BEST + minimum-coverage review pool; source-linked reports
 bat\08_prepare_human_review.bat     :: Prepare work/selected/ and console review (HTML planned)
 bat\09_selective_restoration_gpu.bat:: [GPU] Existing full-body face restoration with rollback
 bat\10_package_flux_dataset_gpu.bat :: [GPU] 16px dimension alignment and CLIP captioning
@@ -200,8 +200,8 @@ Default values from config reflect existing code:
 | Step3 gate | Global Laplacian 25; face Laplacian 50; eye sharpness 1.6; plasticity maximum 45 |
 | Step4 pose | Yaw 15/42 degrees; pitch +/-20; extreme pitch/roll 35 |
 | Step5 dedup | pHash 10; angle 12; frame-index window 6 |
-| Step6 identity | DINO `facebook/dino-vitb16`; dynamic shot/pose thresholds; device auto |
-| Step7 candidate pool | 65; fixed min/max quotas; output `work/candidates/` |
+| Step6 identity | InsightFace `buffalo_l`; fixed historical0.55; confirmed reference preflight; device auto |
+| Step7 review options | target70 within60–80; BEST only, minimum coverage and source caps; source-linked review |
 | Step8 initial review | 45; displayed targets 18/62/20; manually curated final guidance 30–45 |
 | Step9 restoration | Fidelity 0.8; identity floor 0.6; maximum loss 0.08; minimum fidelity 0.82 |
 | Step10 packaging | Trigger `character`; CLIP attributes; dimensions aligned to 16, no aspect buckets |
@@ -464,9 +464,9 @@ per image, same offline JSON/CSV export. Previous45/180 sets remain debug histor
 [Scoped result](docs/STEP3_SINGLE_GATE_BOUNDARY_FIX.md).117 tests PASS.
 Production CSV, thresholds, formulas, source images and STEP4+ unchanged.
 
-### STEP7 Revision B candidate selection
+### Historical STEP7 Revision B candidate selection (superseded by DEC-0024)
 
-`bat\07_score_lora_candidates.bat` now runs the report-only Revision B path.
+The former `bat\07_score_lora_candidates.bat` ran the report-only Revision B path. The current normal BAT runs v2 described below.
 Use current-generation STEP3, full A/B/C sidecar, STEP4 and STEP5 outputs; STEP6
 identity safety is consumed when available. Settings live in `step7_revision_b`.
 A is primary, confirmed B fills shortages, pending B stays a review reserve, and
@@ -489,3 +489,64 @@ Run `bat\03_revision_a_diagnostics.bat` after declaring `supplemental_dir` in pr
 ## Current STEP3 review outputs
 
 [STEP3 review revision](docs/STEP3_REVIEW_GAPS_IMPLEMENTATION.md) keeps canonical192 sharpness and retained Hard Gates. Half-eye/exposure are diagnostic-only; a large measurable FULL_BODY face undergoes the existing per-eye presence validation. A complete successful 03_face_quality_gate.bat refreshes disposable configured reports/passed and reports/borderline copies. They are never inputs/lineage or A/B/C decisions and may be deleted after review. Failed/partial runs retain the previous successful copies. Production rerun belongs to ★maru; wait for Chappy review before Revision A.
+
+
+## STEP6 Identity Verification v2
+
+Use a dedicated Python3.10 environment: `bat/setup_step6_identity.bat`.
+Weights must already exist in the standard InsightFace buffalo_l model directory;
+pipeline runs do not automatically download them. Legacy DINO code is preserved.
+
+1. Place3–10 explicitly confirmed identity anchors in configured reference_face_dir.
+2. Run `bat/06_evaluate_identity_gpu.bat --reference-preflight-only`.
+3. Review `docs/STEP6_REFERENCE_AUDIT.md` and `docs/STEP6_REFERENCE_REVIEW.html`.
+4. Only after reference audit PASS, run `bat/06_evaluate_identity_gpu.bat`.
+5. Share `docs/STEP6_IDENTITY_SUMMARY.md` and `docs/STEP6_IDENTITY_REVIEW.html`.
+
+STEP6 preserves all STEP5 rows; identity_state is authoritative, independent of
+quality/pose/history. Only UNIQUE/REPRESENTATIVE receive default candidate inference.
+Partial/error results cannot replace successful production reports. No STEP7+
+execution. The normal runner retains its STOP after STEP5. See DEC-0023 and
+[implementation details](docs/STEP6_IDENTITY_V2_IMPLEMENTATION.md).
+
+
+## Active STEP7 Candidate Selection v2.1
+
+Current-version explicit Human Rejects are candidate exclusions, not score penalties.
+STEP7 verifies best_rank_v2.2 version-scoped history/feedback against current frame,
+image/generation and ranking evidence. PENDING/old-version Rejects remain eligible.
+See [eligibility patch](docs/STEP7_CURRENT_VERSION_REJECT_PATCH.md).
+
+`bat/07_score_lora_candidates.bat` runs step7_quality_coverage_v2.1, consuming current
+STEP6 COMPLETE with verified STEP3–6 lineage. Quality is STEP3 BEST only; STEP6
+identity is diagnostic-only with weight0. No A/B/C requirement or second quality
+score. Normal pool: ranking_eligible and UNIQUE/REPRESENTATIVE without upstream errors.
+
+Config defaults: approximately70 review options within60–70, bounded quality guard
+target×2.0, fixed BEST core60, at most10 soft coverage repairs; unused slots fill by
+BEST. Cap6 per video and15 collective stills, one-per-cluster. Never leave the guard
+or replace the quality core for coverage. Missing coverage is a warning; core/<60
+quality shortage blocks publication. See [v2.1 report](docs/STEP7_CANDIDATE_V21_IMPLEMENTATION.md).
+No final training ratio, automatic duplicate fallback or quality Reject.
+
+Codex performs synthetic tests and `--preflight-only`; production is ★maru's action
+**after Chappy reviews the implementation**. Outputs: full step7_candidate_selection.csv,
+selected step7_review_candidates.csv, STEP7_CANDIDATE_SUMMARY.md/JSON and source-linked
+STEP7_CANDIDATE_REVIEW.html grouped by pose/scale. STEP8 later decides final35–45.
+Runner retains STOP after STEP5; no STEP8+ handoff execution is authorized here.
+[Historical v2 implementation](docs/STEP7_CANDIDATE_V2_IMPLEMENTATION.md),
+[Knowledge](knowledge/current/candidate-selection.md).
+
+## Active STEP8 Folder-Based Human Final Review
+
+Run `bat/08_prepare_folder_review.bat` after current STEP7 production. Review
+`work/step8_review` in Explorer. Each pose folder has FULL and initially empty ACCEPT;
+copy chosen images FULL→ACCEPT, leaving FULL intact. Select35–45 total; no notes needed.
+Then run `bat/08_collect_folder_review.bat` and share docs/STEP8_SELECTION_SUMMARY.md.
+Pose/scale/up-down ranges are soft guidance; never choose a poor image just to fill them.
+
+Prepare refuses nonempty ACCEPT. Explicit `--reset-review` archives the old session
+including choices before rebuilding; no silent discard. Validated decisions are
+step8_human_selection.csv, not folder contents. Old STEP8 assistant is historical;
+the normal legacy STEP9 path STOPs pending its separate CSV/component-mask revision.
+See [operation/validation report](docs/STEP8_FOLDER_REVIEW_IMPLEMENTATION.md).

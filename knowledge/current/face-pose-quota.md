@@ -31,9 +31,9 @@ pending description above is historical. STEP7 quotas remain out of scope.
 Normal run_all now runs STEP5 v2, then stops before STEP6 for cluster/pose review;
 see [deduplication Knowledge](deduplication.md).
 
-## Active STEP7 Revision B (2026-10-02)
+## Historical STEP7 Revision B (2026-10-02; superseded by DEC-0024)
 
-Normal STEP7 BAT now selects report-only proposals using `step7_revision_b` SSOT
+The former STEP7 BAT selected report-only proposals using `step7_revision_b` SSOT
 settings and complete reviewed A/B/C state. A is primary; confirmed B fills actual
 coverage/minimum-count shortages; pending B remains a review reserve; C is excluded.
 Current configured target is 40 within 35–45. Duplicate-group/source caps and angle,
@@ -81,3 +81,7 @@ A high-performance LoRA must avoid "frontal angle lock" and "close-up bias". The
 
 ## 8. Not Yet Validated
 - Drone aerial footage or severe overhead bird's-eye camera angles ($> 60^\circ$ pitch).
+
+## Active STEP7 v2.1 — 2026-10-05
+
+Bounded BEST guard/core plus optional soft review options replaces old quotas/A-B-C runtime dependence for this generation. Missing pose options remain shortages; guard/core/caps are not relaxed. Source caps and one-per-cluster constrain options; no pose percentage maximum. STEP8 final35–45 human authority. FULL_BODY remains face-area scale. See [candidate selection](candidate-selection.md) and DEC-0025.

@@ -57,12 +57,13 @@ CLI paths themselves use normal filesystem notation, not these config tokens.
 - Step3 uses canonical192 face-core Laplacian as the approved Hard Gate; see DEC-0014 below. Native global/face 25/50, eye1.6, plasticity45 and skin0.050/0.035 remain diagnostics. Face dimensions140/110/80 remain Hard Gates.
 - Step4 uses yaw 15/42, pitch +/-20, extreme pitch/roll 35.
 - Step5 uses pHash 10, angle 12 and frame-index window 6.
-- Step6 uses DINO `facebook/dino-vitb16` with shot/pose-dependent gates;
-  InsightFace/buffalo_l remains a future migration.
+- Step6 v2 uses InsightFace `buffalo_l`, fixed historical identity threshold0.55,
+  confirmed references minimum3/maximum20 and explicit reference-only preflight.
+  Legacy DINO dynamic settings are archived, not active v2 settings (DEC-0023).
 - Legacy Step7 candidate pool default is 65; its old fixed maps remain preserved.
-  Normal Step7 now uses separate `step7_revision_b` settings targeting 40 within
-  35–45, producing report-only A/B/C coverage proposals and stopping the runner
-  before legacy Step8. See [Revision B result](../../docs/STEP7_REVISION_B_RESULT.md).
+  Historical Revision B settings remain preserved. Normal STEP7 now uses
+  `step7_candidates_v2`: target70 within60–80 review options, BEST quality only,
+  minimum coverage/source caps; STEP8 final35–45. See DEC-0024.
 - Step8 initial review default is 45, displayed percentages 18/62/20;
   final guidance is 30–45, controlled by human curation, not packaging truncation.
   No HTML dashboard currently exists.
@@ -135,3 +136,32 @@ not new physical Tenengrad/mouth/haze thresholds. See
 [DEC-0020](../decisions/DEC-0020-balanced-critical-quality-best-v22.md).
 Normal BAT reuses stored measurements and stops; Human Review starts Round1
 independently of older versions. Historical Gate thresholds and STEP4 unchanged.
+
+## STEP6 v2 SSOT — 2026-10-05
+
+step6_identity declares step6_identity_v2/insightface/buffalo_l and explicit
+reference/candidate audit paths. Schema forbids legacy dynamic thresholds/modifiers/
+face_eligible settings when versionv2 is declared. Config defaults threshold0.55,
+references3–20; no subject tuning. Legacy config snapshot: config/step6_identity_legacy_dino.json.
+Dedicated environment dependencies: requirements-step6.txt and exact lock file.
+See [DEC-0023](../decisions/DEC-0023-step6-insightface-identity.md).
+
+## STEP7 v2 SSOT — 2026-10-05
+
+step7_candidates_v2 owns review range/target, pose/vertical/scale minima, source caps and input/output paths. Defaults reflect DEC-0024 user specification, not new quality thresholds. Legacy step7_selection and step7_revision_b sections remain historical and unused by normal BAT. Identity has no scoring configuration because its selection weight is fixed0 in this architecture.
+
+## Active STEP7 v2.1 SSOT — DEC-0025
+
+The compatible section name step7_candidates_v2 now declares step7_quality_coverage_v2.1.
+Current defaults target70/min60/max70, multiplier2.0, core60, repair maximum10,
+profile desired minima2/2; other soft goals and source caps unchanged. Runtime
+validates core/range/repair relationships; guard size uses ceiling(target×multiplier).
+Historical generic example settings are saved in config/step7_candidates_v2_legacy.json
+for v2 regression tests. No STEP3–6 or quality threshold setting changes.
+
+## STEP8 folder-review SSOT — DEC-0026
+
+step8_folder_review owns paths, count35/40/45 and soft pose/scale/vertical guidance.
+Pose folder names derive from configured guidance, not separate BAT constants.
+Legacy step8_review remains historical and unchanged; no auto-populate setting in
+the new workflow. No STEP3–7 score/threshold changes or STEP9 algorithm tuning.

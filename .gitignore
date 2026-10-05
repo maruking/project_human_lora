@@ -181,6 +181,8 @@ output/reports/.step3_best_operation.lock
 /output/reports/.step4_pose_operation.lock
 /output/reports/.step5_dedup_operation.lock
 /output/reports/.step5_stage_*/
+/output/reports/.step6_identity_operation.lock
+/output/reports/.step7_candidate_operation.lock
 
 # Historical calibration inputs contain private source pixels and local metadata.
 /input/canonical_sharpness*/
@@ -205,3 +207,8 @@ output/reports/.step3_best_operation.lock
 
 # Source code, Agent Rules, Knowledge, tests, documentation, configuration
 # templates and non-media reports remain eligible for version control.
+
+# STEP8 copies/staging are an interaction surface, never source or code assets.
+/work/step8_review/
+/work/.step8_stage_*/
+/output/reports/.step8_folder_operation.lock

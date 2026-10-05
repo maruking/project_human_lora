@@ -36,7 +36,7 @@ Each record explains **why** a specific choice was made, what alternatives were 
 
 - [DEC-0012 — Separate A/B/C selection groups](DEC-0012-separate-selection-groups.md), ACCEPTED user policy; provisional diagnostics do not finalize selection.
 
-- [DEC-0013 — Revision B candidate proposals](DEC-0013-revision-b-candidate-selection.md), ACCEPTED user selection design; synthetic validation only, production pending.
+- [DEC-0013 — Revision B candidate proposals](DEC-0013-revision-b-candidate-selection.md), SUPERSEDED by DEC-0024 for current generation; original user design/synthetic evidence preserved.
 
 - [DEC-0014 — Approved canonical192 face Gate](DEC-0014-canonical192-face-gate.md), SUPERSEDED by DEC-0015; canonical metric/threshold retained by successor. Original architecture and synthetic implementation evidence preserved.
 
@@ -55,3 +55,11 @@ Each record explains **why** a specific choice was made, what alternatives were 
 - [DEC-0021 — STEP4 stored pose / authoritative face scale](DEC-0021-step4-stored-pose-face-scale.md), ACCEPTED user definition; measurement-only, synthetic/six-row validation. Historical DEC-0005 unchanged; STEP4 production pending ★maru.
 
 - [DEC-0022 — STEP5 conservative duplicate clusters](DEC-0022-step5-conservative-dedup-clusters.md), ACCEPTED user architecture; full-row audit, BEST representatives, source-aware pHash and diagnostic pose review. Synthetic validation; full STEP5 production pending ★maru.
+
+- [DEC-0023 — STEP6 InsightFace identity](DEC-0023-step6-insightface-identity.md), ACCEPTED user design; seven-reference GPU preflight and synthetic validation; production candidate evaluation pending.
+
+- [DEC-0024 — STEP7 quality/coverage review pool](DEC-0024-step7-quality-coverage-review-pool.md), SUPERSEDED by DEC-0025; v2 and current-version Reject amendment preserved.
+
+- [DEC-0025 — STEP7 bounded QUALITY-FIRST v2.1](DEC-0025-step7-bounded-quality-first.md), ACCEPTED; quality core + optional soft repair, Reject patch retained; synthetic/read-only validation, production pending Chappy/★maru.
+
+- [DEC-0026 — STEP8 folder Human final review](DEC-0026-step8-folder-human-final-review.md), ACCEPTED; FULL→copy to ACCEPT, validated CSV authority, count35–45; synthetic validation, production preparation pending ★maru.

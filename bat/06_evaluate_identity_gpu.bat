@@ -1,27 +1,18 @@
 @echo off
 chcp 65001 >nul
 setlocal
-call "%~dp0_common.bat"
-if errorlevel 1 (
-    echo [ERROR] Failed to initialize environment.
+for %%I in ("%~dp0..") do set "PROJECT_DIR=%%~fI\"
+set "STEP6_PY=%PROJECT_DIR%.venv-step6\Scripts\python.exe"
+if not exist "%STEP6_PY%" (
+    echo [ERROR] STEP6 environment missing. Run setup_step6_identity.bat first.
     exit /b 1
 )
-
-echo ==============================================================================
-echo [STEP 06] [GPU] Identity Similarity and Imposter / Distance Filtering
-echo Effective input/output paths are printed by the Python step; defaults are defined in config.
-echo Effective input/output paths are printed by the Python step; defaults are defined in config.
-echo Effective input/output paths are printed by the Python step; defaults are defined in config.
-echo Effective input/output paths are printed by the Python step; defaults are defined in config.
-echo ==============================================================================
-
-%PY_CMD% "%PROJECT_DIR%scripts\evaluate_identity.py" %*
+set "PYTHONPATH=%PROJECT_DIR%;%PROJECT_DIR%scripts"
+echo [STEP 06] InsightFace Identity Verification v2
+"%STEP6_PY%" -X utf8 "%PROJECT_DIR%scripts\step6_identity_v2.py" %*
 if errorlevel 1 (
-    echo.
-    echo [ERROR] Identity evaluation failed with exit code %errorlevel%.
-    exit /b %errorlevel%
+    echo [ERROR] STEP6 stopped. Inspect the error above.
+    exit /b 1
 )
-
-echo.
-echo [SUCCESS] STEP 06: Identity evaluation completed successfully.
+echo [SUCCESS] STEP6 requested phase completed.
 exit /b 0

@@ -7,6 +7,13 @@ if errorlevel 1 (
     exit /b 1
 )
 
+rem Folder-review CSV is the authoritative handoff. Legacy directory scanning must not run.
+%PY_CMD% "%PROJECT_DIR%scripts\step8_folder_review.py" handoff-check
+if errorlevel 1 exit /b %errorlevel%
+echo [STOP] STEP8 CSV handoff validated. Legacy STEP9 source scanning is disabled.
+echo STEP9 restoration requires a separate CSV-input and component-mask revision.
+exit /b 1
+
 echo ==============================================================================
 echo [STEP 09] [GPU] Selective Face Restoration (Raw Camera Skin Preserved)
 echo Effective input/output paths are printed by the Python step; defaults are defined in config.

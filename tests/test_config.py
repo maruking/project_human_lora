@@ -132,7 +132,10 @@ class ConfigTests(unittest.TestCase):
             self.assertEqual(namespace, entry['constants'], section)
 
     def test_model_and_restoration_defaults(self):
-        self.assertEqual(self.config['step6_identity']['model_name'], 'facebook/dino-vitb16')
+        self.assertEqual(self.config['step6_identity']['model_name'], 'buffalo_l')
+        self.assertEqual(self.config['step6_identity']['identity_threshold'], 0.55)
+        legacy = json.loads((ROOT / 'config/step6_identity_legacy_dino.json').read_text())
+        self.assertEqual(legacy['step6_identity']['model_name'], 'facebook/dino-vitb16')
         self.assertEqual(self.config['step9_restoration']['restoration_face_dim_threshold'], 190.0)
         self.assertEqual(self.config['step10_packaging']['dimension_alignment'], 16)
 

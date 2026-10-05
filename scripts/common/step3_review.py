@@ -15,6 +15,9 @@ def review_roots(config):
     roots = tuple((reports / name).resolve() for name in ('passed', 'borderline', 'reject'))
     REGISTERED_ROOTS.update(roots)
     REGISTERED_ROOTS.add((reports/'step3_best_review').resolve())
+    folder_review=get_section(config,'step8_folder_review')
+    if folder_review.get('review_root'):
+        REGISTERED_ROOTS.add(resolve_config_path(folder_review['review_root'],config).resolve())
     return roots
 
 
@@ -24,6 +27,8 @@ def is_review_copy(path, roots=()):
     conventional = any((p.name.lower() in ('passed', 'borderline', 'reject') and
                         p.parent.name.lower() == 'reports') or
                        p.name.lower() == 'step3_best_review' or
+                       p.name.lower() == 'step8_review' or
+                       p.name.startswith(('.step8_stage_','step8_folder_review_v2_')) or
                        p.name.startswith('.step3-review-stage-') for p in (path, *path.parents))
     return conventional or any(path == root or path.is_relative_to(root) for root in (*roots, *REGISTERED_ROOTS))
 

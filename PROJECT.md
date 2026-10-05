@@ -32,10 +32,10 @@ schema fields will be introduced compatibly in scoped later work.
 | 3 | BEST v2.2 balanced critical quality and version-separated review (DEC-0020) | Production and 135-image Human Review completed; practical baseline approved for STEP4, general quality accuracy unvalidated; see [current Knowledge](knowledge/current/step3-best-ranking.md) |
 | 4 | Stored pose / face-scale descriptors, full-row audit | Current production summary available; no pose accuracy/final selection claim |
 | 5 | Source-aware duplicate clusters / BEST representatives | STEP5 v2 synthetic validation; production pending ★maru; no deletion/quality rescoring/quotas; [DEC-0022](knowledge/decisions/DEC-0022-step5-conservative-dedup-clusters.md) |
-| 6 | Identity evaluation | Existing backend; no new backend implied |
-| 7 | Candidate scoring/selection | Existing configured quota maps; full audit retained |
-| 8 | Human decision/review | Existing review assistant; decision persistence needs audit review |
-| 9 | Selective restoration, preserving source skin | Existing implementation differs from component-only policy |
+| 6 | Identity evaluation | InsightFace v2 implemented; seven-reference preflight PASS, synthetic validation; full candidate production pending ★maru; DEC-0023 |
+| 7 | Human-review candidate pool | Bounded QUALITY-FIRST v2.1; core60 plus optional repair/fill, same-version Reject exclusion, identity diagnostic-only; synthetic/read-only validation, production pending Chappy/★maru; DEC-0025 |
+| 8 | Human decision/review | Folder FULL→ACCEPT Human workflow and validated CSV authority implemented; synthetic validation; production preparation/35–45 selection pending ★maru, DEC-0026 |
+| 9 | Selective restoration, preserving source skin | Legacy BAT guarded/disabled after STEP8 CSV validation; CSV adapter/component-only restoration revision pending |
 | 10 | Training export/captions | Existing FLUX-oriented exporter; other adapters are planned |
 
 See [Pipeline Rules](.agents/rules/lora_pipeline_rules.md) and the
@@ -191,3 +191,7 @@ Technical safety, reversibility, backups, or hash validation do not substitute f
 A commentary notice such as "移動します" or "実行します" is not approval and must not be treated as user consent.
 When authorization is ambiguous, default to:
 READ / EXPLAIN / STOP
+
+## Current STEP7 scope — DEC-0025
+
+The current generation uses a bounded BEST quality core and optional soft coverage repair. Confirmed current-version Human Rejects are eligibility exclusions; preferences never score. No A/B/C runtime dependency or identity hard selection gate. Historical v2/Revision B/DEC-0012 sidecars remain evidence. STEP8 folder review now implements final35–45 Human authority (DEC-0026), pending production preparation. STEP9+ remains deferred; legacy STEP9 source scanning is guarded/disabled pending CSV adapter and component-mask revision.
