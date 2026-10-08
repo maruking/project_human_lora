@@ -8,7 +8,15 @@ representative pose/cluster HTML; these outputs are not pre-existing results.
 
 ## 今見る資料
 
-- [STEP4 Pose / Composition v2 実装・最小検証](STEP4_POSE_COMPOSITION_IMPLEMENTATION.md)：本番はbat/04_classify_face_pose.bat。実行後のSTEP4_POSE_COMPOSITION_SUMMARY.mdをChappyへ共有。
+- [Training ContractとSTEP10 preflight表示](TRAINING_CONTRACT_IMPLEMENTATION.md)：config内SSOT、trigger整合性確認。外部adapter YAML同期・Trainingは未実行。
+
+- [STEP10 Caption V2実装・モデル確認](STEP10_CAPTION_V2_IMPLEMENTATION.md)：Qwen3-VL分割重み確認、1枚smokeまで。40枚生成は10_caption_v2_gpu.bat。
+
+- [STEP10固有trigger・Training準備結果](STEP10_SASHA_RH_TRAINING_PREPARATION.md)：40件再Packaging・元画像不変、AI Toolkit Klein Base9B YAML確認済み。Trainingは未実行。
+
+- [STEP4 Pose / Composition v3 実装・最小検証](STEP4_POSE_COMPOSITION_V3_IMPLEMENTATION.md)：既存buffalo_l推定へ変更。bat/04_classify_face_pose.bat実行後のSTEP4_POSE_COMPOSITION_SUMMARY.mdをChappyへ共有。STEP5+互換対応は別作業。
+- [歴史資料：STEP4 v2](STEP4_POSE_COMPOSITION_IMPLEMENTATION.md)。
+- [STEP5のSTEP4 v3入力対応](STEP5_STEP4_V3_COMPATIBILITY.md)：判定・閾値・代表選択は維持。正式05 BATのpreflightのみ確認、本番未実行。
 
 - [v2.2 Round1〜3 Chappy報告](STEP3_BEST_RANKING_V22_ROUND1_3_CHAPPY_REPORT.md)：135件レビュー、Human Reject4件。記録上PENDING131件。
 - [Reject画像一覧](STEP3_BEST_RANKING_V22_ROUND1_3_REJECT_IMAGES.html)
@@ -47,3 +55,13 @@ representative pose/cluster HTML; these outputs are not pre-existing results.
 - [STEP7 v2.1 implementation](STEP7_CANDIDATE_V21_IMPLEMENTATION.md): bounded quality guard/core and optional soft coverage, Chappy approval before ★maru production.
 
 - [STEP8 folder-review implementation](STEP8_FOLDER_REVIEW_IMPLEMENTATION.md): Explorer copy selection, guarded ACCEPT, validated CSV handoff and user instructions.
+
+- [STEP7/STEP8 review redesign](STEP7_STEP8_REVIEW_REDESIGN.md): immutable BASE70 + guard-bounded additions, multi-view99_ACCEPT; synthetic/preflight validation only, production07 pending; STEP8 prepare deferred.
+
+- [STEP7 Rare Profile patch](STEP7_RARE_PROFILE_IMPLEMENTATION.md): profile-only BEST top-up from all eligible to3 choices per side; BASE/normal coverage unchanged; no production run.
+
+- [STEP8 collect VIEW copy repair](STEP8_VIEW_COPY_COLLECTION_FIX.md): exact duplicate presentation copies ignored with audit;40 accepts verified read-only, production collect pending ★maru.
+
+- [STEP9 diagnostic summary](STEP9_DIAGNOSTIC_SUMMARY.md):40 accepted images,30 protected/10 review due missing legacy eye metric; restoration/inference/image changes:NO.
+
+- [STEP10 STEP9-SKIP input bridge](STEP10_STEP9_SKIP_IMPLEMENTATION.md): originalSTEP8_ACCEPT input40 verified/preflight-only; caption/16px unchanged; packaging not run.

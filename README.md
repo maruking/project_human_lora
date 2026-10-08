@@ -47,11 +47,15 @@ The legacy STEP4+ report integration remains deferred; run STEP3 standalone.
 
 ## Architecture & Pipeline Flow
 
-STEP4 v2 now reads stored BEST v2.2 pose/geometry without inference or selection.
+STEP4 v3 uses the installed buffalo_l 68-point 3D pose estimator, approved on25
+comparison images. STEP3 BEST score/rank and stored face geometry remain intact.
 Run `bat/04_classify_face_pose.bat`, then share `docs/STEP4_POSE_COMPOSITION_SUMMARY.md`
 with Chappy. Face-scale area labels do not prove body visibility. Missing/fatal
-rows remain in the audit. `run_all.bat` stops after STEP4; STEP5 integration with
-the new table is deferred. [Implementation and limits](docs/STEP4_POSE_COMPOSITION_IMPLEMENTATION.md).
+rows remain in the audit. STEP5 dedup v2 now accepts STEP4 v3 using new yaw/pitch
+without changing dedup rules. Run `bat/05_face_deduplication.bat` after STEP4 review;
+share its summary with Chappy. [STEP5 bridge](docs/STEP5_STEP4_V3_COMPATIBILITY.md).
+[v3 implementation and limits](docs/STEP4_POSE_COMPOSITION_V3_IMPLEMENTATION.md).
+The earlier [v2 implementation](docs/STEP4_POSE_COMPOSITION_IMPLEMENTATION.md) is historical.
 
 ```mermaid
 flowchart TD
@@ -510,43 +514,39 @@ execution. The normal runner retains its STOP after STEP5. See DEC-0023 and
 [implementation details](docs/STEP6_IDENTITY_V2_IMPLEMENTATION.md).
 
 
-## Active STEP7 Candidate Selection v2.1
+## Active STEP7/STEP8 Human Review
 
-Current-version explicit Human Rejects are candidate exclusions, not score penalties.
-STEP7 verifies best_rank_v2.2 version-scoped history/feedback against current frame,
-image/generation and ranking evidence. PENDING/old-version Rejects remain eligible.
-See [eligibility patch](docs/STEP7_CURRENT_VERSION_REJECT_PATCH.md).
+Normal07_score_lora_candidates.bat runs step7_quality_coverage_v2.2. BEST top70
+eligible candidates form immutable BASE; deficient pose/shot/up-down goals add BEST
+options from the existing Quality Guard. Left/right Profile shortages alone may
+use all eligible BEST options toward3 choices per side; additions are review-only.
+Existing BASE/coverage profiles are never removed. Source caps warn only. Current-version
+Human Reject exclusions remain, identity weight0 and BEST unchanged. No weak fillers.
+Full audit rows remain. Candidate total may exceed70; final selection remains35–45.
 
-`bat/07_score_lora_candidates.bat` runs step7_quality_coverage_v2.1, consuming current
-STEP6 COMPLETE with verified STEP3–6 lineage. Quality is STEP3 BEST only; STEP6
-identity is diagnostic-only with weight0. No A/B/C requirement or second quality
-score. Normal pool: ranking_eligible and UNIQUE/REPRESENTATIVE without upstream errors.
+STEP8 v3 prepares00_ALL_RANKED plus BY_SHOT/BY_POSE/BY_VERTICAL views sorted by BEST.
+The same image may appear across views; only99_ACCEPT is the Human decision surface.
+Existing reviews require explicit reset/archive for migration. Do not prepare STEP8
+in this revision: ★maru reruns07 and shares STEP7_CANDIDATE_SUMMARY.md with Chappy first.
 
-Config defaults: approximately70 review options within60–70, bounded quality guard
-target×2.0, fixed BEST core60, at most10 soft coverage repairs; unused slots fill by
-BEST. Cap6 per video and15 collective stills, one-per-cluster. Never leave the guard
-or replace the quality core for coverage. Missing coverage is a warning; core/<60
-quality shortage blocks publication. See [v2.1 report](docs/STEP7_CANDIDATE_V21_IMPLEMENTATION.md).
-No final training ratio, automatic duplicate fallback or quality Reject.
+[Implementation and minimum validation](docs/STEP7_STEP8_REVIEW_REDESIGN.md).
+Historical v2/v2.1 and STEP8 v2 documentation remain as earlier evidence.
 
-Codex performs synthetic tests and `--preflight-only`; production is ★maru's action
-**after Chappy reviews the implementation**. Outputs: full step7_candidate_selection.csv,
-selected step7_review_candidates.csv, STEP7_CANDIDATE_SUMMARY.md/JSON and source-linked
-STEP7_CANDIDATE_REVIEW.html grouped by pose/scale. STEP8 later decides final35–45.
-Runner retains STOP after STEP5; no STEP8+ handoff execution is authorized here.
-[Historical v2 implementation](docs/STEP7_CANDIDATE_V2_IMPLEMENTATION.md),
-[Knowledge](knowledge/current/candidate-selection.md).
+## STEP9 diagnostics only
 
-## Active STEP8 Folder-Based Human Final Review
+09_diagnose_selected.bat reads validated STEP8_ACCEPT metrics and produces
+[STEP9_DIAGNOSTIC_SUMMARY.md](docs/STEP9_DIAGNOSTIC_SUMMARY.md) plus
+output/reports/STEP9_DIAGNOSTIC.csv. No restoration/model inference or image copies.
+Existing FULL_BODY190px/legacy-eye2.0 trigger settings unchanged; missing eye evidence
+requires Human review. Current40 audit:30 protected shots,10 evidence-review cases.
+Share summary with Chappy; noSTEP10 executed or automatically authorized.
 
-Run `bat/08_prepare_folder_review.bat` after current STEP7 production. Review
-`work/step8_review` in Explorer. Each pose folder has FULL and initially empty ACCEPT;
-copy chosen images FULL→ACCEPT, leaving FULL intact. Select35–45 total; no notes needed.
-Then run `bat/08_collect_folder_review.bat` and share docs/STEP8_SELECTION_SUMMARY.md.
-Pose/scale/up-down ranges are soft guidance; never choose a poor image just to fill them.
+## STEP10 input preflight / STEP9 SKIP
 
-Prepare refuses nonempty ACCEPT. Explicit `--reset-review` archives the old session
-including choices before rebuilding; no silent discard. Validated decisions are
-step8_human_selection.csv, not folder contents. Old STEP8 assistant is historical;
-the normal legacy STEP9 path STOPs pending its separate CSV/component-mask revision.
-See [operation/validation report](docs/STEP8_FOLDER_REVIEW_IMPLEMENTATION.md).
+When formalSTEP9 report is absent, packaging reads validatedSTEP8_ACCEPT originals
+and marksSKIPPED_NOT_NEEDED. Formalrestoration results require current lineage/hash
+proof; ambiguous old reports STOP. Caption/16px alignment unchanged.
+
+First run only `bat/10_package_flux_dataset_gpu.bat --preflight-only` and share the
+console result with Chappy. Do not run actual packaging yet.
+[Input bridge and minimum verification](docs/STEP10_STEP9_SKIP_IMPLEMENTATION.md).

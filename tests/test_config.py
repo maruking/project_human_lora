@@ -102,6 +102,8 @@ class ConfigTests(unittest.TestCase):
                 args = parser.parse_args([])
                 for key, value in frozen[section]['cli'].items():
                     if section == 'step1_extract' and key in ('num_frames', 'trim_start', 'trim_end'): continue  # DEC-0009 authorized sampling revision
+                    if section == 'step10_packaging' and key == 'trigger':
+                        value = self.config['training']['trigger_word']  # Current explicit Training Contract; keep frozen fixture historical.
                     self.assertEqual(getattr(args, key), value, (module, key))
                 for action in parser._actions:
                     if action.type is resolve_project_path:

@@ -385,11 +385,14 @@
     },
     "step4_pose_composition": {
       "type": "object",
-      "description": "Stored BEST v2.2 measurement/classification only. Thresholds reuse step4_pose and step3_face_gate.",
+      "description": "STEP4 v3 buffalo_l pose; v2 is historical stored pose. Thresholds reuse step4_pose and step3_face_gate.",
       "additionalProperties": false,
       "properties": {
         "version": {
-          "const": "step4_pose_composition_v2"
+          "enum": [
+            "step4_pose_composition_v2",
+            "step4_pose_composition_v3"
+          ]
         },
         "report": {
           "type": "string",
@@ -1119,6 +1122,14 @@
         "reference_limit": {
           "type": "integer",
           "minimum": 1
+        },
+        "diagnostic_csv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "diagnostic_summary": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "additionalProperties": false
@@ -1424,13 +1435,14 @@
         "markdown",
         "review_html",
         "limit",
-        "quality_guard_multiplier",
-        "quality_core_target",
-        "coverage_repair_slots_max"
+        "quality_guard_multiplier"
       ],
       "properties": {
         "version": {
-          "const": "step7_quality_coverage_v2.1"
+          "enum": [
+            "step7_quality_coverage_v2.1",
+            "step7_quality_coverage_v2.2"
+          ]
         },
         "candidate_pool_target": {
           "type": "integer",
@@ -1444,8 +1456,7 @@
         },
         "candidate_pool_max": {
           "type": "integer",
-          "minimum": 60,
-          "maximum": 70
+          "minimum": 60
         },
         "max_per_video": {
           "type": "integer",
@@ -1565,6 +1576,11 @@
         "coverage_repair_slots_max": {
           "type": "integer",
           "minimum": 0
+        },
+        "rare_profile_review_target": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 3
         }
       }
     },
@@ -1591,7 +1607,10 @@
       ],
       "properties": {
         "version": {
-          "const": "step8_folder_review_v2"
+          "enum": [
+            "step8_folder_review_v2",
+            "step8_folder_review_v3"
+          ]
         },
         "review_root": {
           "type": "string"
@@ -1753,6 +1772,148 @@
             "LOOKING_DOWN": {
               "type": "integer",
               "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "step10_caption_v2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model_id",
+        "model_dir",
+        "python_executable",
+        "output_dir",
+        "output_csv",
+        "review_html",
+        "max_pixels",
+        "max_new_tokens"
+      ],
+      "properties": {
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "python_executable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_dir": {
+          "type": "string",
+          "minLength": 1
+        },
+        "output_csv": {
+          "type": "string",
+          "minLength": 1
+        },
+        "review_html": {
+          "type": "string",
+          "minLength": 1
+        },
+        "max_pixels": {
+          "type": "integer",
+          "minimum": 262144
+        },
+        "max_new_tokens": {
+          "type": "integer",
+          "minimum": 64
+        }
+      }
+    },
+    "training": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter",
+        "base_model",
+        "trigger_word",
+        "dataset",
+        "lora",
+        "target"
+      ],
+      "properties": {
+        "adapter": {
+          "type": "string",
+          "minLength": 1
+        },
+        "base_model": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name_or_path",
+            "arch"
+          ],
+          "properties": {
+            "name_or_path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "arch": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "trigger_word": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dataset": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "caption_format",
+            "caption_version"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "caption_format": {
+              "type": "string",
+              "minLength": 1
+            },
+            "caption_version": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "lora": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rank",
+            "alpha"
+          ],
+          "properties": {
+            "rank": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "alpha": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "final_images"
+          ],
+          "properties": {
+            "final_images": {
+              "type": "integer",
+              "minimum": 1
             }
           }
         }

@@ -95,3 +95,12 @@ items; identity readiness is not claimed. run_all stops after STEP5.
 [Implementation](../../docs/STEP5_DEDUP_V2_IMPLEMENTATION.md),
 [Current Knowledge](../current/deduplication.md). Legacy code/results, historical
 Decisions, STEP3/4 outputs, Human Review and A/B/C remain unchanged.
+
+## 2026-10-06 — accepted STEP4 v3 input compatibility
+
+★maru authorizes v3 input without changing STEP5 dedup semantics. Preflight now
+accepts v2/v3 and verifies v3 STEP3 pose evidence via step3_* aliases. Existing
+angle logic directly reads v3 yaw/pitch; missing pose remains exact-only. Common
+dedup/pHash code and SSOT thresholds are byte-identical. Current1951-row read-only
+preflight,8 missing-row checks and32 tests PASS; no full processing/publication.
+See [result](../../docs/STEP5_STEP4_V3_COMPATIBILITY.md). Prior body remains historical.

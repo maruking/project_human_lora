@@ -53,3 +53,13 @@ Code constants are explicit compatibility fallbacks; docs cite defaults from con
 Do not optimize thresholds or change algorithms as part of configuration cleanup.
 Keep DINO, existing quotas, scoring, extraction, restoration and caption behavior
 until an explicitly scoped later step authorizes changes. Preserve baseline metrics.
+
+## 2026-10-08 Training Contract supplement
+
+Explicit user scope adds training adapter/base model/trigger/dataset/caption
+format+version/LoRA/image target to config SSOT. Project/training triggers must
+match; STEP10 prints the formal target and refuses a missing contract. PROJECT
+references config without independent runtime values. Existing results and
+external Training adapter files are not rewritten or assumed synchronized.
+Local/example validation,24 tests and both STEP10 preflights PASS; no production
+processing or Training. [Implementation](../../docs/TRAINING_CONTRACT_IMPLEMENTATION.md).

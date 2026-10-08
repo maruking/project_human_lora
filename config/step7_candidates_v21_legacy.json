@@ -1,0 +1,35 @@
+{
+  "version": "step7_quality_coverage_v2.1",
+  "candidate_pool_target": 70,
+  "candidate_pool_min": 60,
+  "candidate_pool_max": 70,
+  "quality_guard_multiplier": 2.0,
+  "quality_core_target": 60,
+  "coverage_repair_slots_max": 10,
+  "max_per_video": 6,
+  "max_supplemental_still": 15,
+  "pose_min": {
+    "FRONTAL": 15,
+    "THREE_QUARTER_LEFT": 10,
+    "THREE_QUARTER_RIGHT": 10,
+    "PROFILE_LEFT": 2,
+    "PROFILE_RIGHT": 2
+  },
+  "vertical_min": {
+    "LOOKING_UP": 2,
+    "LOOKING_DOWN": 2
+  },
+  "scale_min": {
+    "CLOSE_UP": 12,
+    "UPPER_BODY": 18,
+    "FULL_BODY": 12
+  },
+  "report": "@reports/step6_dataset_report.csv",
+  "step6_summary": "@reports/step6_identity_summary.json",
+  "output_csv": "@reports/step7_candidate_selection.csv",
+  "candidates_csv": "@reports/step7_review_candidates.csv",
+  "summary": "@reports/step7_candidate_summary.json",
+  "markdown": "docs/STEP7_CANDIDATE_SUMMARY.md",
+  "review_html": "docs/STEP7_CANDIDATE_REVIEW.html",
+  "limit": 0
+}

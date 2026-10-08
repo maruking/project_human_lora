@@ -20,7 +20,17 @@ review_dir/representative copies are legacy; new HTML/summary paths are explicit
 No unrelated Gate/ranking setting changes. See
 [DEC-0022](../decisions/DEC-0022-step5-conservative-dedup-clusters.md).
 
-## STEP4 v2 paths — 2026-10-05
+## STEP4 v3 — 2026-10-05
+
+Active step4_pose_composition.version is step4_pose_composition_v3. Normal04 BAT
+uses the existing .venv-step6 environment and the comparison-approved buffalo_l
+CPU estimator. All step4_pose angle and face-gate scale thresholds are unchanged.
+Paths remain unchanged; prior outputs archive on production publication. Schema
+retains v2 compatibility for historical tests. See [DEC-0027](../decisions/DEC-0027-step4-buffalo-pose-v3.md).
+STEP5 configuration is unchanged; its preflight now accepts v3 and validates
+preserved STEP3 pose aliases (2026-10-06). STEP6+ was not changed in that bridge.
+
+## Historical STEP4 v2 paths — 2026-10-05
 
 step4_pose_composition adds output version and input/report/summary paths only.
 Angle thresholds remain owned by step4_pose; face-scale area thresholds remain
@@ -150,18 +160,41 @@ See [DEC-0023](../decisions/DEC-0023-step6-insightface-identity.md).
 
 step7_candidates_v2 owns review range/target, pose/vertical/scale minima, source caps and input/output paths. Defaults reflect DEC-0024 user specification, not new quality thresholds. Legacy step7_selection and step7_revision_b sections remain historical and unused by normal BAT. Identity has no scoring configuration because its selection weight is fixed0 in this architecture.
 
-## Active STEP7 v2.1 SSOT — DEC-0025
+## Active STEP7/8 presentation SSOT — DEC-0028
 
-The compatible section name step7_candidates_v2 now declares step7_quality_coverage_v2.1.
-Current defaults target70/min60/max70, multiplier2.0, core60, repair maximum10,
-profile desired minima2/2; other soft goals and source caps unchanged. Runtime
-validates core/range/repair relationships; guard size uses ceiling(target×multiplier).
-Historical generic example settings are saved in config/step7_candidates_v2_legacy.json
-for v2 regression tests. No STEP3–6 or quality threshold setting changes.
+step7_candidates_v2.version=step7_quality_coverage_v2.2. Target70 is immutable BASE;
+Quality Guard multiplier2.0 stays. candidate_pool_max140 reflects additive options,
+not a new quality threshold. Old core60/repair10 settings are archived in
+config/step7_candidates_v21_legacy.json for historical tests. Coverage goals unchanged;
+source caps6/15 are diagnostic only. Scores/identity/STEP3–6 settings unchanged.
 
-## STEP8 folder-review SSOT — DEC-0026
+step8_folder_review.version=step8_folder_review_v3. Paths and count35/40/45 plus
+pose/scale/vertical guidance unchanged. VIEW categories come from inherited labels;
+only99_ACCEPT determines acceptance. Old sessions preserved; explicit reset needed
+for future migration, not performed in this task.
 
-step8_folder_review owns paths, count35/40/45 and soft pose/scale/vertical guidance.
-Pose folder names derive from configured guidance, not separate BAT constants.
-Legacy step8_review remains historical and unchanged; no auto-populate setting in
-the new workflow. No STEP3–7 score/threshold changes or STEP9 algorithm tuning.
+2026-10-07 Rare Profile supplement: step7_candidates_v2.rare_profile_review_target=3
+(allowed2–3) controls profile-only top-up. Existing pose_min, scale_min, vertical_min,
+BASE/guard settings unchanged. Pool max140 is not a removal gate; profile exceptions
+may add beyond guard size. STEP8 preflight accepts only explicit eligible profile
+exception rows outside guard. No STEP8 prepare or production result updated.
+
+STEP9 diagnostic-only output paths added to step9_restoration: diagnostic_csv and
+diagnostic_summary. Existing190px/2.0 settings unchanged; no new score/threshold.
+Normal restoration BAT remains guarded; diagnostics read accepted rows only.
+
+STEP10 input bridge uses existing step10_packaging.step9_report/restored_dir and
+step8_folder_review authoritative paths. No new threshold or runtime setting.
+--preflight-only exits before model/output processing; missing STEP9 selects originals
+from STEP8_ACCEPT only. Caption/alignment settings unchanged (DEC-0029).
+
+## Current Training Contract
+
+config/config.yaml:training is the formal active Training Target. The example is
+bootstrap only. Adapter/model/trigger/dataset/caption format+version/LoRA/target
+values come from this section, not PROJECT or BAT. Project/training trigger mismatch
+raises ConfigError. STEP10 prints the contract and refuses missing contracts without
+historical-model fallback. Other STEPs retain partial-config compatibility.
+External AI Toolkit YAML is not automatically synchronized; current external dataset
+still references V1 and requires explicit future alignment before Training.
+[Implementation/preflight snapshot](../../docs/TRAINING_CONTRACT_IMPLEMENTATION.md).

@@ -1,13 +1,13 @@
 ---
 id: DEC-0026
 title: STEP8 folder-based Human Final Review and validated CSV authority
-status: ACCEPTED
+status: SUPERSEDED
 date: 2026-10-05
 confidence: MEDIUM
 components: [human-review, lineage, dataset-selection]
 tags: [folder-review, explicit-accept, no-auto-selection]
 supersedes: []
-superseded_by: []
+superseded_by: [DEC-0028]
 related_experiments: []
 related_failures: []
 related_cases: [CASE-0005]
@@ -77,3 +77,5 @@ collect runs. Human visual selection/final LoRA usefulness remain unvalidated.
 
 [Implementation](../../docs/STEP8_FOLDER_REVIEW_IMPLEMENTATION.md),
 [current Knowledge](../current/human-final-review.md).
+
+2026-10-07: presentation/selection policy superseded by [DEC-0028](DEC-0028-step7-base-additive-step8-views.md). Earlier evidence and review history preserved.

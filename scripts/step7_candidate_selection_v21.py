@@ -29,6 +29,19 @@ STATES={'IDENTITY_PASS','IDENTITY_REVIEW','IDENTITY_REJECT','IDENTITY_NOT_EVALUA
     'NOT_APPLICABLE_DUPLICATE_MEMBER','NOT_APPLICABLE_UPSTREAM','UPSTREAM_ERROR'}
 
 
+def bind_review_ranking(rows, ranking_rows):
+    """Review belongs to STEP3 ranking, while downstream pose may be remeasured."""
+    expected={row['frame_id']:row for row in ranking_rows}
+    if len(expected)!=len(ranking_rows) or len({row['frame_id'] for row in rows})!=len(rows) or \
+            set(expected)!={row['frame_id'] for row in rows}:
+        raise ValueError('Review ranking and current universe differ')
+    for row in rows:
+        if any(row.get(key)!=expected[row['frame_id']].get(key) for key in
+               ('ranking_version','image_sha256','dataset_generation_id','best_score','global_rank')):
+            raise ValueError('Review ranking identity/hash/score differs from current row')
+    return ranking_rows
+
+
 def review_exclusions(rows,config,images,hashes):
     reports=resolve_config_path(config['paths']['reports_dir'],config)
     history_path=reports/'step3_best_review_history_by_version.json'
@@ -49,7 +62,8 @@ def review_exclusions(rows,config,images,hashes):
         if digest(path)!=legacy['sha256']:raise ValueError('Historical review source changed')
         hashes[str(path)]=digest(path)
     _,feedback=read_csv(feedback_path)
-    rejected,historical=confirmed_rejects(rows,history,feedback,summary)
+    _,ranking_rows=read_csv(ranking_path)
+    rejected,historical=confirmed_rejects(bind_review_ranking(rows,ranking_rows),history,feedback,summary)
     for row in rows:
         if row['frame_id'] in rejected:
             image=source_path(row,images)
@@ -59,7 +73,7 @@ def review_exclusions(rows,config,images,hashes):
     return rejected,dict(ranking_version=CURRENT_RANKING_VERSION,current_version_rejects_found=len(rejected),
         historical_version_rejects_left_eligible=sum(normal(r) and r['frame_id'] in historical for r in rows),
         history=str(history_path),feedback=str(feedback_path),ranking_sha256=summary['ranking_sha256'],
-        binding='Pinned ranking hash + all shared immutable review-record columns + frame/image/generation identity')
+        binding='Pinned authoritative STEP3 ranking hash/columns + current frame/image/generation/score/rank; downstream pose may differ')
 
 
 def preflight(report,summary_path,config,images):
@@ -159,7 +173,28 @@ def csv_bytes(rows,columns):
     return buffer.getvalue().encode('utf-8-sig')
 
 
+def upstream_input_versions(hashes):
+    """Version labels come only from hash-verified official upstream summaries."""
+    versions = {key: [] for key in ('ranking', 'pose', 'dedup', 'identity')}
+    for name, expected_hash in hashes.items():
+        path = Path(name)
+        if path.suffix.lower() != '.json':
+            continue
+        if digest(path) != expected_hash:
+            raise ValueError('Upstream summary changed before version recording: '+name)
+        metadata = json.loads(path.read_text(encoding='utf-8-sig'))
+        if 'ranking_sha256' in metadata and 'version' in metadata:
+            versions['ranking'].append(metadata['version'])
+        for kind, field in (('pose','step4_version'),('dedup','step5_version'),('identity','step6_version')):
+            if field in metadata:
+                versions[kind].append(metadata[field])
+    if any(len(values)!=1 or not isinstance(values[0],str) or not values[0] for values in versions.values()):
+        raise ValueError('Unique official STEP3–6 version metadata required')
+    return [values[0] for values in versions.values()]
+
+
 def publish_selection(rows,settings,targets,images,hashes,limit=0,current_reject_ids=(),review_evidence=None):
+    input_versions = upstream_input_versions(hashes)
     outputs,pool,summary=select(rows,settings,partial=limit>0,limit=limit,current_reject_ids=current_reject_ids)
     if review_evidence is not None:
         summary['current_version_review_exclusions']=review_evidence
@@ -170,7 +205,7 @@ def publish_selection(rows,settings,targets,images,hashes,limit=0,current_reject
         directory=targets['summary'].parent/'audit'/(VERSION+'_'+uuid.uuid4().hex)
         targets={key:directory/path.name for key,path in targets.items()}
     summary.update(input_hashes=hashes,settings=settings,outputs={k:str(p) for k,p in targets.items()},
-        input_versions=['best_rank_v2.2','step4_pose_composition_v2','step5_dedup_v2','step6_identity_v2'],
+        input_versions=input_versions,
         completeness_evidence='STEP3/4 complete hash and full-row contract; STEP5/6 explicit COMPLETE markers',
         dataset_generations_by_kind={kind:sorted({r['dataset_generation_id'] for r in rows if r['input_kind']==kind}) for kind in sorted({r['input_kind'] for r in rows})})
     columns=list(dict.fromkeys(k for row in outputs for k in row))
@@ -206,6 +241,7 @@ def main():
         rows,hashes=preflight(args.report,args.step6_summary,config,args.images)
         rejected,evidence=review_exclusions(rows,config,args.images,hashes)
         if args.preflight_only:
+            print('input_versions:',json.dumps(upstream_input_versions(hashes)))
             print('PREFLIGHT PASS; full rows:',len(rows),'normal candidate universe:',sum(normal(r) and r['frame_id'] not in rejected for r in rows),'Confirmed current-version rejects:',len(rejected),'No selection/output/image inference.')
             return 0
         summary=publish_selection(rows,settings,targets,args.images,hashes,args.limit,rejected,evidence)

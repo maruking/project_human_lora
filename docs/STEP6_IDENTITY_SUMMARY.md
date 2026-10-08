@@ -1,0 +1,253 @@
+# STEP6 Identity Summary
+
+Identity-only audit. Historical threshold is not a measured FAR/FRR guarantee. No quality ranking, quotas or final training selection.
+
+identity_state is authoritative. identity_passed is a compatibility field only. Duplicate members are not identity rejects.
+
+[Source-linked review](STEP6_IDENTITY_REVIEW.html)
+
+```json
+{
+  "step6_version": "step6_identity_v2",
+  "publication_status": "COMPLETE",
+  "total_rows": 1951,
+  "input_roles": {
+    "REPRESENTATIVE": 186,
+    "UNIQUE": 580,
+    "DUPLICATE_MEMBER": 1114,
+    "NOT_APPLICABLE_STEP3_FATAL": 71
+  },
+  "candidate_target_count": 766,
+  "states": {
+    "IDENTITY_PASS": 444,
+    "IDENTITY_REJECT": 294,
+    "NOT_APPLICABLE_DUPLICATE_MEMBER": 1114,
+    "IDENTITY_NOT_EVALUABLE": 8,
+    "IDENTITY_REVIEW": 20,
+    "NOT_APPLICABLE_UPSTREAM": 71
+  },
+  "reference": {
+    "reference_audit_status": "PASS",
+    "total_references": 7,
+    "valid_references": 7,
+    "invalid_references": 0,
+    "reference_outliers": 0,
+    "embedding_dim": 512,
+    "historical_identity_threshold": 0.55,
+    "min_reference_count": 3,
+    "max_reference_count": 20,
+    "reference_confirmation": "User places explicitly confirmed identity anchors in configured reference directory; not automatically selected",
+    "backend": "insightface",
+    "model": "buffalo_l",
+    "insightface_version": "0.7.3",
+    "onnxruntime_version": "1.23.2",
+    "device": "cuda",
+    "providers": {
+      "detection": [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "recognition": [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ]
+    },
+    "model_sha256": {
+      "1k3d68.onnx": "df5c06b8a0c12e422b2ed8947b8869faa4105387f199c477af038aa01f9a45cc",
+      "2d106det.onnx": "f001b856447c413801ef5c42091ed0cd516fcd21f2d6b79635b1e733a7109dbf",
+      "det_10g.onnx": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91",
+      "genderage.onnx": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb",
+      "w600k_r50.onnx": "4c06341c33c2ca1f86781dab0e829f88ad5b64be9fba56e56bc9ebdefc619e43"
+    },
+    "preprocessing": "InsightFace original-image detection, five-point alignment, recognition model defaults",
+    "detection_input_size": [
+      640,
+      640
+    ],
+    "detection_threshold": 0.5,
+    "leave_one_out_distribution": {
+      "count": 7,
+      "min": 0.6627492630157726,
+      "P05": 0.6676921252659554,
+      "P10": 0.6726349875161383,
+      "median": 0.6990476401122694,
+      "P90": 0.739039864527928,
+      "max": 0.7623835238044114
+    },
+    "step6_version": "step6_identity_v2",
+    "reference_directory_sha256": "2a1c29863aed24b4a4e63df9fc4d45ea9c1a8c41a0bb5cbdedac447b40515bd2"
+  },
+  "historical_identity_threshold": 0.55,
+  "input_hashes": {
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step5_dataset_report.csv": "c9daf2a1615fca973abee9beb381c198dbb9f24042ff7953b2a7c81ca60d72d2",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step5_dedup_summary.json": "5b67e92707414297c4d3dcdc8289f4a2f82f7f15499fbb1983280091860c983f",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step4_pose_composition.csv": "ed5a213b4487132bc19915a6aa12a4008d9535a7cebf0cf752166c9c421d4634",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step4_pose_summary.json": "b6e8dd1fc1937a0d8443020061421136f2bc674dcb217c955374209949d44b07",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step3_best_ranking.csv": "6400f2a09d30b0a99488872c435c0fae039644cbc27619d90b09a31e0d7126ca",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step3_best_ranking_summary.json": "afe320e6385abf268b560ab05b7125f936a034cbd4754097221b9e5c22c16d87",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step6_reference_audit.csv": "9c3a3dc3952f7bcc1cf30195ae999758504dff6273b75279281f59e5c8700e6f",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\docs\\STEP6_REFERENCE_AUDIT.md": "2f6a2fdcc1158e0d057cd0708f324c66244eea15918294bd97a77e6355512033",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\docs\\STEP6_REFERENCE_REVIEW.html": "a70b2f1955594ceb8457eda87d78902adcebe70c9796d4c2b99c66eb12bc605e",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step6_reference_summary.json": "07ae58f575bc60d488f44e36eff4cabbc24d5cf53c7165b07bd113ee3e1639d7",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\input\\reference\\654025529_18101141824898533_326058541450589604_n.jpg": "914f8228e99602a9d71ae2f4f9796ddcc5122a5011fc49b05dd4a079bea8b5b7",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\input\\reference\\Sasha_v22_001.png": "e94b0c77e6eac5f07c83390a2a6f4fbdd7b090c4ef487af32ef19d71590c338f",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\input\\reference\\スクリーンショット 2026-09-30 110439.png": "16bb9d481f23ed13e9e856fbe29858cf11db3a1f314dcac577aed1066e270119",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\input\\reference\\スクリーンショット 2026-09-30 110504.png": "6a6adfe01ab3f532088b9fddfff186e13aebcf6f76b944ba93e3b05bb1858b0a",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\input\\reference\\スクリーンショット 2026-09-30 110609.png": "a0187e624e4d50d20edcb5cd1acc1e6c644a896dae14b98fdc748d2daa502645",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\input\\reference\\スクリーンショット 2026-09-30 110644.png": "c4ddd636159cacc32e7d0fab42fd6069d8c5aba60b930399c5f2d3ea49bf2e5e",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\input\\reference\\スクリーンショット 2026-09-30 111403.png": "58c342a9abcf28674abf22911d8e2425fadcb8fa603bb677ab6b5cb4dc61e082"
+  },
+  "errors": [],
+  "dataset_generations_by_kind": {
+    "formal_video": [
+      "bd72f194f62260fb728b77b26c75c5491b178908bff53393e197c11137bf9a40"
+    ],
+    "supplemental_still": [
+      "b09674fe16b281285380bd5ae7c3d3585b2f787347d7672c74dd053bbbc968c4"
+    ]
+  },
+  "outputs": {
+    "output_csv": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step6_dataset_report.csv",
+    "markdown": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\docs\\STEP6_IDENTITY_SUMMARY.md",
+    "review_html": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\docs\\STEP6_IDENTITY_REVIEW.html",
+    "summary": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step6_identity_summary.json"
+  },
+  "backend": "insightface",
+  "model": "buffalo_l",
+  "insightface_version": "0.7.3",
+  "onnxruntime_version": "1.23.2",
+  "device": "cuda",
+  "providers": {
+    "detection": [
+      "CUDAExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "recognition": [
+      "CUDAExecutionProvider",
+      "CPUExecutionProvider"
+    ]
+  },
+  "model_sha256": {
+    "1k3d68.onnx": "df5c06b8a0c12e422b2ed8947b8869faa4105387f199c477af038aa01f9a45cc",
+    "2d106det.onnx": "f001b856447c413801ef5c42091ed0cd516fcd21f2d6b79635b1e733a7109dbf",
+    "det_10g.onnx": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91",
+    "genderage.onnx": "4fde69b1c810857b88c64a335084f1c3fe8f01246c9a191b48c7bb756d6652fb",
+    "w600k_r50.onnx": "4c06341c33c2ca1f86781dab0e829f88ad5b64be9fba56e56bc9ebdefc619e43"
+  },
+  "preprocessing": "InsightFace original-image detection, five-point alignment, recognition model defaults",
+  "detection_input_size": [
+    640,
+    640
+  ],
+  "detection_threshold": 0.5,
+  "similarity_distribution": {
+    "count": 758,
+    "min": 0.017831719973982134,
+    "P05": 0.2829221574991536,
+    "P10": 0.3757917243802152,
+    "median": 0.5844448012983501,
+    "P90": 0.7091612587313212,
+    "max": 0.8329145410385259
+  },
+  "similarity_by_context": {
+    "pose_bin": {
+      "FRONTAL": {
+        "count": 468,
+        "min": 0.18091179400409957,
+        "P05": 0.35029616683709947,
+        "P10": 0.417679270894466,
+        "median": 0.5968227591619786,
+        "P90": 0.7091461323561637,
+        "max": 0.8099285021600388
+      },
+      "PROFILE_LEFT": {
+        "count": 25,
+        "min": 0.017831719973982134,
+        "P05": 0.05934403815830414,
+        "P10": 0.1599480912450713,
+        "median": 0.41297080048554824,
+        "P90": 0.5670288924920215,
+        "max": 0.6276253883178712
+      },
+      "PROFILE_RIGHT": {
+        "count": 17,
+        "min": 0.04928675014272164,
+        "P05": 0.08249543622947021,
+        "P10": 0.09126208629231299,
+        "median": 0.242898142917178,
+        "P90": 0.5145552146807881,
+        "max": 0.5240610024020114
+      },
+      "THREE_QUARTER_LEFT": {
+        "count": 108,
+        "min": 0.032333482412805384,
+        "P05": 0.281775677764172,
+        "P10": 0.37179352284687683,
+        "median": 0.578287964629511,
+        "P90": 0.70947273943636,
+        "max": 0.8329145410385259
+      },
+      "THREE_QUARTER_RIGHT": {
+        "count": 140,
+        "min": 0.027993269394029272,
+        "P05": 0.29800372187605784,
+        "P10": 0.4012780340572623,
+        "median": 0.5831126324976936,
+        "P90": 0.7163127631830339,
+        "max": 0.8040467432376222
+      }
+    },
+    "face_scale_bin": {
+      "CLOSE_UP": {
+        "count": 162,
+        "min": 0.32589706471463004,
+        "P05": 0.47780721234719253,
+        "P10": 0.5147960015191504,
+        "median": 0.6517316098230126,
+        "P90": 0.7361959304759832,
+        "max": 0.8329145410385259
+      },
+      "FULL_BODY": {
+        "count": 251,
+        "min": 0.017831719973982134,
+        "P05": 0.16145074337682053,
+        "P10": 0.26775333565515647,
+        "median": 0.5260369759865413,
+        "P90": 0.6768919570569848,
+        "max": 0.8099285021600388
+      },
+      "UPPER_BODY": {
+        "count": 345,
+        "min": 0.04928675014272164,
+        "P05": 0.35009248071991955,
+        "P10": 0.391396005136844,
+        "median": 0.59318996319565,
+        "P90": 0.7016098552358713,
+        "max": 0.8040467432376222
+      }
+    },
+    "input_kind": {
+      "formal_video": {
+        "count": 703,
+        "min": 0.017831719973982134,
+        "P05": 0.26751144526217635,
+        "P10": 0.36709058235277164,
+        "median": 0.5739061194365762,
+        "P90": 0.6897211038658334,
+        "max": 0.7855189530826022
+      },
+      "supplemental_still": {
+        "count": 55,
+        "min": 0.3815489305644201,
+        "P05": 0.5107295121367462,
+        "P10": 0.590965824231962,
+        "median": 0.7470965939481176,
+        "P90": 0.7896076412592643,
+        "max": 0.8329145410385259
+      }
+    }
+  },
+  "cluster_fallback_needed_count": 46,
+  "interpretation": "Identity calibration only; no quality/quotas/final selection; identity_state authoritative; no measured current FAR/FRR claim"
+}
+```

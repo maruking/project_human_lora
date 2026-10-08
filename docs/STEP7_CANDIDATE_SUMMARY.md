@@ -1,0 +1,319 @@
+# STEP7 Candidate Pool Summary
+
+BEST top70 BASE plus additive coverage inside Quality Guard. Profile-only top-up may use eligible rows outside guard; no auto-accept. Source caps diagnostic only. STEP8 decides final35–45. Identity weight0; BEST is the only quality score.
+
+[Source-linked candidate review](STEP7_CANDIDATE_REVIEW.html)
+
+```json
+{
+  "step7_version": "step7_quality_coverage_v2.2",
+  "publication_status": "COMPLETE",
+  "full_upstream_rows": 1951,
+  "normal_candidate_universe": 762,
+  "selected_review_pool": 74,
+  "base_target": 70,
+  "base_count": 70,
+  "coverage_additional_count": 2,
+  "rare_profile_added_count": 2,
+  "rare_profile_outside_guard_count": 2,
+  "rare_profile_review": {
+    "PROFILE_LEFT": {
+      "target": 3,
+      "before": 4,
+      "after": 4,
+      "added": 0,
+      "shortage": 0,
+      "eligible_available": 25
+    },
+    "PROFILE_RIGHT": {
+      "target": 3,
+      "before": 1,
+      "after": 3,
+      "added": 2,
+      "shortage": 0,
+      "eligible_available": 17
+    }
+  },
+  "base_frame_ids": [
+    "Sasha_v53/Sasha_v53_007.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105704.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110631.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105945.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105042.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105921.png",
+    "Sash_high_identity-img/652794808_18008722232838431_6335316425841053458_n.jpg",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111838.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105148.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105646.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110008.png",
+    "Sash_high_identity-img/SaveTik.co_7543503138088537379_2.jpeg",
+    "Sash_high_identity-img/654025529_18101141824898533_326058541450589604_n.jpg",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105443.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105344.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110644.png",
+    "Sasha_v23/Sasha_v23_001.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111248.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111038.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105849.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111214.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111403.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 112018.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110609.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110439.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111733.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105321.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110314.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105758.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110343.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110734.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111314.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111340.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110120.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111946.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110933.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111857.png",
+    "Sasha_v05/Sasha_v05_027.png",
+    "Sasha_v05/Sasha_v05_026.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105518.png",
+    "Sasha_v05/Sasha_v05_021.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110409.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110424.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 112040.png",
+    "Sasha_v60/Sasha_v60_001.png",
+    "Sasha_v23/Sasha_v23_006.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110504.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110039.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 111016.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110146.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 105543.png",
+    "Sasha_v33/Sasha_v33_006.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110857.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110759.png",
+    "Sasha_v34/Sasha_v34_004.png",
+    "Sasha_v22/Sasha_v22_020.png",
+    "Sasha_v41/Sasha_v41_005.png",
+    "Sasha_v22/Sasha_v22_035.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110956.png",
+    "Sasha_v08/Sasha_v08_020.png",
+    "Sasha_v23/Sasha_v23_002.png",
+    "Sasha_v41/Sasha_v41_015.png",
+    "Sasha_v22/Sasha_v22_023.png",
+    "Sasha_v53/Sasha_v53_005.png",
+    "Sasha_v16/Sasha_v16_001.png",
+    "Sasha_v41/Sasha_v41_011.png",
+    "Sasha_v22/Sasha_v22_003.png",
+    "Sasha_v33/Sasha_v33_028.png",
+    "Sash_high_identity-img/スクリーンショット 2026-09-30 110709.png",
+    "Sasha_v11/Sasha_v11_001.png"
+  ],
+  "base_preserved": true,
+  "quality_guard_size_requested": 140,
+  "quality_guard_size_actual": 140,
+  "deepest_global_rank_selected": 704,
+  "quality_guard_best_score_min": 47.550075893782406,
+  "selection_reasons": {
+    "BASE_BEST": 70,
+    "COVERAGE_ADDITIONAL": 2,
+    "RARE_PROFILE_REVIEW": 2
+  },
+  "soft_coverage_requested": {
+    "pose_bin": {
+      "FRONTAL": 15,
+      "THREE_QUARTER_LEFT": 10,
+      "THREE_QUARTER_RIGHT": 10,
+      "PROFILE_LEFT": 2,
+      "PROFILE_RIGHT": 2
+    },
+    "vertical_pose": {
+      "LOOKING_UP": 2,
+      "LOOKING_DOWN": 2
+    },
+    "face_scale_bin": {
+      "CLOSE_UP": 12,
+      "UPPER_BODY": 18,
+      "FULL_BODY": 12
+    }
+  },
+  "soft_coverage_achieved": {
+    "pose_bin": {
+      "FRONTAL": 41,
+      "PROFILE_LEFT": 4,
+      "THREE_QUARTER_RIGHT": 13,
+      "THREE_QUARTER_LEFT": 12,
+      "NOT_EVALUABLE": 1,
+      "PROFILE_RIGHT": 3
+    },
+    "vertical_pose": {
+      "LEVEL": 68,
+      "LOOKING_UP": 2,
+      "LOOKING_DOWN": 3,
+      "NOT_EVALUABLE": 1
+    },
+    "face_scale_bin": {
+      "FULL_BODY": 20,
+      "UPPER_BODY": 31,
+      "CLOSE_UP": 23
+    }
+  },
+  "soft_coverage_shortages": [],
+  "coverage_shortages": [],
+  "source_distribution": {
+    "video:Sasha_v53": 3,
+    "supplemental_still_collection": 49,
+    "video:Sasha_v23": 3,
+    "video:Sasha_v05": 3,
+    "video:Sasha_v60": 1,
+    "video:Sasha_v33": 2,
+    "video:Sasha_v34": 1,
+    "video:Sasha_v22": 4,
+    "video:Sasha_v41": 3,
+    "video:Sasha_v08": 1,
+    "video:Sasha_v16": 1,
+    "video:Sasha_v11": 1,
+    "video:Sasha_v03": 2
+  },
+  "source_caps_diagnostic_only": true,
+  "source_concentration_warnings": [
+    {
+      "source": "supplemental_still_collection",
+      "count": 49,
+      "configured_cap": 15
+    }
+  ],
+  "identity_selection_weight": 0,
+  "current_version_human_reject_count": 4,
+  "final_training_selection": false,
+  "step8_final_authority": true,
+  "hard_shortages": [],
+  "policy_review_required": false,
+  "count_note": "BASE retained; normal coverage inside guard; Profile-only review top-up from eligible; source caps diagnostic; no auto-accept",
+  "considered_candidate_count": 762,
+  "actual_pool_count": 74,
+  "candidate_pool_target": 70,
+  "candidate_pool_min": 60,
+  "candidate_pool_max": 140,
+  "quality_guard_global_rank_max": 267,
+  "coverage_achieved": {
+    "pose_bin": {
+      "FRONTAL": 41,
+      "PROFILE_LEFT": 4,
+      "THREE_QUARTER_RIGHT": 13,
+      "THREE_QUARTER_LEFT": 12,
+      "NOT_EVALUABLE": 1,
+      "PROFILE_RIGHT": 3
+    },
+    "vertical_pose": {
+      "LEVEL": 68,
+      "LOOKING_UP": 2,
+      "LOOKING_DOWN": 3,
+      "NOT_EVALUABLE": 1
+    },
+    "face_scale_bin": {
+      "FULL_BODY": 20,
+      "UPPER_BODY": 31,
+      "CLOSE_UP": 23
+    }
+  },
+  "source_cap_conflicts": [],
+  "source_count": 61,
+  "video_count": 12,
+  "identity_state_distribution": {
+    "IDENTITY_PASS": 65,
+    "IDENTITY_REJECT": 7,
+    "IDENTITY_NOT_EVALUABLE": 1,
+    "IDENTITY_REVIEW": 1
+  },
+  "best_score": {
+    "min": 34.104445295986466,
+    "median": 79.8209835108056,
+    "max": 95.13703613736767
+  },
+  "global_rank_range": [
+    1,
+    704
+  ],
+  "pool_quality_status": "BASE_PRESERVED_ADDITIVE_COVERAGE",
+  "current_version_review_exclusions": {
+    "ranking_version": "best_rank_v2.2",
+    "current_version_rejects_found": 4,
+    "historical_version_rejects_left_eligible": 9,
+    "history": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step3_best_review_history_by_version.json",
+    "feedback": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step3_best_review_reject_feedback_best_rank_v2.2.csv",
+    "ranking_sha256": "6400f2a09d30b0a99488872c435c0fae039644cbc27619d90b09a31e0d7126ca",
+    "binding": "Pinned authoritative STEP3 ranking hash/columns + current frame/image/generation/score/rank; downstream pose may differ"
+  },
+  "input_hashes": {
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step5_dataset_report.csv": "c9daf2a1615fca973abee9beb381c198dbb9f24042ff7953b2a7c81ca60d72d2",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step5_dedup_summary.json": "5b67e92707414297c4d3dcdc8289f4a2f82f7f15499fbb1983280091860c983f",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step4_pose_composition.csv": "ed5a213b4487132bc19915a6aa12a4008d9535a7cebf0cf752166c9c421d4634",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step4_pose_summary.json": "b6e8dd1fc1937a0d8443020061421136f2bc674dcb217c955374209949d44b07",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step3_best_ranking.csv": "6400f2a09d30b0a99488872c435c0fae039644cbc27619d90b09a31e0d7126ca",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step3_best_ranking_summary.json": "afe320e6385abf268b560ab05b7125f936a034cbd4754097221b9e5c22c16d87",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step6_dataset_report.csv": "8fd4b88d925e73de059a403aeec73c975cd8207c2067d1f631fd6e2567bda78d",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step6_identity_summary.json": "63c9e7f5795c42a70e9eed22ddf646ec1c82ee17215c1c37fc83a5a9678b5ba8",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step3_best_review_history.json": "b32c406b6c24edad3b1a8a1d28fddcec61d1aab4ff64a75ab357d820ad801bd9",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\work\\frames_raw\\Sasha_v05\\Sasha_v05_003.png": "4164e6f9e195da618831d53bce9c9d6f6458d43642af036b4869551d88009a32",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\work\\frames_raw\\Sasha_v08\\Sasha_v08_004.png": "70fcac71103a56d33d5c1b36f4234a5ba8c70ae899ceb7026e7cc5e62b6f80dd",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\work\\frames_raw\\Sasha_v08\\Sasha_v08_018.png": "49349667c82c656848ca0ed9597ac646687b469ccc35781de2be8a3847f995c3",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\work\\frames_raw\\Sasha_v08\\Sasha_v08_008.png": "9a7367c4bfcd56bc42c09dacd1f22a64104514df1850a292bc8b57799a3940f3",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step3_best_review_history_by_version.json": "930fadc50baf45fb5cfbcecab30098e2902cd9a8609b28d32253b37074df0a87",
+    "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step3_best_review_reject_feedback_best_rank_v2.2.csv": "602bfd331478d1e45bd921312114b6ad08937f61a57b4999f4b8b348fb7f3832"
+  },
+  "settings": {
+    "version": "step7_quality_coverage_v2.2",
+    "candidate_pool_target": 70,
+    "candidate_pool_min": 60,
+    "candidate_pool_max": 140,
+    "quality_guard_multiplier": 2.0,
+    "rare_profile_review_target": 3,
+    "max_per_video": 6,
+    "max_supplemental_still": 15,
+    "pose_min": {
+      "FRONTAL": 15,
+      "THREE_QUARTER_LEFT": 10,
+      "THREE_QUARTER_RIGHT": 10,
+      "PROFILE_LEFT": 2,
+      "PROFILE_RIGHT": 2
+    },
+    "vertical_min": {
+      "LOOKING_UP": 2,
+      "LOOKING_DOWN": 2
+    },
+    "scale_min": {
+      "CLOSE_UP": 12,
+      "UPPER_BODY": 18,
+      "FULL_BODY": 12
+    },
+    "report": "@reports/step6_dataset_report.csv",
+    "step6_summary": "@reports/step6_identity_summary.json",
+    "output_csv": "@reports/step7_candidate_selection.csv",
+    "candidates_csv": "@reports/step7_review_candidates.csv",
+    "summary": "@reports/step7_candidate_summary.json",
+    "markdown": "docs/STEP7_CANDIDATE_SUMMARY.md",
+    "review_html": "docs/STEP7_CANDIDATE_REVIEW.html",
+    "limit": 0
+  },
+  "outputs": {
+    "output_csv": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step7_candidate_selection.csv",
+    "candidates_csv": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step7_review_candidates.csv",
+    "markdown": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\docs\\STEP7_CANDIDATE_SUMMARY.md",
+    "review_html": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\docs\\STEP7_CANDIDATE_REVIEW.html",
+    "summary": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step7_candidate_summary.json"
+  },
+  "input_versions": [
+    "best_rank_v2.2",
+    "step4_pose_composition_v3",
+    "step5_dedup_v2",
+    "step6_identity_v2"
+  ],
+  "completeness_evidence": "STEP3/4 complete hash and full-row contract; STEP5/6 explicit COMPLETE markers",
+  "dataset_generations_by_kind": {
+    "formal_video": [
+      "bd72f194f62260fb728b77b26c75c5491b178908bff53393e197c11137bf9a40"
+    ],
+    "supplemental_still": [
+      "b09674fe16b281285380bd5ae7c3d3585b2f787347d7672c74dd053bbbc968c4"
+    ]
+  }
+}
+```

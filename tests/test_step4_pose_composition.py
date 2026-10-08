@@ -175,7 +175,12 @@ class Step4Tests(unittest.TestCase):
             digest=hashlib.sha256(report.read_bytes()).hexdigest()
             snapshot.write_text(json.dumps(dict(version='best_rank_v2.2',total_universe=3,ranking_sha256=digest)),encoding='utf-8')
             targets={key:base/name for key,name in [('output','step4.csv'),('summary','summary.json'),('video_summary','sources.csv'),('markdown','summary.md')]}
-            argv=[sys.executable,str(ROOT/'scripts/step4_pose_composition.py'),'--config',str(ROOT/'config/config.example.yaml'),
+            import yaml
+            legacy_config=copy.deepcopy(self.config)
+            legacy_config['step4_pose_composition']['version']='step4_pose_composition_v2'
+            legacy_path=base/'legacy.yaml'
+            legacy_path.write_text(yaml.safe_dump(legacy_config),encoding='utf-8')
+            argv=[sys.executable,str(ROOT/'scripts/step4_pose_composition.py'),'--config',str(legacy_path),
                   '--report',str(report),'--step3-summary',str(snapshot)]
             for key,path in targets.items():argv.extend(['--'+key.replace('_','-'),str(path)])
             result=subprocess.run(argv,capture_output=True,text=True,encoding='utf-8')

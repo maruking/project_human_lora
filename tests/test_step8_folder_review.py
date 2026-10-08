@@ -19,8 +19,8 @@ def fixture(base,n=8):
     rows=[]
     for i in range(n):
         r=row(i,pose_bin=POSES[i%6],face_scale_bin=('CLOSE_UP','UPPER_BODY','FULL_BODY')[i%3],vertical_pose=('LEVEL','LOOKING_UP','LOOKING_DOWN')[i%3],
-            ranking_version='best_rank_v2.2',step7_version='step7_quality_coverage_v2.1',candidate_pool_eligible='true',candidate_pool_selected='true',
-            quality_guard_member='true',quality_guard_order=str(i+1),selection_reason='BEST_QUALITY_CORE')
+            ranking_version='best_rank_v2.2',step7_version='step7_quality_coverage_v2.2',candidate_pool_eligible='true',candidate_pool_selected='true',
+            quality_guard_member='true',rare_profile_candidate='false',quality_guard_order=str(i+1),selection_reason='BEST_QUALITY_CORE')
         pixels=('synthetic'+str(i)).encode();(images/r['filename']).write_bytes(pixels);r['image_sha256']=hashlib.sha256(pixels).hexdigest();rows.append(r)
     return settings,root,images,rows
 
@@ -36,18 +36,18 @@ class FolderReviewTests(unittest.TestCase):
     def test_01_each_candidate_once(self):
         with tempfile.TemporaryDirectory() as tmp:
             s,root,images,rows,records,_=materialize(Path(tmp))
-            self.assertEqual(sum(len(list((root/pose_folder(p,s)/'FULL').iterdir())) for p in POSES),len(rows))
+            self.assertEqual(len(list((root/'00_ALL_RANKED').iterdir())),len(rows))
             self.assertEqual({r['frame_id'] for r in records},{r['frame_id'] for r in rows})
 
     def test_02_stored_pose_folder(self):
         with tempfile.TemporaryDirectory() as tmp:
             s,root,images,rows,records,_=materialize(Path(tmp))
-            self.assertTrue(all(Path(r['full_review_path']).parent.parent.name==pose_folder(r['pose_bin'],s) for r in records))
+            self.assertTrue(all(Path(r['full_review_path']).parent.name=='00_ALL_RANKED' for r in records))
 
     def test_03_accept_empty(self):
         with tempfile.TemporaryDirectory() as tmp:
             s,root,*_=materialize(Path(tmp))
-            self.assertTrue(all(not list((root/pose_folder(p,s)/'ACCEPT').iterdir()) for p in POSES))
+            self.assertTrue(not list((root/'99_ACCEPT').iterdir()))
 
     def test_04_nonempty_accept_protected(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -66,20 +66,20 @@ class FolderReviewTests(unittest.TestCase):
     def test_06_filename_manifest_identity(self):
         with tempfile.TemporaryDirectory() as tmp:
             s,root,images,rows,records,_=materialize(Path(tmp))
-            self.assertTrue(records[0]['review_filename'].startswith('R0001_B100.0_'))
+            self.assertTrue(records[0]['review_filename'].startswith('O0001_R0001_B100.0_'))
             self.assertEqual(records[0]['frame_id'],rows[0]['frame_id'])
 
     def test_07_duplicate_frame_detected(self):
         with tempfile.TemporaryDirectory() as tmp:
             s,root,images,rows,records,_=materialize(Path(tmp))
             first=records[0];shutil.copy2(first['full_review_path'],first['accept_review_path'])
-            shutil.copy2(first['full_review_path'],root/pose_folder(POSES[1],s)/'ACCEPT'/first['review_filename'])
-            with self.assertRaisesRegex(ValueError,'Same frame'):accepted_ids(records,root,s)
+            shutil.copy2(first['full_review_path'],root/'99_ACCEPT'/('extra_'+first['review_filename']))
+            with self.assertRaisesRegex(ValueError,'Unknown ACCEPT'):accepted_ids(records,root,s)
 
     def test_08_unknown_file_detected(self):
         with tempfile.TemporaryDirectory() as tmp:
             s,root,images,rows,records,_=materialize(Path(tmp))
-            (root/pose_folder(POSES[0],s)/'ACCEPT/unknown.png').write_bytes(b'unknown')
+            (root/'99_ACCEPT/unknown.png').write_bytes(b'unknown')
             with self.assertRaisesRegex(ValueError,'Unknown ACCEPT'):accepted_ids(records,root,s)
 
     def test_09_current_reject_not_finalized(self):
@@ -161,7 +161,7 @@ class FolderReviewTests(unittest.TestCase):
     def test_full_missing_stops_collection(self):
         with tempfile.TemporaryDirectory() as tmp:
             s,root,images,rows,records,_=materialize(Path(tmp));Path(records[0]['full_review_path']).unlink()
-            with self.assertRaisesRegex(ValueError,'FULL must retain'):accepted_ids(records,root,s)
+            with self.assertRaisesRegex(ValueError,'VIEW must retain'):accepted_ids(records,root,s)
 
     def test_edited_accept_stops(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -176,12 +176,12 @@ class FolderReviewTests(unittest.TestCase):
     def test_stale_step7_reject_patch_stops(self):
         with tempfile.TemporaryDirectory() as tmp:
             base=Path(tmp);s,root,images,rows=fixture(base,1)
-            from common.candidate_selection_v21 import FIELDS
+            from common.candidate_selection_v22 import FIELDS
             upstream={k:v for k,v in rows[0].items() if k not in FIELDS}
             full=dict(upstream,**{k:rows[0].get(k,'') for k in FIELDS})
             paths={k:base/name for k,name in dict(full_csv='full.csv',candidates_csv='candidates.csv',step7_summary='summary.json').items()}
             paths['full_csv'].write_bytes(encoded_csv([full]));paths['candidates_csv'].write_bytes(encoded_csv([full]))
-            paths['step7_summary'].write_text(json.dumps(dict(step7_version='step7_quality_coverage_v2.1',publication_status='COMPLETE',settings=load_config()['step7_candidates_v2'],input_hashes={},selected_review_pool=1,artifact_sha256={'output_csv':hashlib.sha256(paths['full_csv'].read_bytes()).hexdigest(),'candidates_csv':hashlib.sha256(paths['candidates_csv'].read_bytes()).hexdigest()})))
+            paths['step7_summary'].write_text(json.dumps(dict(step7_version='step7_quality_coverage_v2.2',publication_status='COMPLETE',settings=load_config()['step7_candidates_v2'],input_hashes={},selected_review_pool=1,artifact_sha256={'output_csv':hashlib.sha256(paths['full_csv'].read_bytes()).hexdigest(),'candidates_csv':hashlib.sha256(paths['candidates_csv'].read_bytes()).hexdigest()})))
             config=load_config()
             with patch('step8_folder_review.upstream_preflight',return_value=([upstream],{})),patch('step8_folder_review.review_exclusions',return_value=({full['frame_id']},{})):
                 with self.assertRaisesRegex(ValueError,'Reject patch absent'):preflight(config,paths,images)

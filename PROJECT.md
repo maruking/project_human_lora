@@ -30,13 +30,13 @@ schema fields will be introduced compatibly in scoped later work.
 | 1 | Source mapping, normalized working copies, frame extraction | Duration-aware generation validated |
 | 2 | Whole-frame technical metrics and derived human reports | Current generation/report layer validated |
 | 3 | BEST v2.2 balanced critical quality and version-separated review (DEC-0020) | Production and 135-image Human Review completed; practical baseline approved for STEP4, general quality accuracy unvalidated; see [current Knowledge](knowledge/current/step3-best-ranking.md) |
-| 4 | Stored pose / face-scale descriptors, full-row audit | Current production summary available; no pose accuracy/final selection claim |
+| 4 | buffalo_l 3D pose / unchanged face-scale descriptors, full-row audit | v3 production completed; full-row/score checks; bounded25-image visual approval, DEC-0027; STEP5 input bridge validated, downstream production pending |
 | 5 | Source-aware duplicate clusters / BEST representatives | STEP5 v2 synthetic validation; production pending ★maru; no deletion/quality rescoring/quotas; [DEC-0022](knowledge/decisions/DEC-0022-step5-conservative-dedup-clusters.md) |
 | 6 | Identity evaluation | InsightFace v2 implemented; seven-reference preflight PASS, synthetic validation; full candidate production pending ★maru; DEC-0023 |
-| 7 | Human-review candidate pool | Bounded QUALITY-FIRST v2.1; core60 plus optional repair/fill, same-version Reject exclusion, identity diagnostic-only; synthetic/read-only validation, production pending Chappy/★maru; DEC-0025 |
-| 8 | Human decision/review | Folder FULL→ACCEPT Human workflow and validated CSV authority implemented; synthetic validation; production preparation/35–45 selection pending ★maru, DEC-0026 |
-| 9 | Selective restoration, preserving source skin | Legacy BAT guarded/disabled after STEP8 CSV validation; CSV adapter/component-only restoration revision pending |
-| 10 | Training export/captions | Existing FLUX-oriented exporter; other adapters are planned |
+| 7 | Human-review candidate pool | v2.2 immutable BASE70 plus additive Quality-Guard coverage/profile-only eligible top-up; source caps diagnostic, identity0; production rerun by ★maru pending; DEC-0028 |
+| 8 | Human decision/review | v3 ALL/SHOT/POSE/VERTICAL views, only99_ACCEPT; count35–45 and guidance unchanged; prepare deferred, DEC-0028 |
+| 9 | Selective restoration, preserving source skin | Diagnostic-only accepted40 audit completed (30 protected/10 review for missing legacy eye metric); no restoration; legacy BAT guarded, component-only revision pending |
+| 10 | Training export/captions | STEP8_ACCEPT original40 rePackaged with local unique trigger; captions40/40 and source/export hash preservation verified; AI Toolkit Klein Base9B YAML typed-config validation PASS, training not started; DEC-0029; see docs/STEP10_SASHA_RH_TRAINING_PREPARATION.md |
 
 See [Pipeline Rules](.agents/rules/lora_pipeline_rules.md) and the
 [current scope/result](docs/STEP3_RESULT.md). Existing code and
@@ -63,6 +63,23 @@ Existing subject_name, manifest video_id, relative frame_id/filename and generat
 fingerprints supply partial lineage today. They do not imply that the four explicit
 fields already exist everywhere. Retain compatible naming and evolve schemas gradually.
 A photograph needs a source identity too; the generalized photo path is planned.
+
+## Current Training Target
+
+The authoritative Training Contract is the `training` section of
+`config/config.yaml`. It defines the active adapter, base model/architecture,
+trigger, dataset/caption version and format, LoRA settings and final-image target.
+Read these runtime values from config; this document does not independently set
+them. `config/config.example.yaml` is a bootstrap example when local config is
+absent; it is not a second operational SSOT.
+
+STEP10 prints this contract at startup and preflight. `project.trigger_word` must
+match `training.trigger_word`; disagreement is a configuration error. Missing
+contracts do not select historical training defaults. Existing v1 exports and
+old-model references remain Baseline/history, not the current training target.
+The contract is a declaration, not permission to execute Training or proof that
+Human Review is complete. External adapter YAML synchronization is separate work;
+the AI Toolkit application is not changed by declaring this contract.
 
 ## Model Independence
 

@@ -1,6 +1,6 @@
 # STEP4 Pose / Composition Summary
 
-Version: step4_pose_composition_v2
+Version: step4_pose_composition_v3
 
 Full input rows: 1951; ranking eligible: 1880.
 
@@ -14,9 +14,9 @@ Distributions below include all ranking-eligible rows, including missing measure
 
 | State | Count |
 | --- | ---: |
-| MEASURED | 1698 |
+| MEASURED | 1872 |
 | NOT_APPLICABLE_STEP3_FATAL | 71 |
-| NOT_EVALUABLE | 182 |
+| NOT_EVALUABLE | 8 |
 
 ## input_kind_all_rows
 
@@ -36,21 +36,21 @@ Distributions below include all ranking-eligible rows, including missing measure
 
 | State | Count |
 | --- | ---: |
-| FRONTAL | 1153 |
-| THREE_QUARTER_LEFT | 274 |
-| THREE_QUARTER_RIGHT | 245 |
-| PROFILE_LEFT | 15 |
-| PROFILE_RIGHT | 11 |
-| NOT_EVALUABLE | 182 |
+| FRONTAL | 1464 |
+| THREE_QUARTER_LEFT | 141 |
+| THREE_QUARTER_RIGHT | 224 |
+| PROFILE_LEFT | 26 |
+| PROFILE_RIGHT | 17 |
+| NOT_EVALUABLE | 8 |
 
 ## vertical_pose
 
 | State | Count |
 | --- | ---: |
-| LOOKING_UP | 488 |
-| LEVEL | 1161 |
-| LOOKING_DOWN | 49 |
-| NOT_EVALUABLE | 182 |
+| LOOKING_UP | 37 |
+| LEVEL | 1766 |
+| LOOKING_DOWN | 69 |
+| NOT_EVALUABLE | 8 |
 
 ## face_scale_bin
 
@@ -65,40 +65,40 @@ Distributions below include all ranking-eligible rows, including missing measure
 
 | Row | Column | Count |
 | --- | --- | ---: |
-| FRONTAL | CLOSE_UP | 231 |
-| FRONTAL | FULL_BODY | 363 |
-| FRONTAL | UPPER_BODY | 559 |
-| NOT_EVALUABLE | FULL_BODY | 169 |
-| NOT_EVALUABLE | UPPER_BODY | 13 |
-| PROFILE_LEFT | CLOSE_UP | 1 |
-| PROFILE_LEFT | FULL_BODY | 7 |
+| FRONTAL | CLOSE_UP | 230 |
+| FRONTAL | FULL_BODY | 625 |
+| FRONTAL | UPPER_BODY | 609 |
+| NOT_EVALUABLE | CLOSE_UP | 1 |
+| NOT_EVALUABLE | FULL_BODY | 5 |
+| NOT_EVALUABLE | UPPER_BODY | 2 |
+| PROFILE_LEFT | CLOSE_UP | 2 |
+| PROFILE_LEFT | FULL_BODY | 17 |
 | PROFILE_LEFT | UPPER_BODY | 7 |
-| PROFILE_RIGHT | CLOSE_UP | 1 |
-| PROFILE_RIGHT | FULL_BODY | 5 |
-| PROFILE_RIGHT | UPPER_BODY | 5 |
-| THREE_QUARTER_LEFT | CLOSE_UP | 44 |
-| THREE_QUARTER_LEFT | FULL_BODY | 124 |
-| THREE_QUARTER_LEFT | UPPER_BODY | 106 |
-| THREE_QUARTER_RIGHT | CLOSE_UP | 52 |
-| THREE_QUARTER_RIGHT | FULL_BODY | 99 |
-| THREE_QUARTER_RIGHT | UPPER_BODY | 94 |
+| PROFILE_RIGHT | FULL_BODY | 6 |
+| PROFILE_RIGHT | UPPER_BODY | 11 |
+| THREE_QUARTER_LEFT | CLOSE_UP | 32 |
+| THREE_QUARTER_LEFT | FULL_BODY | 40 |
+| THREE_QUARTER_LEFT | UPPER_BODY | 69 |
+| THREE_QUARTER_RIGHT | CLOSE_UP | 64 |
+| THREE_QUARTER_RIGHT | FULL_BODY | 74 |
+| THREE_QUARTER_RIGHT | UPPER_BODY | 86 |
 
 ## pose_bin_x_input_kind
 
 | Row | Column | Count |
 | --- | --- | ---: |
-| FRONTAL | formal_video | 1123 |
+| FRONTAL | formal_video | 1434 |
 | FRONTAL | supplemental_still | 30 |
-| NOT_EVALUABLE | formal_video | 179 |
-| NOT_EVALUABLE | supplemental_still | 3 |
-| PROFILE_LEFT | formal_video | 13 |
+| NOT_EVALUABLE | formal_video | 7 |
+| NOT_EVALUABLE | supplemental_still | 1 |
+| PROFILE_LEFT | formal_video | 24 |
 | PROFILE_LEFT | supplemental_still | 2 |
-| PROFILE_RIGHT | formal_video | 10 |
-| PROFILE_RIGHT | supplemental_still | 1 |
-| THREE_QUARTER_LEFT | formal_video | 265 |
-| THREE_QUARTER_LEFT | supplemental_still | 9 |
-| THREE_QUARTER_RIGHT | formal_video | 233 |
-| THREE_QUARTER_RIGHT | supplemental_still | 12 |
+| PROFILE_RIGHT | formal_video | 14 |
+| PROFILE_RIGHT | supplemental_still | 3 |
+| THREE_QUARTER_LEFT | formal_video | 129 |
+| THREE_QUARTER_LEFT | supplemental_still | 12 |
+| THREE_QUARTER_RIGHT | formal_video | 215 |
+| THREE_QUARTER_RIGHT | supplemental_still | 9 |
 
 ## face_scale_bin_x_input_kind
 
@@ -113,3 +113,7 @@ Distributions below include all ranking-eligible rows, including missing measure
 
 Human Review dependency: NONE. Reject/quota introduced: NO.
 STEP5+ is not executed. Inspect distribution before designing STEP5.
+
+Estimator: installed buffalo_l 68-point 3D; raw signed degrees, comparison-approved.
+STEP3 angles preserved in step3_yaw/pitch/roll/pose_status.
+STEP5+ remains unchanged and v2-only: do not run downstream until explicitly adapted for v3.

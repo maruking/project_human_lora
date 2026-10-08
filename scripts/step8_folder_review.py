@@ -11,8 +11,8 @@ from common.config import load_for_cli,get_section,resolve_config_path
 from common.video_manifest import manifest_lock
 from common.folder_review import (VERSION,EXTRA,POSES,validate_settings,safe_root,manifest_rows,
     stage_review,install_review,accepted_ids,selection_rows,no_links,pose_folder)
-from common.candidate_selection_v21 import VERSION as STEP7_VERSION,FIELDS
-from step7_candidate_selection_v21 import preflight as upstream_preflight,review_exclusions,csv_bytes
+from common.candidate_selection_v22 import VERSION as STEP7_VERSION,FIELDS,review_scope_allowed
+from step7_candidate_selection_v22 import preflight as upstream_preflight,review_exclusions,csv_bytes
 from step5_dedup_v2 import read_csv,sha256_file as digest,source_path
 from step6_identity_v2 import publish,ensure_unchanged
 
@@ -39,7 +39,7 @@ def preflight(config,paths,images):
     rejected,evidence=review_exclusions(rows,config,images,hashes)
     summary=json.loads(paths['step7_summary'].read_text(encoding='utf-8-sig'))
     if summary.get('step7_version')!=STEP7_VERSION or summary.get('publication_status')!='COMPLETE' or summary.get('policy_review_required'):
-        raise ValueError('Current complete STEP7 v2.1 required; rerun 07_score_lora_candidates.bat')
+        raise ValueError('Current complete STEP7 v2.2 required; rerun 07_score_lora_candidates.bat')
     if summary.get('settings')!=cfg:
         raise ValueError('STEP7 configuration changed; rerun STEP7 first')
     for p,value in hashes.items():
@@ -60,7 +60,7 @@ def preflight(config,paths,images):
     if len({r['frame_id'] for r in candidates})!=len(candidates) or selected!={r['frame_id'] for r in candidates} or len(candidates)!=summary.get('selected_review_pool'):
         raise ValueError('STEP7 candidate view differs from full audit/summary')
     for row in candidates:
-        if row!=indexed[row['frame_id']] or row['frame_id'] in rejected or row['candidate_pool_eligible']!='true' or row['quality_guard_member']!='true':
+        if row!=indexed[row['frame_id']] or row['frame_id'] in rejected or row['candidate_pool_eligible']!='true' or not review_scope_allowed(row):
             raise ValueError('Invalid or rejected STEP7 candidate; rerun STEP7')
     for key in ('full_csv','candidates_csv','step7_summary'):hashes[str(paths[key])]=digest(paths[key])
     return full,candidates,rejected,hashes
@@ -88,7 +88,7 @@ def prepare(config,paths,images,reset=False):
         failed.parent.mkdir(exist_ok=True);paths['review_root'].replace(failed)
         if archive:archive.replace(paths['review_root'])
         raise
-    print('Prepared',len(records),'FULL copies; ACCEPT empty. Review:',paths['review_root'])
+    print('Prepared',len(records),'unique candidates in multiple VIEWs; 99_ACCEPT empty. Review:',paths['review_root'])
     if archive:print('Prior review/choices preserved:',archive)
     return prep
 
@@ -122,6 +122,7 @@ def markdown(summary):
         text+='\n'+field+'\n\n| label | count |\n|---|---:|\n'
         for label in labels:text+=f"| {label} | {summary['distributions'][field].get(label,0)} |\n"
     text+='\nSources / quality / warnings\n\n```json\n'+json.dumps({k:summary[k] for k in ('source_summary','quality','guidance_warnings')},ensure_ascii=False,indent=2)+'\n```\n'
+    text+='\nIgnored exact duplicate VIEW copies (not additional accepts): '+str(summary.get('view_duplicate_copies_ignored_count',0))+'\n'
     text+='\nSTEP9 input is validated step8_human_selection.csv with STEP8_ACCEPT only, and requires VALID total count. No STEP9 processing ran.\n'
     return text.encode('utf-8')
 
@@ -135,10 +136,17 @@ def collect(config,paths,images):
     if any(any(out[k]!=v for k,v in old.items()) for old,out in zip(full,rows)):raise ValueError('STEP8 altered upstream values')
     summary.update(input_hashes=hashes,settings=config['step8_folder_review'],authoritative_csv=str(paths['selection_csv']),
         step9_input='Validated CSV rows with step8_decision=STEP8_ACCEPT; original sources, not ACCEPT filesystem')
+    expected_review_paths={str(Path(p).resolve()) for r in records for p in json.loads(r['review_view_paths_json'])}
+    expected_review_paths.update(str(Path(r['accept_review_path']).resolve()) for r in records if r['frame_id'] in accepted)
+    extras=sorted(p for p in copy_hashes if str(Path(p).resolve()) not in expected_review_paths)
+    summary.update(view_duplicate_copies_ignored_count=len(extras),view_duplicate_copies_ignored=extras)
+    if extras:
+        print('[WARNING] Ignored exact duplicate VIEW copies (not extra accepts):',len(extras))
+        for p in extras:print(' ',p)
     contents=dict(selection_csv=encoded_csv(rows),markdown=markdown(summary))
     summary['artifact_sha256']={k:hashlib.sha256(v).hexdigest() for k,v in contents.items()}
     contents['summary']=json.dumps(summary,ensure_ascii=False,indent=2).encode('utf-8')
-    current_accept_paths={str(p) for pose in POSES for p in (paths['review_root']/pose_folder(pose,config['step8_folder_review'])/'ACCEPT').iterdir()}
+    current_accept_paths={str(p) for p in (paths['review_root']/'99_ACCEPT').iterdir()}
     if current_accept_paths!={r['accept_review_path'] for r in records if r['frame_id'] in accepted}:
         raise ValueError('ACCEPT changed during collection; finish copying and retry')
     publish(contents,{k:paths[k] for k in contents},'summary',hashes)
@@ -181,7 +189,7 @@ def load_step9_selection(config):
 
 def main():
     config=load_for_cli();settings,paths,images=paths_for(config)
-    parser=argparse.ArgumentParser(description='STEP8 Explorer FULL -> copy to ACCEPT -> collect')
+    parser=argparse.ArgumentParser(description='STEP8 ranked/multi-VIEW -> copy to 99_ACCEPT -> collect')
     parser.add_argument('action',choices=('prepare','collect','handoff-check'))
     parser.add_argument('--config',type=Path)
     parser.add_argument('--preflight-only',action='store_true')

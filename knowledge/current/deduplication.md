@@ -1,6 +1,6 @@
 ---
 topic: deduplication
-last_updated: 2026-10-05
+last_updated: 2026-10-06
 confidence: MEDIUM
 status: ACTIVE
 related_decisions: [DEC-0022]
@@ -11,9 +11,21 @@ related_cases: []
 # Current Knowledge: STEP5 Deduplication v2
 
 Normal entry: bat/05_face_deduplication.bat → scripts/step5_dedup_v2.py. Read the
-complete authoritative STEP4 v2 CSV, verified against its summary and current
+complete authoritative STEP4 v2 or v3 CSV, verified against its summary and current
 BEST v2.2. Analyze ranking_eligible, not legacy face_eligible. Keep every row/column,
 including fatal and duplicate members. [DEC-0022](../decisions/DEC-0022-step5-conservative-dedup-clusters.md)
+
+2026-10-06 input bridge: v3 raw yaw/pitch feed unchanged dedup angle functions;
+STEP3 angle lineage is verified through required step3_yaw/pitch/roll/pose_status.
+Mixed STEP4 versions or modified score/source/old-angle evidence stop preflight.
+Current1951-row read-only preflight and all8 missing-pose checks PASS;32 synthetic
+STEP5 tests PASS. Dedup/phash modules and all thresholds remain unchanged; full
+v3-input STEP5 production pending ★maru. [Compatibility result](../../docs/STEP5_STEP4_V3_COMPATIBILITY.md).
+
+Subsequent v3-input production completed (1951 rows;766 UNIQUE/REPRESENTATIVE).
+Its input_versions metadata was corrected from a fixed v2 literal to authoritative
+summary-derived versions; cluster output unchanged, no recalculation.34 synthetic
+tests PASS. See the metadata-only correction appendix in the compatibility result.
 
 Exact SHA byte identity may cross kinds/sources. Near matching is limited to
 same-video frames or stills within the declared supplemental universe. Separate

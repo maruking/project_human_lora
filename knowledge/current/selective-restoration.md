@@ -48,3 +48,22 @@ Whole-face neural upscaling or restoration is strictly forbidden. Restoration is
 
 ## 8. Not Yet Validated
 - Subjects with intricate facial tattoos across cheek regions.
+
+## 2026-10-07 diagnostic-only STEP9 branch
+
+Current user request permits diagnostics only on validated STEP8_ACCEPT images;
+restoration/inference/image copying andSTEP10 are forbidden. Normal legacy09 BAT
+remains guarded;09_diagnose_selected.bat calls step9_diagnostic.py only. Config owns
+STEP9_DIAGNOSTIC.csv andSTEP9_DIAGNOSTIC_SUMMARY.md output paths, existing thresholds
+unchanged. Classify by legacy FULL_BODY scope with face-dimension/old eye triggers;
+missing/disabled old eye metric means review, never invent a local-detail substitute.
+canonical metrics remain visible, with no newSTEP9 canonical cutoff.
+
+Observed40 selected rows:30 protected shots RESTORATION_NOT_NEEDED,10 FULL_BODY
+REVIEW_RECOMMENDED because legacy eye_sharpness unavailable. All40 face min dimensions
+>=229px,above existing190 threshold. This is uncertainty review, not10 proven blur
+or restoration cases.18 tests PASS; source/STEP8 hashes preserved. No automatic skip
+because review_count>0. Chappy/Human review required for these10 before a skip decision.
+[Diagnostic result](../../docs/STEP9_DIAGNOSTIC_SUMMARY.md).
+Earlier mask enforcement/accuracy claims above are historical policy language, not
+current validated production behavior; legacy implementation mismatch remains.

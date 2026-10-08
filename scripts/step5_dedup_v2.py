@@ -33,6 +33,8 @@ PATH_DEFAULTS = dict(report='@reports/step4_pose_composition.csv',
     review_html='docs/STEP5_DEDUP_REVIEW.html', pose_review='docs/STEP5_REPRESENTATIVE_POSE_REVIEW.html',
     pose_summary='@reports/step5_representative_pose_summary.csv')
 OUTPUT_KEYS = ('output_csv','summary','markdown','review_html','pose_review','pose_summary')
+STEP4_INPUT_VERSIONS = ('step4_pose_composition_v2', 'step4_pose_composition_v3')
+V3_POSE_FIELDS = ('yaw', 'pitch', 'roll', 'pose_status')
 
 
 def read_csv(path):
@@ -61,8 +63,11 @@ def preflight(report, step4_summary, step3_report, step3_summary, images):
     if set(FIELDS) & set(columns):
         raise ValueError('STEP4 input already contains STEP5 output fields; do not merge generations')
     summary = json.loads(step4_summary.read_text(encoding='utf-8-sig'))
-    if summary.get('step4_version') != 'step4_pose_composition_v2':
+    input_version = summary.get('step4_version')
+    if input_version not in STEP4_INPUT_VERSIONS:
         raise ValueError('Wrong authoritative STEP4 version')
+    if input_version == 'step4_pose_composition_v3' and any('step3_'+key not in columns for key in V3_POSE_FIELDS):
+        raise ValueError('STEP4 v3 lacks preserved STEP3 pose evidence')
     if summary.get('output_csv_sha256') != sha256_file(report) or summary.get('total_rows') != len(rows):
         raise ValueError('STEP4 count/content differs from summary')
     if summary.get('statuses', {}).get('ERROR', 0):
@@ -78,10 +83,15 @@ def preflight(report, step4_summary, step3_report, step3_summary, images):
     eligible_count = 0
     for row in rows:
         frame = row['frame_id']
-        if row['step4_version'] != 'step4_pose_composition_v2':
+        if row['step4_version'] != input_version:
             raise ValueError('Mixed STEP4 version')
         for key, value in old[frame].items():
-            if key not in ADDED_FIELDS and row.get(key) != value:
+            # Only v3's explicitly replaced pose columns may differ. Verify their
+            # original values through the mandatory step3_* lineage columns.
+            if input_version == 'step4_pose_composition_v3' and key in V3_POSE_FIELDS:
+                if row.get('step3_'+key) != value:
+                    raise ValueError('STEP4 v3 changed preserved STEP3 pose: ' + frame + '/' + key)
+            elif key not in ADDED_FIELDS and row.get(key) != value:
                 raise ValueError('STEP4 changed inherited STEP3 field: ' + frame + '/' + key)
         kind = row['input_kind']
         if kind not in ('formal_video', 'supplemental_still'):
@@ -241,12 +251,35 @@ def validate_targets(targets, inputs, images):
             raise ValueError('Output cannot overwrite source/code/history: ' + str(path))
 
 
+def authoritative_input_versions(rows, input_hashes):
+    """Read versions from hash-bound input summaries, never output-version literals."""
+    ranking_versions, pose_versions = [], []
+    for name, expected_hash in input_hashes.items():
+        path = Path(name)
+        if path.suffix.lower() != '.json':
+            continue
+        if sha256_file(path) != expected_hash:
+            raise ValueError('Input metadata changed before summary generation')
+        metadata = json.loads(path.read_text(encoding='utf-8-sig'))
+        if 'step4_version' in metadata:
+            pose_versions.append(metadata['step4_version'])
+        elif 'version' in metadata and 'ranking_sha256' in metadata:
+            ranking_versions.append(metadata['version'])
+    if len(ranking_versions) != 1 or len(pose_versions) != 1:
+        raise ValueError('Unique authoritative STEP3/4 version metadata required')
+    if {r['ranking_version'] for r in rows} != set(ranking_versions) or \
+            {r['step4_version'] for r in rows} != set(pose_versions):
+        raise ValueError('Input summary versions disagree with dataset rows')
+    return ranking_versions + pose_versions
+
+
 def publish(rows, hashes, errors, rules, targets, images, input_hashes, partial=False):
+    input_versions = authoritative_input_versions(rows, input_hashes)
     outputs, clusters, edges = annotate(rows, hashes, errors, rules, partial)
     assert len(outputs) == len(rows)
     assert all(all(out[k] == v for k,v in original.items()) for out,original in zip(outputs,rows))
     summary, cross = summarize(outputs, clusters, edges, partial)
-    summary.update(rules=rules,input_hashes=input_hashes, input_versions=['best_rank_v2.2','step4_pose_composition_v2'],
+    summary.update(rules=rules,input_hashes=input_hashes, input_versions=input_versions,
                    dataset_generations_by_kind={kind:sorted({r['dataset_generation_id'] for r in rows if r['input_kind']==kind})
                                                 for kind in sorted({r['input_kind'] for r in rows})},
                    outputs={key:str(value) for key,value in targets.items()},

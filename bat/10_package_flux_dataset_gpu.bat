@@ -8,7 +8,7 @@ if errorlevel 1 (
 )
 
 echo ==============================================================================
-echo [STEP 10] [GPU] Final Packaging for FLUX.1 LoRA Training
+echo [STEP 10] Dataset Packaging - Training Target is defined in config.
 echo Effective input/output paths are printed by the Python step; defaults are defined in config.
 echo Effective input/output paths are printed by the Python step; defaults are defined in config.
 echo ==============================================================================
@@ -18,6 +18,11 @@ if errorlevel 1 (
     echo.
     echo [ERROR] Dataset packaging failed with exit code %errorlevel%.
     exit /b %errorlevel%
+)
+
+if /i "%~1"=="--preflight-only" (
+    echo [PREFLIGHT ONLY] Packaging was not executed.
+    exit /b 0
 )
 
 echo.

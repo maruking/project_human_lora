@@ -1,13 +1,13 @@
 ---
 id: DEC-0025
 title: STEP7 bounded BEST quality core with optional soft coverage repair
-status: ACCEPTED
+status: SUPERSEDED
 date: 2026-10-05
 confidence: MEDIUM
 components: [candidate-selection, human-review, lineage]
 tags: [quality-guard, best-authority, soft-coverage]
 supersedes: [DEC-0024]
-superseded_by: []
+superseded_by: [DEC-0028]
 related_experiments: []
 related_failures: [FAIL-0003]
 related_cases: [CASE-0005]
@@ -71,3 +71,5 @@ This does not prove photographic quality, semantic occlusion accuracy, identity
 calibration, greedy optimality or final LoRA suitability. STEP8+ remains deferred.
 
 [Implementation report](../../docs/STEP7_CANDIDATE_V21_IMPLEMENTATION.md).
+
+2026-10-07: presentation/selection policy superseded by [DEC-0028](DEC-0028-step7-base-additive-step8-views.md). Earlier evidence and review history preserved.

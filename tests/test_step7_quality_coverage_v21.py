@@ -7,7 +7,19 @@ from test_step7_candidate_selection_v2 import row
 from test_step7_review_exclusions import evidence
 from common.config import load_config
 from common.candidate_selection_v21 import select,VERSION
-from step7_candidate_selection_v21 import publish_selection
+from step7_candidate_selection_v21 import publish_selection,upstream_input_versions,digest,bind_review_ranking
+
+
+def version_metadata(root,pose_version='step4_pose_composition_v3'):
+    records=[dict(version='best_rank_v2.2',ranking_sha256='synthetic'),
+             dict(step4_version=pose_version),dict(step5_version='step5_dedup_v2'),
+             dict(step6_version='step6_identity_v2')]
+    hashes={}
+    for i,record in enumerate(records):
+        path=root/f'upstream_{i}.json'
+        path.write_text(json.dumps(record),encoding='utf-8')
+        hashes[str(path)]=digest(path)
+    return hashes
 
 
 def cfg(target=6,core=3,**values):
@@ -57,12 +69,12 @@ class QualityCoverageTests(unittest.TestCase):
         self.assertEqual([r['frame_id'] for r in pool if r['selection_reason']=='BEST_QUALITY_CORE'],['f000','f003','f004'])
 
     def test_09_default_core60(self):
-        self.assertEqual(load_config()['step7_candidates_v2']['quality_core_target'],60)
-        _,_,s=run([row(i) for i in range(150)],load_config()['step7_candidates_v2'])
+        self.assertEqual(json.loads((Path(__file__).resolve().parents[1]/'config/step7_candidates_v21_legacy.json').read_text(encoding='utf-8'))['quality_core_target'],60)
+        _,_,s=run([row(i) for i in range(150)],json.loads((Path(__file__).resolve().parents[1]/'config/step7_candidates_v21_legacy.json').read_text(encoding='utf-8')))
         self.assertEqual(s['quality_core_count'],60)
 
     def test_10_default_repair_at_most10(self):
-        settings=load_config()['step7_candidates_v2'];self.assertEqual(settings['coverage_repair_slots_max'],10)
+        settings=json.loads((Path(__file__).resolve().parents[1]/'config/step7_candidates_v21_legacy.json').read_text(encoding='utf-8'));self.assertEqual(settings['coverage_repair_slots_max'],10)
         rows=[row(i) for i in range(150)]
         for r in rows[60:100]:r.update(pose_bin='PROFILE_LEFT',vertical_pose='LOOKING_UP',face_scale_bin='FULL_BODY')
         self.assertLessEqual(run(rows,settings)[2]['selection_reasons']['COVERAGE_REPAIR'],10)
@@ -84,7 +96,7 @@ class QualityCoverageTests(unittest.TestCase):
         self.assertEqual([r['frame_id'] for r in run(rows,cfg(pose_min={'PROFILE_LEFT':1}))[1] if r['selection_reason']=='COVERAGE_REPAIR'],['f006'])
 
     def test_14_profile_minima2_each(self):
-        settings=load_config()['step7_candidates_v2']
+        settings=json.loads((Path(__file__).resolve().parents[1]/'config/step7_candidates_v21_legacy.json').read_text(encoding='utf-8'))
         self.assertEqual(settings['pose_min']['PROFILE_LEFT'],2);self.assertEqual(settings['pose_min']['PROFILE_RIGHT'],2)
 
     def test_15_missing_profile_soft_shortage(self):
@@ -102,12 +114,12 @@ class QualityCoverageTests(unittest.TestCase):
         self.assertEqual(len(pool),4);self.assertTrue(all(int(r['quality_guard_order'])<=12 for r in pool))
 
     def test_18_60_to69_publish_warning(self):
-        settings=load_config()['step7_candidates_v2'];_,_,s=run([row(i) for i in range(64)],settings)
+        settings=json.loads((Path(__file__).resolve().parents[1]/'config/step7_candidates_v21_legacy.json').read_text(encoding='utf-8'));_,_,s=run([row(i) for i in range(64)],settings)
         self.assertEqual(s['publication_status'],'COMPLETE');self.assertEqual(s['pool_quality_status'],'POOL_BELOW_TARGET_QUALITY_PRESERVED')
 
     def test_19_below60_no_expand(self):
         rows=[row(i,video_id='same') for i in range(140)]+[row(i) for i in range(140,220)]
-        _,pool,s=run(rows,load_config()['step7_candidates_v2'])
+        _,pool,s=run(rows,json.loads((Path(__file__).resolve().parents[1]/'config/step7_candidates_v21_legacy.json').read_text(encoding='utf-8')))
         self.assertEqual(len(pool),6);self.assertEqual(s['publication_status'],'BLOCKED')
         self.assertIn('QUALITY_CORE_SHORTAGE',s['hard_shortages']);self.assertIn('QUALITY_POOL_INSUFFICIENT',s['hard_shortages'])
 
@@ -133,17 +145,40 @@ class QualityCoverageTests(unittest.TestCase):
     def test_soft_shortage_published_and_hard_failure_isolated(self):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);targets={k:root/name for k,name in dict(output_csv='step7_candidate_selection.csv',candidates_csv='step7_review_candidates.csv',summary='step7_candidate_summary.json',markdown='STEP7_CANDIDATE_SUMMARY.md',review_html='STEP7_CANDIDATE_REVIEW.html').items()}
-            s=publish_selection([row(i) for i in range(8)],cfg(pose_min={'PROFILE_LEFT':2}),targets,root,{},review_evidence={})
+            hashes=version_metadata(root)
+            s=publish_selection([row(i) for i in range(8)],cfg(pose_min={'PROFILE_LEFT':2}),targets,root,hashes,review_evidence={})
+            self.assertEqual(s['input_versions'],['best_rank_v2.2','step4_pose_composition_v3','step5_dedup_v2','step6_identity_v2'])
             self.assertEqual(s['publication_status'],'COMPLETE');prior={k:p.read_bytes() for k,p in targets.items()}
-            blocked=publish_selection([row(0)],cfg(),targets,root,{},review_evidence={})
+            blocked=publish_selection([row(0)],cfg(),targets,root,hashes,review_evidence={})
             self.assertEqual(blocked['publication_status'],'BLOCKED');self.assertEqual(prior,{k:p.read_bytes() for k,p in targets.items()})
 
     def test_partial_cannot_overwrite(self):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);targets={k:root/name for k,name in dict(output_csv='step7_candidate_selection.csv',candidates_csv='step7_review_candidates.csv',summary='step7_candidate_summary.json',markdown='STEP7_CANDIDATE_SUMMARY.md',review_html='STEP7_CANDIDATE_REVIEW.html').items()}
             for p in targets.values():p.write_bytes(b'previous')
-            s=publish_selection([row(i) for i in range(12)],cfg(),targets,root,{},limit=4,review_evidence={})
+            s=publish_selection([row(i) for i in range(12)],cfg(),targets,root,version_metadata(root),limit=4,review_evidence={})
             self.assertEqual(s['publication_status'],'PARTIAL');self.assertTrue(all(p.read_bytes()==b'previous' for p in targets.values()))
+
+    def test_versions_are_summary_derived_not_fixed(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder)
+            for value in ('step4_pose_composition_v2','step4_pose_composition_v3','synthetic_future_pose'):
+                self.assertEqual(upstream_input_versions(version_metadata(root,value))[1],value)
+
+    def test_missing_or_changed_version_metadata_blocks(self):
+        with tempfile.TemporaryDirectory() as folder:
+            hashes=version_metadata(Path(folder))
+            with self.assertRaises(ValueError):upstream_input_versions({})
+            Path(next(iter(hashes))).write_text('{}',encoding='utf-8')
+            with self.assertRaises(ValueError):upstream_input_versions(hashes)
+
+    def test_review_binding_preserves_ranking_with_new_pose(self):
+        original=[dict(row(0),ranking_version='best_rank_v2.2',image_sha256='hash')]
+        current=copy.deepcopy(original);current[0].update(yaw='55',pitch='20',roll='-15')
+        self.assertEqual(bind_review_ranking(current,original),original)
+        for key in ('best_score','global_rank','image_sha256','dataset_generation_id','ranking_version'):
+            changed=copy.deepcopy(current);changed[0][key]='changed'
+            with self.assertRaises(ValueError):bind_review_ranking(changed,original)
 
 
 if __name__=='__main__':unittest.main()

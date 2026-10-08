@@ -1,0 +1,19 @@
+{
+  "image_count": 40,
+  "caption_count": 40,
+  "captions_with_single_sasha_rh": 40,
+  "captions_with_character": 0,
+  "metadata_rows": 40,
+  "step10_audit_rows": 40,
+  "selected_frame_ids_and_order_unchanged": true,
+  "original_source_hashes_unchanged": 40,
+  "upstream_artifact_hashes_unchanged": 36,
+  "export_image_bytes_unchanged": 40,
+  "caption_change_only_trigger": true,
+  "alignment_16px_pass": true,
+  "restoration_status": "SKIPPED_NOT_NEEDED",
+  "historical_backup": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\bkup\\step10_before_sasha_rh_20261007_200327",
+  "step10_executed": true,
+  "step1_9_executed": false,
+  "training_started": false
+}

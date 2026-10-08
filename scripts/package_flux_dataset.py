@@ -11,7 +11,7 @@
 
 from __future__ import annotations
 
-from common.config import configure_parser, configure_constants, load_for_cli, get_section, resolve_project_path
+from common.config import configure_parser, configure_constants, load_for_cli, get_section, resolve_project_path, print_training_target
 
 import argparse
 import csv
@@ -22,17 +22,17 @@ import shutil
 import sys
 import tempfile
 from pathlib import Path
-from PIL import Image
 
-import cv2
-import numpy as np
-import torch
-from transformers import CLIPModel, CLIPProcessor
+from common.packaging_input import load_inputs
+from step6_identity_v2 import ensure_unchanged
+from step5_dedup_v2 import sha256_file as digest
 
 STEP10_COLUMNS = (
     "step_name",
     "final_filename",
     "original_filename",
+    "frame_id", "source_path", "original_source_path", "image_sha256",
+    "packaging_image_sha256", "dataset_generation_id", "step8_review_session_id", "packaging_input_kind",
     "shot_type",
     "pose_bucket",
     "width",
@@ -231,6 +231,8 @@ def build_flux_caption(
 def main() -> int:
     project = Path(__file__).resolve().parent.parent
     config = load_for_cli()
+    print_training_target(config)
+    training = get_section(config, 'training')
     settings = get_section(config, 'step10_packaging')
     configure_constants(globals(), config, 'step10_packaging', ['CLOTHING_PROMPTS', 'HAIR_PROMPTS', 'EXPRESSION_PROMPTS', 'BACKGROUND_PROMPTS', 'LIGHTING_PROMPTS'])
 
@@ -274,6 +276,7 @@ def main() -> int:
                         help="Subject trigger token (default: 'character')")
     parser.add_argument("--limit", type=int, default=0,
                         help="Process only N images for pre-check")
+    parser.add_argument("--preflight-only", action="store_true", help="Validate selected input identities/hashes; no model loading, images or captions written")
     parser.add_argument("--config", type=Path, help="Alternate YAML config (relative to project root)")
     configure_parser(parser, config, 'step10_packaging', aliases={'trigger': 'trigger_word'}, paths={'restored_dir': 'restored_dir', 'output_dir': 'output_dataset_dir'})
     parser.set_defaults(trigger=get_section(config, "project").get("trigger_word", parser.get_default("trigger")))
@@ -285,30 +288,31 @@ def main() -> int:
     output_dir = args.output_dir if args.output_dir.is_absolute() else (project / args.output_dir)
     output_csv = args.output_csv if args.output_csv.is_absolute() else (project / args.output_csv)
 
-    if not restored_dir.is_dir():
-        print(f"ERROR: Images directory not found: {restored_dir}", file=sys.stderr)
-        return 1
+    inputs,input_hashes=load_inputs(config,step9_file,restored_dir)
+    ensure_unchanged(input_hashes)
+    export_root=output_dir.resolve()
+    if any(Path(r[key]).resolve().is_relative_to(export_root) or export_root.is_relative_to(Path(r[key]).resolve().parent)
+           for r in inputs for key in ('source_path','original_source_path')):
+        raise ValueError('Packaging output directory overlaps input images')
+    if output_csv.resolve() in {Path(p).resolve() for p in input_hashes}:
+        raise ValueError('Packaging audit must not overwrite source evidence')
+    print(f"Validated {len(inputs)} STEP8_ACCEPT images; input={inputs[0]['packaging_input_kind']}",flush=True)
+    if args.preflight_only:
+        print("STEP10 PREFLIGHT PASS; accepted count:",len(inputs),"input count:",len(inputs))
+        print("restoration_status:",','.join(sorted({r['restoration_status'] for r in inputs})))
+        print("Packaging:NO; CLIP/model load:NO; image change:NO; caption generation:NO")
+        return 0
 
-    restored_files = sorted([f for f in restored_dir.glob("*.png")] + [f for f in restored_dir.glob("*.jpg")])
-    if not restored_files:
-        print(f"ERROR: No images found in {restored_dir}", file=sys.stderr)
-        return 1
+    # Heavy dependencies are loaded only after the explicit read-only preflight.
+    global cv2,np,torch,CLIPModel,CLIPProcessor,Image
+    import cv2
+    import numpy as np
+    import torch
+    from PIL import Image
+    from transformers import CLIPModel,CLIPProcessor
 
-    print(f"Found {len(restored_files)} images to package.")
-
-    # Load Step 7 metadata
-    step7_map = {}
-    if step7_file.exists():
-        with open(step7_file, "r", encoding="utf-8-sig") as f:
-            for r in csv.DictReader(f):
-                step7_map[Path(r.get("filename", "")).name] = r
-
-    # Load Step 9 metadata
-    step9_map = {}
-    if step9_file.exists():
-        with open(step9_file, "r", encoding="utf-8-sig") as f:
-            for r in csv.DictReader(f):
-                step9_map[Path(r.get("filename", "")).name] = r
+    if output_dir.exists() and any(output_dir.iterdir()):
+        raise ValueError('Packaging output is nonempty; use an empty export directory to avoid mixing previous images')
 
     device_setting = settings.get("device", "auto")
     device = torch.device(("cuda" if torch.cuda.is_available() else "cpu") if device_setting == "auto" else device_setting)
@@ -331,43 +335,21 @@ def main() -> int:
     jsonl_records = []
     report_rows = []
 
-    target_files = restored_files[:args.limit] if args.limit > 0 else restored_files
+    target_files = inputs[:args.limit] if args.limit > 0 else inputs
     print(f"Packaging {len(target_files)} images with trigger token '{args.trigger}'...\n")
 
-    for idx, img_path in enumerate(target_files, start=1):
-        # Match metadata
-        fn_match = None
-        for k, v in step7_map.items():
-            if k and k in img_path.name:
-                fn_match = v
-                break
-
-        r_status = "untouched_raw_camera"
-        if img_path.name in step9_map:
-            r_status = step9_map[img_path.name].get("restoration_status", r_status)
-
-        shot_type = fn_match.get("shot_type", "") if fn_match else ""
-        if not shot_type:
-            if "CLOSE_UP" in img_path.name:
-                shot_type = "CLOSE_UP"
-            elif "FULL_BODY" in img_path.name:
-                shot_type = "FULL_BODY"
-            else:
-                shot_type = "UPPER_BODY"
-
-        pose_bucket = fn_match.get("pose_bucket", "") if fn_match else ""
-        if not pose_bucket:
-            for pb in ("FRONT", "LEFT_3Q", "RIGHT_3Q", "LEFT_PROFILE", "RIGHT_PROFILE", "LOOKING_DOWN", "LOOKING_UP"):
-                if pb in img_path.name:
-                    pose_bucket = pb
-                    break
-            if not pose_bucket:
-                pose_bucket = "FRONT"
+    for idx, entry in enumerate(target_files, start=1):
+        img_path=Path(entry['source_path'])
+        if digest(img_path)!=entry['packaging_image_sha256']:
+            raise ValueError('Packaging input image hash changed: '+entry['frame_id'])
+        r_status=entry['restoration_status']
+        shot_type=entry['shot_type']
+        pose_bucket=entry['pose_bucket']
 
         encoded = np.fromfile(img_path, dtype=np.uint8)
         img = cv2.imdecode(encoded, cv2.IMREAD_COLOR)
         if img is None:
-            continue
+            raise ValueError("Cannot decode accepted image: "+entry["frame_id"])
 
         orig_h, orig_w = img.shape[:2]
         aligned_img = align_image_16x(img)
@@ -387,9 +369,9 @@ def main() -> int:
 
         # Save 16x aligned image
         is_success, buf = cv2.imencode(".png", aligned_img)
-        if is_success:
-            with open(final_img_path, "wb") as f:
-                buf.tofile(f)
+        if not is_success:raise ValueError("Cannot encode packaged image: "+entry["frame_id"])
+        with open(final_img_path, "wb") as f:
+            buf.tofile(f)
 
         # Save paired caption text file
         with open(final_txt_path, "w", encoding="utf-8") as f:
@@ -411,6 +393,7 @@ def main() -> int:
             "step_name": "STEP10_PACKAGING",
             "final_filename": final_img_name,
             "original_filename": img_path.name,
+            **{k:entry[k] for k in ("frame_id","source_path","original_source_path","image_sha256","packaging_image_sha256","dataset_generation_id","step8_review_session_id","packaging_input_kind")},
             "shot_type": shot_type,
             "pose_bucket": pose_bucket,
             "width": str(orig_w),
@@ -430,6 +413,8 @@ def main() -> int:
         if idx % 10 == 0 or idx == len(target_files):
             print(f"[{idx}/{len(target_files)}] -> {final_img_name} ({align_w}x{align_h})")
 
+    ensure_unchanged(input_hashes)
+
     # Save metadata.jsonl
     jsonl_path = output_dir / "metadata.jsonl"
     with open(jsonl_path, "w", encoding="utf-8") as f:
@@ -439,7 +424,7 @@ def main() -> int:
     # Save README_TRAINING_GUIDE.md inside packaged dataset folder
     guide_path = output_dir / "README_TRAINING_GUIDE.md"
     with open(guide_path, "w", encoding="utf-8") as f:
-        f.write(f"""# FLUX.2 / FLUX.1 Dev LoRA Training Guide: {args.trigger.upper()}
+        f.write(f"""# Training Contract: {training['base_model']['name_or_path']}
 
 ## 1. Dataset Overview
 - **Total Images**: {len(target_files)} pristine images
@@ -461,18 +446,19 @@ All captions explicitly describe:
 **Result**: FLUX binds only the subject's unique facial bone structure, eyes, and skin texture to the token `{args.trigger}`.
 At inference time, you can freely change clothes, hairstyles, and scenery without dataset bleed.
 
-## 3. Recommended Training Hyperparameters (Kohya / ai-toolkit)
-| Parameter | Recommended Value | Note |
-| :--- | :--- | :--- |
-| **Model** | FLUX.1-dev / FLUX.2-dev | fp8 or bfloat16 base |
-| **Network Type** | LoRA (Linear + Attention) | Standard rank |
-| **Network Rank (dim)** | 16 or 32 | 16 is optimal for single human face |
-| **Network Alpha** | 16 | alpha = rank or rank/2 |
-| **Learning Rate** | `1e-4` to `2e-4` | With cosine scheduler |
-| **Batch Size** | 1 (or 2 with gradient accum 2) | |
-| **Resolution / Buckets** | Max resolution 1024 or 1536 | Enable aspect ratio bucketing |
-| **Total Steps** | 1,500 ~ 2,200 steps | ~35 to 50 epochs |
-| **Text Encoder LR** | 0.0 (Freeze T5) or `5e-5` (CLIP only) | Keeping T5 frozen prevents style corruption |
+## 3. Current Training Contract (from config/config.yaml)
+| Parameter | Configured Value |
+| :--- | :--- |
+| **Model** | {training['base_model']['name_or_path']} |
+| **Architecture** | {training['base_model']['arch']} |
+| **Adapter** | {training['adapter']} |
+| **Training Dataset** | {training['dataset']['path']} |
+| **Caption Version / Format** | {training['dataset']['caption_version']} / {training['dataset']['caption_format']} |
+| **Network Rank / Alpha** | {training['lora']['rank']} / {training['lora']['alpha']} |
+| **Target Final Images** | {training['target']['final_images']} |
+
+Other runtime parameters belong to the adapter configuration. This export does
+not start Training or confirm that the external adapter YAML is synchronized.
 
 ## 4. Inference Prompt Templates
 - **Standard Portrait**:

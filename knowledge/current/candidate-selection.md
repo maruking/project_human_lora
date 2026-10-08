@@ -1,45 +1,45 @@
 ---
 topic: candidate-selection
-last_updated: 2026-10-05
+last_updated: 2026-10-07
 status: ACTIVE
 confidence: MEDIUM
-related_decisions: [DEC-0025]
+related_decisions: [DEC-0028]
 related_failures: [FAIL-0003]
 related_cases: [CASE-0005]
 ---
 
 # STEP7 quality / coverage review options
 
-step7_quality_coverage_v2.1 is the active normal STEP7 BAT path. It replaces v2/Revision B
-for this pipeline generation, preserving old code/sidecars/Decisions. STEP3 BEST
-is the sole quality authority; identity similarity/state/preferences/A-B-C contribute0
-to quality priority. Only authoritative, same-version explicit REVIEW_REJECT decisions
-with current image/generation/ranking evidence exclude from candidate eligibility.
-Historical-version Rejects and PENDING remain eligible. Quality copy stays byte-value equivalent to best_score.
-Tie:BEST DESC/global_rank ASC/frame_id ASC. Human preferences belong to STEP8.
+2026-10-06 metadata bridge: input_versions derives from official upstream summary
+hashes (current STEP4 v3), not fixed labels. Human Review binds to authoritative
+STEP3 ranking; valid downstream pose replacement is not ranking-history mutation.
+Full current frame/image/generation/score/rank checks and the4 current Rejects
+remain. Normal07 preflight PASS1951 rows;28 synthetic tests; no production selection.
+See [result](../../docs/STEP7_UPSTREAM_VERSION_METADATA_FIX.md).
 
-Normal pool:ranking_eligible + UNIQUE/REPRESENTATIVE without upstream errors.
-Exclude confirmed current best_rank_v2.2 Human Rejects without changing BEST or
-global_rank; preserve their audit rows as CURRENT_VERSION_HUMAN_REJECT.
-All STEP3–6 rows/columns preserved, duplicates/fatal/errors not deleted. STEP6
-REJECT/REVIEW/NOT_EVALUABLE remain eligible diagnostics; LOW_MEASURED_IDENTITY is
-not a wrong-person label. Identity fallback flag never promotes cluster members.
+## Active STEP7 v2.2 — BASE plus additive coverage
 
-Config defaults target70/min60/max70; quality guard=ceil(target ×2.0), normally140
-BEST-ordered eligible rows after authoritative exclusions. Guard order is not
-global_rank<=140. Core60 is fixed first by BEST under source/cluster constraints.
-At most10 optional repairs maximize unmet soft axes then BEST; unused slots return
-to BEST fill inside the same guard. Core images are never replaced for coverage.
-Soft pose15/10/10/2/2, up/down2 each, scale12/18/12. Caps6 eachformal video,
-15 collective stills, one per cluster remain diversity constraints, not penalties.
+Normal BAT runs step7_quality_coverage_v2.2. Eligibility remains ranking_eligible +
+UNIQUE/REPRESENTATIVE, no upstream errors, minus proven current-version Human Rejects.
+PENDING/historical-only Rejects remain eligible. BEST DESC/global_rank ASC/frame_id
+ASC remains the sole priority; identity weight0, upstream score/rank unchanged.
 
-Unavailable soft coverage/source-cap conflicts become COVERAGE_SHORTAGE warnings;
-do not BLOCK solely for coverage. Core shortage blocks formal publication; below60
-also reports QUALITY_POOL_INSUFFICIENT.60–69 can publish with quality-preserved
-warning. No automatic guard expansion, cap relaxation or weak fillers.
-Partial/test output is isolated and cannot replace full successful reports.
-Source-linked pose→scale HTML is STEP8 handoff, not automatic final35–45 selection.
-FULL_BODY is face area, not literal body visibility. No image copying/inference.
+Take configured target70 as immutable BASE. Quality Guard remains ceil(target ×2)
+normal candidates (default140). Fill deficient stored pose/vertical/face-scale goals
+with highest-BEST remaining candidates inside that guard, adding rather than replacing.
+Source caps6/15 are concentration warnings only. No repair-slot budget.
+Profile-only exception: after ordinary coverage, fill each side toward configured
+rare_profile_review_target (default3, allowed2–3), from all eligible rows by BEST.
+Mark RARE_PROFILE_REVIEW / rare_profile_candidate, preserving truthful guard membership.
+Never drop existing BASE/coverage rows even if a profile already exceeds3; no extra
+top-up then. Normal shot/vertical coverage cannot search outside guard. No auto-accept. BASE shortage blocks publication; coverage shortages warn.
+Full upstream rows/values remain; source images and previous reviews are unchanged.
+
+STEP8 v3 shows ALL/SHOT/POSE/VERTICAL copies and uses only99_ACCEPT for decisions.
+Count35–45/target40 and guidance stay unchanged. Synthetic validation and preflight
+only; production candidate counts await ★maru rerun07, then Chappy review.
+[Decision](../decisions/DEC-0028-step7-base-additive-step8-views.md),
+[implementation](../../docs/STEP7_STEP8_REVIEW_REDESIGN.md).
 
 ## Historical v2 implementation-time snapshot
 
@@ -59,7 +59,7 @@ Rejects remain normal candidates. With the correction:1075 normal candidates,
 publication is pending ★maru's BAT rerun; original reports/history are unchanged.
 See [patch report](../../docs/STEP7_CURRENT_VERSION_REJECT_PATCH.md) and DEC-0024 amendment.
 
-## Active v2.1 read-only validation / residual
+## Historical v2.1 read-only validation / residual
 
 1951 full rows/1075 normal candidates;4 current-version Rejects excluded,9
 historical-only Rejects remain eligible. Guard140/deepest rank232/minBEST49.75514;
@@ -74,3 +74,5 @@ inference/filename rule introduced. Post-pipeline generic work remains deferred:
 [CASE-0005](../cases/CASE-0005-semantic-face-obstruction-residual.md).
 [DEC-0025](../decisions/DEC-0025-step7-bounded-quality-first.md),
 [v2.1 implementation](../../docs/STEP7_CANDIDATE_V21_IMPLEMENTATION.md).
+
+[Rare Profile patch](../../docs/STEP7_RARE_PROFILE_IMPLEMENTATION.md): synthetic tests and preflight only; production07 rerun pending, STEP8 prepare deferred.

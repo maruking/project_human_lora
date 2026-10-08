@@ -3,7 +3,7 @@
 project:
   name: real_human_lora
   target_person_name: target_person
-  trigger_word: character
+  trigger_word: sasha_rh
   subject_name: subject
 paths:
   input_video_dir: input/original-mp4
@@ -98,7 +98,7 @@ step4_pose:
   report: '@reports/step3_dataset_report.csv'
   output: '@reports/step4_dataset_report.csv'
 step4_pose_composition:
-  version: step4_pose_composition_v2
+  version: step4_pose_composition_v3
   report: '@reports/step3_best_ranking.csv'
   step3_summary: '@reports/step3_best_ranking_summary.json'
   output: '@reports/step4_pose_composition.csv'
@@ -204,6 +204,8 @@ step8_review:
   final_count_min: 30
   final_count_max: 45
 step9_restoration:
+  diagnostic_csv: '@reports/STEP9_DIAGNOSTIC.csv'
+  diagnostic_summary: docs/STEP9_DIAGNOSTIC_SUMMARY.md
   codeformer_path: null
   fidelity_weight: 0.8
   min_identity_threshold: 0.6
@@ -303,13 +305,12 @@ step3_best_ranking:
 
 # Active STEP7 review options; legacy STEP7 sections above remain historical.
 step7_candidates_v2:
-  version: step7_quality_coverage_v2.1
+  version: step7_quality_coverage_v2.2
   candidate_pool_target: 70
   candidate_pool_min: 60
-  candidate_pool_max: 70
+  candidate_pool_max: 140
   quality_guard_multiplier: 2.0
-  quality_core_target: 60
-  coverage_repair_slots_max: 10
+  rare_profile_review_target: 3
   max_per_video: 6
   max_supplemental_still: 15
   pose_min:
@@ -336,7 +337,7 @@ step7_candidates_v2:
 
 # Folder-based final Human Review; legacy step8_review remains historical.
 step8_folder_review:
-  version: step8_folder_review_v2
+  version: step8_folder_review_v3
   review_root: work/step8_review
   candidates_csv: '@reports/step7_review_candidates.csv'
   full_csv: '@reports/step7_candidate_selection.csv'
@@ -381,3 +382,31 @@ step8_folder_review:
   vertical_guidance:
     LOOKING_UP: 1
     LOOKING_DOWN: 1
+
+# Separate VLM Caption V2; no baseline overwrite, no implicit model fallback.
+step10_caption_v2:
+  model_id: Qwen/Qwen3-VL-8B-Instruct
+  model_dir: models/Qwen3-VL-8B-Instruct
+  python_executable: .venv-vlm/Scripts/python.exe
+  output_dir: output/dataset_flux_caption_v2
+  output_csv: '@reports/step10_caption_v2.csv'
+  review_html: docs/STEP10_CAPTION_V2_REVIEW.html
+  max_pixels: 786432
+  max_new_tokens: 512
+
+# Current Training Contract: authoritative runtime target.
+training:
+  adapter: ai-toolkit
+  base_model:
+    name_or_path: black-forest-labs/FLUX.2-klein-base-9B
+    arch: flux2_klein_9b
+  trigger_word: sasha_rh
+  dataset:
+    path: output/dataset_flux_caption_v2
+    caption_format: natural_language
+    caption_version: step10_caption_v2
+  lora:
+    rank: 16
+    alpha: 16
+  target:
+    final_images: 40

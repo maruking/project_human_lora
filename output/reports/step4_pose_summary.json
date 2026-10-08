@@ -1,5 +1,5 @@
 {
-  "step4_version": "step4_pose_composition_v2",
+  "step4_version": "step4_pose_composition_v3",
   "total_rows": 1951,
   "ranking_eligible_rows": 1880,
   "input_kind_all_rows": {
@@ -11,23 +11,23 @@
     "supplemental_still": 57
   },
   "statuses": {
-    "MEASURED": 1698,
+    "MEASURED": 1872,
     "NOT_APPLICABLE_STEP3_FATAL": 71,
-    "NOT_EVALUABLE": 182
+    "NOT_EVALUABLE": 8
   },
   "pose_bin": {
-    "FRONTAL": 1153,
-    "THREE_QUARTER_LEFT": 274,
-    "THREE_QUARTER_RIGHT": 245,
-    "PROFILE_LEFT": 15,
-    "PROFILE_RIGHT": 11,
-    "NOT_EVALUABLE": 182
+    "FRONTAL": 1464,
+    "THREE_QUARTER_LEFT": 141,
+    "THREE_QUARTER_RIGHT": 224,
+    "PROFILE_LEFT": 26,
+    "PROFILE_RIGHT": 17,
+    "NOT_EVALUABLE": 8
   },
   "vertical_pose": {
-    "LOOKING_UP": 488,
-    "LEVEL": 1161,
-    "LOOKING_DOWN": 49,
-    "NOT_EVALUABLE": 182
+    "LOOKING_UP": 37,
+    "LEVEL": 1766,
+    "LOOKING_DOWN": 69,
+    "NOT_EVALUABLE": 8
   },
   "face_scale_bin": {
     "CLOSE_UP": 329,
@@ -39,59 +39,59 @@
   "cross_tables": {
     "pose_bin_x_face_scale_bin": {
       "FRONTAL": {
-        "CLOSE_UP": 231,
-        "FULL_BODY": 363,
-        "UPPER_BODY": 559
+        "CLOSE_UP": 230,
+        "FULL_BODY": 625,
+        "UPPER_BODY": 609
       },
       "NOT_EVALUABLE": {
-        "FULL_BODY": 169,
-        "UPPER_BODY": 13
+        "CLOSE_UP": 1,
+        "FULL_BODY": 5,
+        "UPPER_BODY": 2
       },
       "PROFILE_LEFT": {
-        "CLOSE_UP": 1,
-        "FULL_BODY": 7,
+        "CLOSE_UP": 2,
+        "FULL_BODY": 17,
         "UPPER_BODY": 7
       },
       "PROFILE_RIGHT": {
-        "CLOSE_UP": 1,
-        "FULL_BODY": 5,
-        "UPPER_BODY": 5
+        "FULL_BODY": 6,
+        "UPPER_BODY": 11
       },
       "THREE_QUARTER_LEFT": {
-        "CLOSE_UP": 44,
-        "FULL_BODY": 124,
-        "UPPER_BODY": 106
+        "CLOSE_UP": 32,
+        "FULL_BODY": 40,
+        "UPPER_BODY": 69
       },
       "THREE_QUARTER_RIGHT": {
-        "CLOSE_UP": 52,
-        "FULL_BODY": 99,
-        "UPPER_BODY": 94
+        "CLOSE_UP": 64,
+        "FULL_BODY": 74,
+        "UPPER_BODY": 86
       }
     },
     "pose_bin_x_input_kind": {
       "FRONTAL": {
-        "formal_video": 1123,
+        "formal_video": 1434,
         "supplemental_still": 30
       },
       "NOT_EVALUABLE": {
-        "formal_video": 179,
-        "supplemental_still": 3
+        "formal_video": 7,
+        "supplemental_still": 1
       },
       "PROFILE_LEFT": {
-        "formal_video": 13,
+        "formal_video": 24,
         "supplemental_still": 2
       },
       "PROFILE_RIGHT": {
-        "formal_video": 10,
-        "supplemental_still": 1
+        "formal_video": 14,
+        "supplemental_still": 3
       },
       "THREE_QUARTER_LEFT": {
-        "formal_video": 265,
-        "supplemental_still": 9
+        "formal_video": 129,
+        "supplemental_still": 12
       },
       "THREE_QUARTER_RIGHT": {
-        "formal_video": 233,
-        "supplemental_still": 12
+        "formal_video": 215,
+        "supplemental_still": 9
       }
     },
     "face_scale_bin_x_input_kind": {
@@ -123,15 +123,32 @@
     "shot_close_up_threshold": 0.12,
     "shot_full_body_threshold": 0.04
   },
-  "yaw_sign_convention": "positive RIGHT; negative LEFT; repository convention, not anatomical",
-  "face_scale_semantics": "face bbox area / image area; not literal body visibility",
+  "estimator": {
+    "estimator": "buffalo_l_1k3d68",
+    "device": "CPUExecutionProvider",
+    "insightface_version": "0.7.3",
+    "model_hashes": {
+      "det_10g.onnx": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91",
+      "1k3d68.onnx": "df5c06b8a0c12e422b2ed8947b8869faa4105387f199c477af038aa01f9a45cc"
+    },
+    "detection_size": [
+      640,
+      640
+    ],
+    "detection_threshold": 0.5,
+    "pose_order": "pitch,yaw,roll; returned yaw,pitch,roll without sign inversion or normalization",
+    "association": "Unique maximal positive IoU with persisted STEP3 primary bbox",
+    "preprocessing": "Original image; InsightFace Landmark.get defaults; same as comparison"
+  },
   "output_paths": {
     "output": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step4_pose_composition.csv",
     "summary": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step4_pose_summary.json",
     "video_summary": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\output\\reports\\step4_video_pose_summary.csv",
     "markdown": "C:\\Users\\maruk\\Documents\\Genelate_img\\Sasha_re_codex\\real_human_lora\\docs\\STEP4_POSE_COMPOSITION_SUMMARY.md"
   },
-  "output_csv_sha256": "5557e3c809a4f9b40d5ee531b684d34f5c5bb4d34006074702210af63fa6df3e",
-  "video_summary_sha256": "42f8e2fa1229972b16ffbfefd252fad00f79e73728e89eb97db3c076f7eb32c2",
-  "markdown_sha256": "c01ef1c1c12e7cfc062ed2cfdab51a3bb14ebe5e754e3cffeac7da37fe93883f"
+  "yaw_sign_convention": "Raw buffalo_l yaw, positive RIGHT/negative LEFT; same as approved comparison",
+  "face_scale_semantics": "Unchanged STEP3 bbox area/image area; not body visibility",
+  "output_csv_sha256": "ed5a213b4487132bc19915a6aa12a4008d9535a7cebf0cf752166c9c421d4634",
+  "video_summary_sha256": "1ba72f876eae335c61559d1f43dae0bf382cd650ad8a99f77ad3e2edf6be9f75",
+  "markdown_sha256": "74e94a7410838743b290c9f25135768ad0ca6430035b83d562da810d86463b09"
 }

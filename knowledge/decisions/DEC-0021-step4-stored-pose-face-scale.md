@@ -1,13 +1,13 @@
 ---
 id: DEC-0021
 title: STEP4 v2 stored pose and authoritative face-scale descriptors
-status: ACCEPTED
+status: SUPERSEDED
 date: 2026-10-05
 confidence: MEDIUM
 components: [pose-classification, composition, lineage]
 tags: [step4-v2, measurement-only, face-scale]
 supersedes: []
-superseded_by: []
+superseded_by: [DEC-0027]
 related_experiments: []
 related_failures: []
 related_cases: []

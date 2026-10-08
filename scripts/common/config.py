@@ -35,6 +35,24 @@ def validate_config(config: dict, schema_path: Path | None = None) -> None:
         details = "; ".join(f"{'.'.join(map(str, e.absolute_path)) or '<root>'}: {e.message}"
                             for e in errors[:8])
         raise ConfigError(f"Configuration validation failed: {details}")
+    if 'training' in config:
+        if config.get('project', {}).get('trigger_word') != config['training']['trigger_word']:
+            raise ConfigError('Training Contract mismatch: project.trigger_word must equal training.trigger_word')
+
+
+def print_training_target(config: dict) -> None:
+    """STEP10 training contract display; no model/data defaults or execution."""
+    training = config.get('training')
+    if not training:
+        raise ConfigError('STEP10 requires an explicit training section; no legacy training defaults are applied')
+    if get_section(config, 'project').get('trigger_word') != training['trigger_word']:
+        raise ConfigError('Training Contract mismatch: project.trigger_word must equal training.trigger_word')
+    print('TRAINING TARGET', flush=True)
+    print('Base Model:', training['base_model']['name_or_path'], '| arch:', training['base_model']['arch'], flush=True)
+    print('Adapter:', training['adapter'], flush=True)
+    print('Trigger:', training['trigger_word'], flush=True)
+    print('Dataset:', training['dataset']['path'], flush=True)
+    print('Caption Version:', training['dataset']['caption_version'], '| format:', training['dataset']['caption_format'], flush=True)
 
 
 def load_config(path: str | Path | None = None, *, project_root: Path | None = None,
@@ -60,6 +78,8 @@ def load_config(path: str | Path | None = None, *, project_root: Path | None = N
         validate_config(data, root / "config/config.schema.json")
     for value in get_section(data, "paths").values():
         resolve_project_path(value, root)
+    if 'training' in data:
+        resolve_project_path(data['training']['dataset']['path'], root)
     return data
 
 

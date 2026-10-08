@@ -52,7 +52,7 @@ Each record explains **why** a specific choice was made, what alternatives were 
 
 - [DEC-0020 — Balanced critical quality / BEST v2.2](DEC-0020-balanced-critical-quality-best-v22.md), ACCEPTED design; original decision records synthetic/9-case validation and then-pending production. Subsequent production/135-image review is recorded in [current Knowledge](../current/step3-best-ranking.md) and [review report](../../docs/STEP3_BEST_RANKING_V22_ROUND1_3_CHAPPY_REPORT.md); original Decision body/status unchanged.
 
-- [DEC-0021 — STEP4 stored pose / authoritative face scale](DEC-0021-step4-stored-pose-face-scale.md), ACCEPTED user definition; measurement-only, synthetic/six-row validation. Historical DEC-0005 unchanged; STEP4 production pending ★maru.
+- [DEC-0021 — STEP4 stored pose / authoritative face scale](DEC-0021-step4-stored-pose-face-scale.md), SUPERSEDED by DEC-0027; original v2 evidence preserved.
 
 - [DEC-0022 — STEP5 conservative duplicate clusters](DEC-0022-step5-conservative-dedup-clusters.md), ACCEPTED user architecture; full-row audit, BEST representatives, source-aware pHash and diagnostic pose review. Synthetic validation; full STEP5 production pending ★maru.
 
@@ -60,6 +60,14 @@ Each record explains **why** a specific choice was made, what alternatives were 
 
 - [DEC-0024 — STEP7 quality/coverage review pool](DEC-0024-step7-quality-coverage-review-pool.md), SUPERSEDED by DEC-0025; v2 and current-version Reject amendment preserved.
 
-- [DEC-0025 — STEP7 bounded QUALITY-FIRST v2.1](DEC-0025-step7-bounded-quality-first.md), ACCEPTED; quality core + optional soft repair, Reject patch retained; synthetic/read-only validation, production pending Chappy/★maru.
+- [DEC-0025 — STEP7 bounded QUALITY-FIRST v2.1](DEC-0025-step7-bounded-quality-first.md), SUPERSEDED by DEC-0028; original v2.1 evidence preserved.
 
-- [DEC-0026 — STEP8 folder Human final review](DEC-0026-step8-folder-human-final-review.md), ACCEPTED; FULL→copy to ACCEPT, validated CSV authority, count35–45; synthetic validation, production preparation pending ★maru.
+- [DEC-0026 — STEP8 folder Human final review](DEC-0026-step8-folder-human-final-review.md), SUPERSEDED by DEC-0028; original folder v2 evidence preserved.
+
+- [DEC-0027 — STEP4 buffalo_l pose v3](DEC-0027-step4-buffalo-pose-v3.md), ACCEPTED user-reported25-image visual review; exact angle comparison and synthetic validation; full v3 production pending ★maru, STEP5+ remains v2-only.
+
+- [DEC-0028 — immutable BEST BASE and additive coverage / multi-view review](DEC-0028-step7-base-additive-step8-views.md), ACCEPTED user design; synthetic tests and preflight only; production07 rerun by ★maru, STEP8 preparation deferred.
+
+- [DEC-0029 — STEP10 STEP8 original input when STEP9 SKIP](DEC-0029-step10-step8-original-input.md), ACCEPTED user scope; exact accepted IDs/source hashes and preflight-only; no packaging performed.
+
+- [DEC-0030 — Separate image-grounded Caption V2](DEC-0030-step10-vlm-caption-v2.md), ACCEPTED user policy; model/preflight/one-image smoke validated, full generation/Human Review pending.

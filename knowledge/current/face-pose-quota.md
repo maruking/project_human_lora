@@ -12,7 +12,18 @@ related_cases: []
 
 # Current Knowledge: Face Pose & Composition Quota Distribution
 
-## Active STEP4 v2 — measurement only (2026-10-05)
+## Active STEP4 v3 — comparison-approved buffalo_l (2026-10-05)
+
+[DEC-0027](../decisions/DEC-0027-step4-buffalo-pose-v3.md) replaces stored solvePnP
+pose with the existing buffalo_l 68-point 3D estimator. All 25 alternative angles
+match the official v3 code exactly; ★maru reports visual acceptance. Boundaries,
+face-scale formulas and STEP3 scores/lineage are unchanged. Old angles remain in
+step3_* columns. Missing/error pose does not fall back to solvePnP; full audit rows
+stay. STEP4 v3 production completed; full-row/score checks were verified. STEP5
+input compatibility now supports v3 without changing dedup logic; its production
+rerun is pending ★maru. STEP6+ remains outside that bridge. No anatomical-sign/general-accuracy claim.
+
+## Historical STEP4 v2 — measurement only (2026-10-05)
 
 [DEC-0021](../decisions/DEC-0021-step4-stored-pose-face-scale.md) defines
 step4_pose_composition_v2: full BEST v2.2 input, stored measured yaw/pitch/roll,

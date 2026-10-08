@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT/'scripts'))
 from common.dedup_v2 import annotate, near_evidence, RULE_KEYS, VERSION, summarize, ordering, compute_phash
 from common.config import load_config
 from common.video_manifest import write_csv_atomic, sha256_file
-from step5_dedup_v2 import preflight, hash_sources, publish, galleries, validate_targets
+from step5_dedup_v2 import preflight, hash_sources, publish, galleries, validate_targets, authoritative_input_versions
 
 
 def rules():
@@ -193,6 +193,81 @@ class PipelineSafety(unittest.TestCase):
         with self.assertRaises(ValueError): preflight(*self.input_paths,self.images)
         self.input_paths[0].unlink()
         with self.assertRaises(FileNotFoundError): preflight(*self.input_paths,self.images)
+
+    def v3_inputs(self):
+        # STEP3 stays as originally written; only the STEP4 fixture changes pose.
+        for r in self.rows:
+            for key in ('yaw','pitch','roll','pose_status'):
+                r['step3_'+key]=r[key]
+            r['step4_version']='step4_pose_composition_v3'
+        self.rows[0].update(yaw='-50',pitch='22',pose_bin='PROFILE_LEFT')
+        self.write_v3_report()
+
+    def write_v3_report(self):
+        p4,s4,_,_=self.input_paths
+        write_csv_atomic(p4,list(self.rows[0]),self.rows)
+        summary=json.loads(s4.read_text(encoding='utf-8'))
+        summary.update(step4_version='step4_pose_composition_v3',output_csv_sha256=sha256_file(p4))
+        s4.write_text(json.dumps(summary),encoding='utf-8')
+
+    def test_v3_preflight_preserves_full_rows_and_new_angles(self):
+        self.v3_inputs()
+        columns,rows=preflight(*self.input_paths,self.images)
+        self.assertEqual([r['frame_id'] for r in rows],['a','b','fatal'])
+        self.assertEqual(rows[0]['yaw'],'-50');self.assertEqual(rows[0]['step3_yaw'],'0')
+        result,_,_=annotate(rows,hashed(rows),{},rules())
+        for before,after in zip(rows,result):
+            for key,value in before.items():self.assertEqual(after[key],value)
+
+    def test_v3_missing_alias_and_tampered_score_blocked(self):
+        self.v3_inputs()
+        for key in ('step3_yaw','best_score','image_sha256'):
+            saved=self.rows[0][key];self.rows[0][key]='tampered'
+            self.write_v3_report()
+            with self.assertRaises(ValueError):preflight(*self.input_paths,self.images)
+            self.rows[0][key]=saved
+        for row in self.rows:row.pop('step3_roll')
+        self.write_v3_report()
+        with self.assertRaises(ValueError):preflight(*self.input_paths,self.images)
+
+    def test_v3_missing_pose_remains_exact_only(self):
+        self.v3_inputs()
+        self.rows[0].update(yaw='',pitch='',roll='',pose_status='NOT_EVALUABLE',
+                            pose_bin='NOT_EVALUABLE',step4_status='NOT_EVALUABLE')
+        self.write_v3_report()
+        _,rows=preflight(*self.input_paths,self.images)
+        self.assertEqual(near_evidence(rows[0],rows[1],{'global':0,'face':0},{'global':0,'face':0},rules()),[])
+        out,_,edges=annotate(rows,hashed(rows),{},rules())
+        # Identical fixture images still form the established exact-SHA edge.
+        self.assertTrue(any('EXACT_DUPLICATE' in edge[2] for edge in edges))
+        self.assertEqual(len(out),3)
+        self.assertEqual(out[0]['representative_frame_id'],'b') # unchanged BEST90 priority
+
+    def test_v3_angle_uses_new_pose_not_step3_alias(self):
+        self.v3_inputs()
+        _,rows=preflight(*self.input_paths,self.images)
+        self.assertEqual(near_evidence(rows[0],rows[1],{'global':0,'face':0},{'global':0,'face':0},rules()),[])
+        old=copy.deepcopy(rows[0]);old.update(yaw=old['step3_yaw'],pitch=old['step3_pitch'])
+        self.assertTrue(near_evidence(old,rows[1],{'global':0,'face':0},{'global':0,'face':0},rules()))
+
+    def test_mixed_v2_v3_is_rejected(self):
+        self.v3_inputs();self.rows[1]['step4_version']='step4_pose_composition_v2'
+        self.write_v3_report()
+        with self.assertRaises(ValueError):preflight(*self.input_paths,self.images)
+
+    def test_published_versions_follow_authoritative_summary(self):
+        for version in ('step4_pose_composition_v2','step4_pose_composition_v3'):
+            if version.endswith('v3'):self.v3_inputs()
+            snapshots={str(p):sha256_file(p) for p in self.input_paths}
+            summary=publish(self.rows,hashed(self.rows),{},rules(),self.targets,self.images,snapshots)
+            self.assertEqual(summary['input_versions'],['best_rank_v2.2',version])
+
+    def test_version_metadata_mismatch_stops_publication(self):
+        self.v3_inputs()
+        snapshots={str(p):sha256_file(p) for p in self.input_paths}
+        self.assertEqual(authoritative_input_versions(self.rows,snapshots)[1],'step4_pose_composition_v3')
+        self.rows[0]['step4_version']='step4_pose_composition_v2'
+        with self.assertRaises(ValueError):authoritative_input_versions(self.rows,snapshots)
 
     def test_preflight_lineage_unique_and_bbox_blockers(self):
         for key,value in (('temporal_index',''),('video_id',''),('face_bbox',''),('image_sha256','bad')):
